@@ -19,7 +19,7 @@ var FOTO_HDR = ['userId', 'foto', 'updatedAt'];
 var SH_RESET = 'ResetReq';
 var RESET_HDR = ['id', 'userId', 'username', 'nama', 'unit', 'createdAt', 'status'];
 var MAX_FOTO_PROFIL = 45000;     // karakter base64 (foto profil 160px ~ 8-12 KB)
-var API_VERSION = 12;             // dinaikkan tiap ada aksi baru; dipakai aplikasi untuk mendeteksi backend lama
+var API_VERSION = 13;             // dinaikkan tiap ada aksi baru; dipakai aplikasi untuk mendeteksi backend lama
 var TEMP_PW_MENIT_EMAIL = 60;
 var TEMP_PW_MENIT_ADMIN = 24 * 60;
 var ABSEN_HDR = ['id', 'tanggal', 'userId', 'nama', 'unit', 'shift', 'jamMasuk', 'jamPulang', 'tglPulang',
@@ -969,6 +969,21 @@ function actSaveLaporan_(u, p) {
   if (f) writeRow_(sh, LAPOR_HDR, f.row, o); else appendObj_(sh, LAPOR_HDR, o);
   return { ok: true };
 }
+/** Hapus laporan milik sendiri (batas hari sama dengan mengubah). Shift kosong = laporan lama. */
+function actHapusLaporan_(u, p) {
+  var tgl = String(p.tanggal || '');
+  if (!validDate_(tgl)) throw fail_('Tanggal tidak valid.');
+  var shift = String(p.shift || '').toUpperCase();
+  if (shift && SHIFTS.indexOf(shift) < 0) throw fail_('Shift tidak valid.');
+  var today = nowJ_().substring(0, 10);
+  if (tgl > today || tgl < addDays_(today, -LAPOR_HARI)) throw fail_('Laporan hanya bisa dihapus untuk ' + LAPOR_HARI + ' hari terakhir.');
+  var sh = laporSheet_(periodKey_(tgl), false);
+  if (!sh) return { ok: true };
+  var f = findRowById_(sh, LAPOR_HDR, u.id + '_' + tgl + '_' + shift);
+  if (!f && !shift) f = findRowById_(sh, LAPOR_HDR, u.id + '_' + tgl);
+  if (f) sh.deleteRow(f.row);
+  return { ok: true };
+}
 /** Peta laporan: kunci userId_tanggal_shift (shift kosong = laporan lama sebelum ada pembagian shift). */
 function laporanMap_(key, userId) {
   var sh = laporSheet_(key, false);
@@ -1329,6 +1344,7 @@ function doPost(e) {
       case 'masuk': r = actMasuk_(u, p); CacheService.getScriptCache().remove('JAGA'); break;
       case 'pulang': r = actPulang_(u, p); CacheService.getScriptCache().remove('JAGA'); break;
       case 'saveLaporan': r = actSaveLaporan_(u, p); break;
+      case 'hapusLaporan': r = actHapusLaporan_(u, p); break;
       case 'koreksi': r = actKoreksi_(u, p); CacheService.getScriptCache().remove('JAGA'); break;
       case 'saveConfig': r = actSaveConfig_(u, p); break;
       case 'saveSemangat': r = actSaveSemangat_(u, p); break;

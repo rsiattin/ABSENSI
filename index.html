@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" href="icon-192.png">
 <title>Absensi Karyawan — RSI At-Tin Husada</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,600;1,700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --navy:#131B33; --navy-2:#1D2A4D; --blue:#1458B0; --blue-2:#2E7DE2; --teal:#0EA39D; --teal-2:#17C7BE;
@@ -435,6 +435,51 @@ a.jg-wa svg{width:23px;height:23px;fill:#fff;}
 #jgSum{grid-template-columns:repeat(4,1fr);gap:6px;} #jgSum>div{padding:10px 2px;} #jgSum span{font-size:9.5px;letter-spacing:0;} #jgSum span .sep{margin:0 .2em;} #jgSum b{font-size:19px;}
 body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+
+/* ===== v15 ===== */
+.tagline{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:13px;padding:11px 10px;border-radius:16px;background:linear-gradient(160deg,rgba(255,255,255,.34),rgba(255,255,255,.1));border:1px solid rgba(255,255,255,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 14px 20px -12px rgba(0,10,50,.7),0 1px 0 rgba(255,255,255,.65) inset;}
+.tagline em{font-family:'Playfair Display','Georgia',serif;font-style:italic;font-weight:700;font-size:15.5px;line-height:1.3;text-align:center;letter-spacing:.1px;text-shadow:0 2px 6px rgba(0,20,70,.45);}
+.tagline i{flex:1 1 14px;max-width:34px;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,#ffd9a8);} .tagline i:last-child{background:linear-gradient(270deg,transparent,#ffd9a8);}
+/* sheet absen */
+.ab-sheet{background:linear-gradient(180deg,#e6f1ff,rgba(255,255,255,.95) 190px) !important;}
+.ab-head{display:flex;align-items:center;gap:13px;margin:-18px -18px 16px;padding:18px;color:#fff;}
+.ab-sheet.in .ab-head{background:linear-gradient(135deg,#08855c,#27c98f);box-shadow:0 16px 22px -16px rgba(8,140,95,.9);}
+.ab-sheet.out .ab-head{background:linear-gradient(135deg,#e8650a,#ffa13f);box-shadow:0 16px 22px -16px rgba(224,110,10,.9);}
+.ab-head h2{margin:0;color:#fff;font-size:21px;} .ab-sub{font-size:12.5px;opacity:.93;margin-top:2px;}
+.ab-ic{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;font-size:23px;background:rgba(255,255,255,.26);box-shadow:0 8px 12px -6px rgba(0,0,0,.35),0 1px 0 rgba(255,255,255,.5) inset;}
+.ab-sheet .field label{font-size:12px;letter-spacing:.5px;color:#2a3550;}
+.ab-sheet .shift-pick{gap:9px;}
+.ab-sheet .shift-pick button{border:1.5px solid rgba(19,40,90,.1);background:linear-gradient(160deg,#fff,#edf2fb);color:#24304d;padding:12px 4px 10px;box-shadow:0 10px 14px -11px rgba(19,40,90,.6),0 1px 0 #fff inset;transition:transform .15s,box-shadow .15s;}
+.ab-sheet .shift-pick button .e{font-size:25px;filter:none;}
+.ab-sheet .shift-pick button.sel{color:#fff;border-color:transparent;transform:translateY(-3px);}
+.ab-sheet .shift-pick button.sel small{color:rgba(255,255,255,.88);}
+.ab-sheet .shift-pick button[data-s="P"].sel{background:linear-gradient(135deg,#0c9a94,#2bd6cc);box-shadow:0 14px 18px -10px rgba(14,163,157,.95);}
+.ab-sheet .shift-pick button[data-s="S"].sel{background:linear-gradient(135deg,#e08a10,#ffc24d);box-shadow:0 14px 18px -10px rgba(224,138,16,.95);}
+.ab-sheet .shift-pick button[data-s="D"].sel{background:linear-gradient(135deg,#1458b0,#4fa3f0);box-shadow:0 14px 18px -10px rgba(20,88,176,.95);}
+.ab-sheet .shift-pick button[data-s="M"].sel{background:linear-gradient(135deg,#5b3fc4,#a48cf0);box-shadow:0 14px 18px -10px rgba(91,63,196,.95);}
+.ab-sheet .shift-pick button[data-s="R"].sel{background:linear-gradient(135deg,#b02266,#ee6aa3);box-shadow:0 14px 18px -10px rgba(176,34,102,.95);}
+.ab-time{display:flex;align-items:center;gap:10px;padding:6px 14px;border-radius:18px;background:linear-gradient(160deg,#fff,#eef3fb);border:1.5px solid rgba(20,88,176,.18);box-shadow:0 10px 16px -12px rgba(19,40,90,.6),0 1px 0 #fff inset;}
+.ab-clk{font-size:22px;} .ab-time small{font-size:11px;color:var(--dim);margin-left:auto;text-align:right;line-height:1.2;max-width:70px;}
+.ab-time input{border:0 !important;background:transparent !important;box-shadow:none !important;font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;color:#14305f;padding:4px 0 !important;width:auto;min-width:0;flex:0 1 auto;}
+.ab-sheet .photo-box{border:2px dashed rgba(20,88,176,.4);background:linear-gradient(160deg,#f4f8ff,#e4eefc);min-height:170px;}
+.ab-sheet .photo-box .ph{display:flex;flex-direction:column;align-items:center;gap:5px;color:#2a3d66;} .ab-sheet .photo-box .ph small{font-size:11.5px;color:var(--dim);}
+.ph-ic{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;font-size:30px;background:linear-gradient(145deg,#4fa3f0,#1458b0);box-shadow:0 12px 16px -8px rgba(20,88,176,.8),0 1px 0 rgba(255,255,255,.5) inset;margin-bottom:4px;}
+.ab-sheet .photo-box img{max-height:38vh;}
+.ph-retake{position:absolute;right:10px;bottom:10px;padding:6px 12px;border-radius:12px;font-size:12px;font-weight:700;color:#fff;background:rgba(20,30,60,.65);backdrop-filter:blur(4px);}
+.ab-sheet .gps{border-radius:16px;padding:11px 13px;border-left:5px solid #9aa6bd;background:linear-gradient(160deg,#fff,#f1f5fb);}
+.ab-sheet .gps.ok{border-left-color:#1fb37a;} .ab-sheet .gps.warn{border-left-color:#f0a020;} .ab-sheet .gps.bad{border-left-color:#e24a5a;}
+.ab-sheet.in .btn-primary{background:linear-gradient(135deg,#0a9a68,#27c98f);box-shadow:0 14px 20px -9px rgba(8,140,95,.85),0 2px 0 rgba(255,255,255,.4) inset;}
+.ab-sheet.out .btn-primary{background:linear-gradient(135deg,#e8650a,#ffa13f);box-shadow:0 14px 20px -9px rgba(224,110,10,.85),0 2px 0 rgba(255,255,255,.4) inset;}
+/* kamera */
+#ovCam{position:fixed;inset:0;z-index:200;background:#000;display:none;flex-direction:column;} #ovCam.show{display:flex;}
+#camVid{flex:1;min-height:0;width:100%;object-fit:cover;background:#000;}
+.cam-top{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));left:0;right:0;text-align:center;color:#fff;font-weight:700;font-size:14px;text-shadow:0 2px 6px rgba(0,0,0,.7);}
+.cam-bar{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;padding:22px 26px calc(26px + env(safe-area-inset-bottom,0px));background:linear-gradient(0deg,rgba(0,0,0,.65),transparent);}
+.cam-btn{min-width:74px;height:46px;border-radius:23px;border:0;background:rgba(255,255,255,.2);color:#fff;font-weight:700;font-size:15px;backdrop-filter:blur(6px);cursor:pointer;}
+.cam-shot{width:74px;height:74px;border-radius:50%;border:5px solid #fff;background:radial-gradient(circle,#fff 62%,rgba(255,255,255,.35) 64%);cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.5);}
+.cam-shot:active{transform:scale(.92);}
+/* hapus laporan */
+.lp-x{color:#d62839 !important;font-weight:800;font-size:15px;padding:4px 11px;background:linear-gradient(160deg,#fff,#ffeef0) !important;border:1.5px solid #f3b3ba !important;box-shadow:0 8px 12px -9px rgba(214,40,57,.7) !important;}
 </style>
 </head>
 <body>
@@ -481,13 +526,14 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
         <div class="welcome"><span>👋 Selamat datang,</span><b id="hWelcome">—</b></div>
         <div class="date" id="hDate">—</div>
         <div class="clock" id="hClock">--:--</div>
-        <div class="stat3">
+        <div class="tagline"><i></i><em>Layanan Islami, Profesional Dengan Hati</em><i></i></div>
+        <div class="stat3" style="display:none">
           <div><b id="hMasuk">—</b><span>Masuk</span></div>
           <div><b id="hPulang">—</b><span>Pulang</span></div>
           <div><b id="hDur">—</b><span>Durasi</span></div>
         </div>
       </div>
-      <div class="glass card quote hidden" id="hQuote"><div class="q-ic"><img id="qLogo" alt="RSI At-Tin Husada"></div><div class="grow"><div class="q-ttl">Semangat Hari Ini</div><div class="q-tx" id="hQuoteTx"></div><div class="q-dt" id="hQuoteDt"></div></div></div>
+      <div class="glass card quote hidden" id="hQuote"><div class="q-ic"><img id="qLogo" alt="RSI At-Tin Husada"></div><div class="grow"><div class="q-ttl">Papan Informasi</div><div class="q-tx" id="hQuoteTx"></div><div class="q-dt" id="hQuoteDt"></div></div></div>
       <div id="olderBanner"></div>
       <div class="act-grid" id="absenAction">
         <button class="act-tile act-in" id="btnMasuk"><span class="act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg></span><b>Absen Masuk</b><small id="tlMasuk">Klik untuk absen saat datang kerja</small></button>
@@ -597,10 +643,10 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
           <div id="lokList"></div>
           <div class="row wrap" style="margin-top:8px"><button class="btn btn-sm" id="lokAdd">+ Tambah titik</button><button class="btn btn-sm" id="lokHere">📍 Pakai lokasi saya</button></div>
         </div>
-        <div class="glass card"><h3>💪 Kata Semangat Beranda</h3>
-          <div class="field"><label>Kalimat untuk semua karyawan (tampil di Beranda)</label><textarea id="setSemangat" maxlength="300" style="min-height:96px" placeholder="mis. Terima kasih sudah bekerja dengan sepenuh hati. Semangat melayani!"></textarea></div>
+        <div class="glass card"><h3>📢 Papan Informasi Beranda</h3>
+          <div class="field"><label>Kalimat untuk semua karyawan (tampil di Beranda)</label><textarea id="setSemangat" maxlength="300" style="min-height:96px" placeholder="mis. Besok apel pagi pukul 07.00 di halaman. Terima kasih sudah bekerja dengan sepenuh hati."></textarea></div>
           <div class="small dim" style="margin-bottom:10px"><span id="semCnt">0</span>/300 huruf. Ganti kapan saja, tersimpan langsung tanpa menunggu tombol Simpan Pengaturan. Kosongkan lalu simpan untuk menyembunyikan.</div>
-          <button class="btn btn-teal btn-block" id="semSave">Simpan Kata Semangat</button>
+          <button class="btn btn-teal btn-block" id="semSave">Simpan Papan Informasi</button>
         </div>
         <div class="glass card"><h3>💬 WhatsApp Admin</h3>
           <div class="field"><label>Nomor WhatsApp admin (untuk tombol "Hubungi admin")</label><input id="setWa" inputmode="tel" placeholder="mis. 0812xxxxxxx"></div>
@@ -623,21 +669,27 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 </div>
 
 <!-- ============ SHEET ABSEN ============ -->
-<div class="overlay" id="ovAbsen"><div class="sheet glass">
-  <h2 id="abTitle">Absen Masuk</h2>
-  <div class="field" id="abShiftWrap"><label>Shift hari ini</label>
+<div class="overlay" id="ovAbsen"><div class="sheet glass ab-sheet in" id="abSheet">
+  <div class="ab-head"><div class="ab-ic" id="abIc">▶</div><div><h2 id="abTitle">Absen Masuk</h2><div class="ab-sub" id="abSub">Isi data di bawah, lalu kirim</div></div></div>
+  <div class="field" id="abShiftWrap"><label>🗂️ Pilih shift hari ini</label>
     <div class="shift-pick" id="abShift">
       <button data-s="P"><span class="e">🌅</span>Pagi<small>P</small></button><button data-s="S"><span class="e">☀️</span>Siang<small>S</small></button>
       <button data-s="D"><span class="e">🌤️</span>Middle<small>D</small></button><button data-s="M"><span class="e">🌙</span>Malam<small>M</small></button><button data-s="R"><span class="e">🏠</span>Remote<small>R</small></button>
     </div></div>
-  <div class="field"><label id="abJamLbl">Jam masuk</label><input type="time" id="abJam"></div>
-  <div class="field"><label>Foto (selfie)</label>
-    <div class="photo-box" id="abPhotoBox"><div class="ph">📷<br><b>Ketuk untuk ambil foto</b></div></div>
+  <div class="field"><label id="abJamLbl">Jam masuk</label><div class="ab-time"><span class="ab-clk">🕒</span><input type="time" id="abJam"><small>ketuk untuk mengubah</small></div></div>
+  <div class="field"><label>📷 Foto selfie</label>
+    <div class="photo-box" id="abPhotoBox"></div>
     <input type="file" id="abFile" accept="image/*" capture="user" class="hidden">
   </div>
-  <div class="field"><label>Lokasi GPS</label><div class="gps" id="abGps">Mencari lokasi…</div></div>
+  <div class="field"><label>📍 Lokasi GPS</label><div class="gps" id="abGps">Mencari lokasi…</div></div>
   <div class="foot"><button class="btn" id="abCancel">Batal</button><button class="btn btn-primary" id="abSend" disabled>Kirim</button></div>
 </div></div>
+
+<!-- kamera depan -->
+<div id="ovCam"><video id="camVid" playsinline autoplay muted></video>
+  <div class="cam-top">Posisikan wajah di tengah</div>
+  <div class="cam-bar"><button class="cam-btn" id="camCancel">Batal</button><button class="cam-shot" id="camShot" aria-label="Ambil foto"></button><button class="cam-btn" id="camFlip" aria-label="Balik kamera">🔄</button></div>
+</div>
 
 <!-- ============ SHEET UMUM ============ -->
 <div class="overlay" id="ovGen"><div class="sheet glass" id="genBody"></div></div>
@@ -647,7 +699,7 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 /* ============================================================
    KONFIGURASI — isi dengan URL Web App Apps Script Anda
    ============================================================ */
-const API_URL = "https://script.google.com/macros/s/AKfycbyp84XwEtwCll-IpqPoO7VRNQ_EilMchTnmbHQy0VbJGzhpa6v-jO665b4GPGikIcUa/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxqli9Ib5TO5GUPE9lHp1ErXI5BHagNklEMNEl1qEddndFNoSc4EgGJeP74EOek_r6h/exec";
 
 /* ---------------- util ---------------- */
 const $ = (id) => document.getElementById(id);
@@ -684,7 +736,7 @@ function toast(msg, err) { const t = $('toast'); t.textContent = msg; t.classNam
 /* ---------------- API ---------------- */
 const API_READY = API_URL && API_URL.indexOf('PASTE_URL') < 0;
 let pubInfo = { waAdmin: '' };
-const NEED_VER = 11;
+const NEED_VER = 13;
 async function loadPubInfo() {
   if (!API_READY) return;
   try { pubInfo = await apiGet('infoPublik', { token: '' }); if (!pubInfo.ver || pubInfo.ver < NEED_VER) $('verWarn').classList.remove('hidden'); }
@@ -951,23 +1003,49 @@ function closeGen() { $('ovGen').classList.remove('show'); }
 $('ovGen').addEventListener('click', (e) => { if (e.target === $('ovGen')) closeGen(); });
 
 /* ---------------- SHEET ABSEN ---------------- */
+const PH_HTML = '<div class="ph"><div class="ph-ic">📷</div><b>Ketuk untuk membuka kamera depan</b><small>Wajah harus terlihat jelas</small></div>';
 let abMode = 'masuk', abPhoto = '', abGeo = null, abGeoState = 'idle', abBusy = false, abId = '';
 function openAbsen(mode) {
   abMode = mode; abPhoto = ''; abGeo = null; abBusy = false; abId = uid();
-  $('abTitle').textContent = mode === 'masuk' ? '▶ Absen Masuk' : '🏁 Absen Pulang';
+  $('abTitle').textContent = mode === 'masuk' ? 'Absen Masuk' : 'Absen Pulang';
+  $('abIc').textContent = mode === 'masuk' ? '▶' : '🏁';
+  $('abSub').textContent = mode === 'masuk' ? 'Pilih shift, cek jam, lalu ambil selfie' : 'Cek jam pulang, lalu ambil selfie';
+  $('abSheet').className = 'sheet glass ab-sheet ' + (mode === 'masuk' ? 'in' : 'out');
   $('abJamLbl').textContent = mode === 'masuk' ? 'Jam masuk (bisa diubah)' : 'Jam pulang (bisa diubah)';
   $('abShiftWrap').classList.toggle('hidden', mode !== 'masuk');
   const n = nowJ(); $('abJam').value = n.hhmm;
   let last = localStorage.getItem('absensi_last_shift') || 'P'; if (SH_ALL.indexOf(last) < 0) last = 'P';
   document.querySelectorAll('#abShift button').forEach((b) => b.classList.toggle('sel', b.dataset.s === last));
-  $('abPhotoBox').innerHTML = '<div class="ph">📷<br><b>Ketuk untuk ambil foto</b></div>';
+  $('abPhotoBox').innerHTML = PH_HTML;
   $('abSend').disabled = true; $('abSend').textContent = 'Kirim';
   $('ovAbsen').classList.add('show'); getGps();
 }
 function selShift() { const b = document.querySelector('#abShift button.sel'); return b ? b.dataset.s : ''; }
 document.querySelectorAll('#abShift button').forEach((b) => b.addEventListener('click', () => { document.querySelectorAll('#abShift button').forEach((x) => x.classList.remove('sel')); b.classList.add('sel'); }));
 $('abCancel').addEventListener('click', () => { if (!abBusy) $('ovAbsen').classList.remove('show'); });
-$('abPhotoBox').addEventListener('click', () => $('abFile').click());
+$('abPhotoBox').addEventListener('click', () => openCam());
+/* kamera depan bawaan (getUserMedia); bila tidak didukung/ditolak, jatuh ke input file */
+let camStream = null, camFace = 'user';
+async function startCam() {
+  stopCam();
+  camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: camFace }, width: { ideal: 1280 }, height: { ideal: 960 } }, audio: false });
+  const v = $('camVid'); v.srcObject = camStream; v.style.transform = camFace === 'user' ? 'scaleX(-1)' : 'none';
+  try { await v.play(); } catch (e) { /* autoplay sudah aktif */ }
+}
+function stopCam() { if (camStream) { camStream.getTracks().forEach((t) => t.stop()); camStream = null; } $('camVid').srcObject = null; }
+function closeCam() { stopCam(); $('ovCam').classList.remove('show'); }
+async function openCam() {
+  if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) { $('abFile').click(); return; }
+  try { camFace = 'user'; await startCam(); $('ovCam').classList.add('show'); } catch (e) { stopCam(); $('abFile').click(); }
+}
+$('camCancel').addEventListener('click', closeCam);
+$('camFlip').addEventListener('click', async () => { camFace = camFace === 'user' ? 'environment' : 'user'; try { await startCam(); } catch (e) { camFace = 'user'; try { await startCam(); } catch (e2) { closeCam(); $('abFile').click(); } } });
+$('camShot').addEventListener('click', () => {
+  const v = $('camVid'); if (!v.videoWidth) return toast('Kamera belum siap, tunggu sebentar', true);
+  const c = document.createElement('canvas'); c.width = v.videoWidth; c.height = v.videoHeight; c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
+  c.toBlob((bl) => { closeCam(); if (bl) setAbPhoto(bl); }, 'image/jpeg', 0.92);
+});
+document.addEventListener('visibilitychange', () => { if (document.hidden && camStream) closeCam(); });
 function updateSend() { $('abSend').disabled = abBusy || !abPhoto; }
 function distM(a, b, c, d) { const R = 6371000, r = Math.PI / 180, dl = (c - a) * r, dg = (d - b) * r; const x = Math.sin(dl / 2) ** 2 + Math.cos(a * r) * Math.cos(c * r) * Math.sin(dg / 2) ** 2; return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x)); }
 function getGps() {
@@ -1005,12 +1083,15 @@ async function compressPhoto(file) {
   x.fillStyle = '#fff'; x.textBaseline = 'middle'; x.fillText(stamp, fs * .5, h - fs * .9, w - fs);
   return c.toDataURL('image/jpeg', 0.62);
 }
+async function setAbPhoto(f) {
+  $('abPhotoBox').innerHTML = '<div class="ph"><span class="spin dk"></span></div>';
+  try { abPhoto = await compressPhoto(f); $('abPhotoBox').innerHTML = `<img src="${abPhoto}" alt="foto"><span class="ph-retake">🔄 Ulangi foto</span>`; }
+  catch (err) { abPhoto = ''; $('abPhotoBox').innerHTML = PH_HTML; toast('Foto gagal diproses, coba lagi', true); }
+  updateSend();
+}
 $('abFile').addEventListener('change', async (e) => {
   const f = e.target.files[0]; if (!f) return;
-  $('abPhotoBox').innerHTML = '<div class="ph"><span class="spin dk"></span></div>';
-  try { abPhoto = await compressPhoto(f); $('abPhotoBox').innerHTML = `<img src="${abPhoto}" alt="foto">`; }
-  catch (err) { abPhoto = ''; $('abPhotoBox').innerHTML = '<div class="ph">Foto gagal diproses. Ketuk untuk coba lagi.</div>'; }
-  e.target.value = ''; updateSend();
+  await setAbPhoto(f); e.target.value = '';
 });
 $('abSend').addEventListener('click', async () => {
   if (abBusy || !abPhoto) return;
@@ -1096,9 +1177,21 @@ async function loadLapHistory() {
     lapRows.sort((a, b) => (a.tanggal < b.tanggal ? 1 : a.tanggal > b.tanggal ? -1 : (a.jamMasuk < b.jamMasuk ? 1 : -1)));
     const keys = Object.keys(lapMap).sort().reverse().slice(0, 14), minD = addDays(t, -LAP_DAYS);
     $('lpHistory').innerHTML = keys.length ? keys.map((x) => { const d = x.slice(0, 10), sh = x.slice(11); const can = d >= minD;
-      return `<div class="item lp-item"><div class="row between"><div class="t">${sh ? `<span class="tag tag-${esc(sh)}">${esc(SHIFT_NAME[sh] || sh)}</span>` : '<span class="tag tag-L">Lama</span>'} ${fmtDate(d)}</div>${can ? `<button class="btn btn-sm" data-ed="${esc(d)}|${esc(sh)}">✎ Ubah</button>` : ''}</div><div class="lap-text">${esc(lapMap[x])}</div></div>`; }).join('') : '<div class="empty">Belum ada laporan pada periode ini.</div>';
+      return `<div class="item lp-item"><div class="row between"><div class="t">${sh ? `<span class="tag tag-${esc(sh)}">${esc(SHIFT_NAME[sh] || sh)}</span>` : '<span class="tag tag-L">Lama</span>'} ${fmtDate(d)}</div>${can ? `<div class="row" style="gap:6px"><button class="btn btn-sm" data-ed="${esc(d)}|${esc(sh)}">✎ Ubah</button><button class="btn btn-sm lp-x" data-xd="${esc(d)}|${esc(sh)}" title="Hapus laporan" aria-label="Hapus laporan">✕</button></div>` : ''}</div><div class="lap-text">${esc(lapMap[x])}</div></div>`; }).join('') : '<div class="empty">Belum ada laporan pada periode ini.</div>';
     $('lpHistory').querySelectorAll('[data-ed]').forEach((b) => b.addEventListener('click', () => { const p = b.dataset.ed.split('|'); $('lpDate').value = p[0]; fillShiftSel(p[1] || ''); fillLap(); $('lpText').focus(); window.scrollTo({ top: 0, behavior: 'smooth' }); }));
+    $('lpHistory').querySelectorAll('[data-xd]').forEach((b) => b.addEventListener('click', () => hapusLaporan(b)));
   } catch (e) { $('lpHistory').innerHTML = `<div class="banner red">${esc(e.message)}</div>`; }
+}
+async function hapusLaporan(btn) {
+  const p = btn.dataset.xd.split('|'), tgl = p[0], shift = p[1] || '';
+  if (!confirm('Hapus laporan ' + (shift ? SHIFT_NAME[shift] + ' ' : '') + fmtDate(tgl) + '? Tindakan ini tidak bisa dibatalkan.')) return;
+  btn.disabled = true; btn.innerHTML = '<span class="spin dk"></span>';
+  try {
+    const k = periodKeyOf(tgl), key = me.id + '_' + tgl + '_' + shift;
+    const r = await sendAndConfirm('hapusLaporan', { tanggal: tgl, shift }, () => apiGet('riwayat', { period: k }), (d) => !(d.laporan[key] || '').trim());
+    if (r) { toast('✅ Laporan dihapus'); await loadState(); renderHome(); await loadLapHistory(); fillShiftSel($('lpShift').value); fillLap(); }
+    else { toast(NOT_CONFIRMED, true); btn.disabled = false; btn.textContent = '✕'; }
+  } catch (e) { toast(e.message, true); btn.disabled = false; btn.textContent = '✕'; }
 }
 function fillLap() {
   const d = $('lpDate').value, sh = $('lpShift').value, own = lapMap[d + '_' + sh], legacy = lapMap[d + '_'];
@@ -1326,9 +1419,9 @@ $('semSave').addEventListener('click', async () => {
   const teks = $('setSemangat').value.replace(/\s+/g, ' ').trim().substring(0, 300), b = $('semSave'); b.disabled = true; b.innerHTML = '<span class="spin"></span> Menyimpan…';
   try {
     const r = await sendAndConfirm('saveSemangat', { teks }, () => apiGet('semangat'), (c) => c.teks === teks);
-    if (r) { semAt = Date.now(); showSemangat(r); toast(teks ? '✅ Kata semangat tersimpan' : '✅ Kata semangat dikosongkan'); } else toast(NOT_CONFIRMED, true);
+    if (r) { semAt = Date.now(); showSemangat(r); toast(teks ? '✅ Papan Informasi tersimpan' : '✅ Papan Informasi dikosongkan'); } else toast(NOT_CONFIRMED, true);
   } catch (e) { toast(e.message, true); }
-  b.disabled = false; b.textContent = 'Simpan Kata Semangat';
+  b.disabled = false; b.textContent = 'Simpan Papan Informasi';
 });
 async function loadConfig() { try { const c = await apiGet('config'); cfgLok = c.lokasi || []; cfgRet = c.retensiFotoHari || 90; renderLok(); $('setRet').value = cfgRet; $('setWa').value = c.waAdmin || ''; $('setSemangat').value = c.semangat || ''; $('semCnt').textContent = ($('setSemangat').value || '').length; $('waTokState').textContent = c.waGatewaySet ? '· aktif ✔' : '· belum diisi'; } catch (e) { $('lokList').innerHTML = `<div class="banner red">${esc(e.message)}</div>`; } }
 function renderLok() {

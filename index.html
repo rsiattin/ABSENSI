@@ -489,6 +489,11 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 .ab-sheet .gps.ok{background:linear-gradient(160deg,#dcf8ec,#b6efd6) !important;border-color:#1fb37a;color:#0b5a3b;}
 .ab-sheet .gps.warn{background:linear-gradient(160deg,#fff0d2,#ffd79a) !important;border-color:#f08a00;color:#7a3f00;}
 .ab-sheet .gps.bad{background:linear-gradient(160deg,#ffe4e7,#ffc3ca) !important;border-color:#e24a5a;color:#7d1624;}
+
+/* v16 tidak sah */
+.item.rec.invalid{border-left:6px solid #d62839;background:linear-gradient(160deg,#fff,#fff0f1);} .item.rec.invalid .att-times b{text-decoration:line-through;opacity:.55;}
+.pill.bad{background:#fde1e4;color:#8f1d2a;}
+.btn-danger-soft{color:#b3202f;background:linear-gradient(160deg,#fff,#ffeef0);border:1.5px solid #f3b3ba;font-weight:700;}
 </style>
 </head>
 <body>
@@ -708,7 +713,7 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 /* ============================================================
    KONFIGURASI — isi dengan URL Web App Apps Script Anda
    ============================================================ */
-const API_URL = "https://script.google.com/macros/s/AKfycbzbLKoD6prNIpkNGM1BrB1PqYcTcbIZO-7r_IeJnZs9FrNruOow8kar9NZOkyqZsqr8/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbz1HnaROVwf5x23neJb0d50EKShtz3W6VkEntF0wz3fsYH3aqizkuUk2zG_P5APgCRH/exec";
 
 /* ---------------- util ---------------- */
 const $ = (id) => document.getElementById(id);
@@ -719,7 +724,8 @@ const SHIFT_NAME = { P: 'Pagi', S: 'Siang', D: 'Middle', M: 'Malam', R: 'Remote'
 const SH_ALL = ['P', 'S', 'D', 'M', 'R'];
 const shTot = (s) => SH_ALL.reduce((a, k) => a + ((s && s[k]) || 0), 0);
 const NEED_VER_UI = 4;
-const FLAG_LABEL = { LOKASI_JAUH: 'Lokasi jauh', GPS_GAGAL: 'GPS gagal', JAM_BEDA: 'Jam beda dgn server', JADWAL_L: 'Absen di hari libur', LUPA_PULANG: 'Lupa pulang', KOREKSI: 'Dikoreksi', DICEK: 'Sudah dicek' };
+const FLAG_LABEL = { LOKASI_JAUH: 'Lokasi jauh', GPS_GAGAL: 'GPS gagal', JAM_BEDA: 'Jam beda dgn server', JADWAL_L: 'Absen di hari libur', LUPA_PULANG: 'Lupa pulang', KOREKSI: 'Dikoreksi', DICEK: 'Sudah dicek', TIDAK_SAH: '⛔ Tidak sah' };
+const isInvalid = (r) => flagsOf(r).includes('TIDAK_SAH');
 const FLAG_CEK = ['LOKASI_JAUH', 'GPS_GAGAL', 'JAM_BEDA', 'JADWAL_L'];
 const pad = (n) => (n < 10 ? '0' : '') + n;
 const uid = () => (crypto.randomUUID ? crypto.randomUUID().replace(/-/g, '').slice(0, 20) : Date.now().toString(36) + Math.random().toString(36).slice(2, 10));
@@ -735,7 +741,7 @@ function flagsOf(r) { return r.flag ? r.flag.split(',').filter(Boolean) : []; }
 function needCheck(r) { const f = flagsOf(r); return !f.includes('DICEK') && f.some((x) => FLAG_CEK.includes(x)); }
 function flagHtml(r) {
   return flagsOf(r).map((f) => {
-    const cls = f === 'LUPA_PULANG' || f === 'GPS_GAGAL' || f === 'LOKASI_JAUH' ? 'bad' : (f === 'DICEK' || f === 'KOREKSI' ? 'ok' : '');
+    const cls = f === 'LUPA_PULANG' || f === 'GPS_GAGAL' || f === 'LOKASI_JAUH' || f === 'TIDAK_SAH' ? 'bad' : (f === 'DICEK' || f === 'KOREKSI' ? 'ok' : '');
     return `<span class="flag ${cls}">${esc(FLAG_LABEL[f] || f)}</span>`;
   }).join('');
 }
@@ -745,7 +751,7 @@ function toast(msg, err) { const t = $('toast'); t.textContent = msg; t.classNam
 /* ---------------- API ---------------- */
 const API_READY = API_URL && API_URL.indexOf('PASTE_URL') < 0;
 let pubInfo = { waAdmin: '' };
-const NEED_VER = 13;
+const NEED_VER = 14;
 async function loadPubInfo() {
   if (!API_READY) return;
   try { pubInfo = await apiGet('infoPublik', { token: '' }); if (!pubInfo.ver || pubInfo.ver < NEED_VER) $('verWarn').classList.remove('hidden'); }
@@ -961,7 +967,7 @@ function geoLine(label, lat, lng, jarak, flag) {
 }
 function attCard(r) {
   const dayDate = fmtDateFull(r.tanggal).split(', ');
-  const work = r.open, st = r.jamPulang ? `<span class="pill">✔ Selesai · ${fmtDur(r.durasi)}</span>` : (work ? '<span class="pill work">Sedang bekerja</span>' : '<span class="pill warn">Belum pulang</span>');
+  const work = r.open, st = isInvalid(r) ? '<span class="pill bad">⛔ Tidak sah</span>' : r.jamPulang ? `<span class="pill">✔ Selesai · ${fmtDur(r.durasi)}</span>` : (work ? '<span class="pill work">Sedang bekerja</span>' : '<span class="pill warn">Belum pulang</span>');
   const ph = (which, ok, label) => ok ? `<button class="att-ph" data-foto="${which}" data-th="${which}"><span>📷 ${label}</span></button>` : `<div class="att-ph empty-ph">${r.fotoDihapus ? 'Foto dihapus otomatis' : (which === 'pulang' && !r.jamPulang ? 'Belum pulang' : 'Tanpa foto')}</div>`;
   return `<div class="item att" data-id="${esc(r.id)}" data-tgl="${esc(r.tanggal)}">
     <div class="att-top"><div><div class="att-day">${esc(dayDate[0])}</div><div class="att-date">${esc(dayDate[1])}</div></div>
@@ -983,8 +989,8 @@ async function loadThumbs(root) {
 }
 function recItem(r, showName) {
   const dd = fmtDateFull(r.tanggal).split(', ');
-  const st = r.jamPulang ? `<span class="pill">✔ Selesai</span>` : (r.open ? '<span class="pill work">Sedang bekerja</span>' : '<span class="pill warn">Belum pulang</span>');
-  return `<div class="item rec" data-id="${esc(r.id)}" data-tgl="${esc(r.tanggal)}">
+  const st = isInvalid(r) ? '<span class="pill bad">⛔ Tidak sah</span>' : r.jamPulang ? `<span class="pill">✔ Selesai</span>` : (r.open ? '<span class="pill work">Sedang bekerja</span>' : '<span class="pill warn">Belum pulang</span>');
+  return `<div class="item rec${isInvalid(r) ? ' invalid' : ''}" data-id="${esc(r.id)}" data-tgl="${esc(r.tanggal)}">
     <div class="att-top"><div>${showName ? `<div class="small" style="font-weight:700;margin-bottom:2px">${esc(r.nama)}</div>` : ''}<div class="att-day" style="font-size:16px">${esc(dd[0])}</div><div class="att-date">${esc(dd[1])}</div></div>
       <div class="att-right"><span class="tag tag-${esc(r.shift)}">${esc(SHIFT_NAME[r.shift] || r.shift)}</span>${st}</div></div>
     <div class="att-times"><div><small>Masuk</small><b>${esc(r.jamMasuk)}</b></div><div class="arr">→</div><div><small>Pulang</small><b>${r.jamPulang ? esc(r.jamPulang) : '—'}</b></div><div><small>Durasi</small><b>${r.durasi != null ? fmtDur(r.durasi) : '…'}</b></div></div>
@@ -1260,7 +1266,7 @@ function renderTim() {
   const sh = { P: 0, S: 0, D: 0, M: 0, R: 0 }; let mnt = 0; tot.forEach((x) => { SH_ALL.forEach((k) => { sh[k] += (x[k] || 0); }); mnt += x.menit; });
   $('tmSum').innerHTML = statTiles([['c1', '👥', tot.length, 'Karyawan'], ['c2', '✅', hadir, 'Pernah hadir'], ['c3', '🔁', shTot(sh), 'Total shift'], ['c4', '⏱️', fmtDur(mnt), 'Total jam'], ['c5', '⚠️', cek, 'Perlu dicek'], ['c6', '⏳', bel, 'Belum pulang']], 'tim6') + shiftBox(sh);
   const tb = $('tmTable').querySelector('tbody');
-  tb.innerHTML = rows.length ? rows.map((s) => `<tr class="click" data-u="${esc(s.userId)}"><td><b>${esc(s.nama)}</b><div class="small dim">${esc(s.unit || '')}</div><div>${SH_ALL.filter((k) => (s[k] || 0) > 0).map((k) => `<span class="tag tag-${k} mini">${SHIFT_NAME[k]} ${s[k]}</span>`).join('')}</div></td><td class="n">${s.hari}</td><td class="n mono">${fmtDur(s.menit)}</td><td class="n"><b>${shTot(s)}</b></td><td class="n">${s.cek ? '<span class="flag">' + s.cek + '</span>' : ''}${s.belum ? '<span class="flag bad">' + s.belum + '</span>' : ''}</td></tr>`).join('') : '<tr><td colspan="5" class="empty">Tidak ada data.</td></tr>';
+  tb.innerHTML = rows.length ? rows.map((s) => `<tr class="click" data-u="${esc(s.userId)}"><td><b>${esc(s.nama)}</b><div class="small dim">${esc(s.unit || '')}</div><div>${SH_ALL.filter((k) => (s[k] || 0) > 0).map((k) => `<span class="tag tag-${k} mini">${SHIFT_NAME[k]} ${s[k]}</span>`).join('')}</div></td><td class="n">${s.hari}</td><td class="n mono">${fmtDur(s.menit)}</td><td class="n"><b>${shTot(s)}</b></td><td class="n">${s.cek ? '<span class="flag">' + s.cek + '</span>' : ''}${s.belum ? '<span class="flag bad">' + s.belum + '</span>' : ''}${s.tidak ? '<span class="flag bad" title="Absen tidak sah">⛔' + s.tidak + '</span>' : ''}</td></tr>`).join('') : '<tr><td colspan="5" class="empty">Tidak ada data.</td></tr>';
   tb.querySelectorAll('tr.click').forEach((tr) => tr.addEventListener('click', () => openEmployee(tr.dataset.u)));
 }
 $('tmPrev').addEventListener('click', () => { tmKey = shiftKey(tmKey, -1); loadTim(); });
@@ -1287,7 +1293,10 @@ function openKoreksi(r, uid_) {
     <div class="field"><label>Tanggal pulang</label><input type="date" id="kTgl" value="${esc(r.tglPulang || r.tanggal)}"></div>
     <div class="field"><label>Catatan</label><input id="kCat" maxlength="300" value="${esc(r.catatan || '')}" placeholder="mis. lupa absen pulang"></div>
     <div class="foot"><button class="btn" id="kDicek">✔ Tandai dicek</button><button class="btn btn-primary" id="kSave">Simpan koreksi</button></div>
+    ${isInvalid(r) ? `<div class="banner red" style="margin-top:10px">⛔ Absen ini ditandai <b>TIDAK SAH</b> dan tidak dihitung di rekap.</div><div class="foot"><button class="btn" id="kPulih">↩ Pulihkan (jadikan sah)</button></div>` : `<div class="foot"><button class="btn btn-danger-soft" id="kTs">⛔ Tandai Tidak Sah</button></div>`}
     <div class="foot" style="margin-top:6px"><button class="btn" onclick="closeGen()">Batal</button></div>`);
+  if ($('kTs')) $('kTs').addEventListener('click', () => openTidakSah(r, uid_, false));
+  if ($('kPulih')) $('kPulih').addEventListener('click', () => openTidakSah(r, uid_, true));
   const done = async (data, pred) => {
     const ids = ['kSave', 'kDicek']; ids.forEach((i) => ($(i).disabled = true));
     try {
@@ -1300,6 +1309,24 @@ function openKoreksi(r, uid_) {
     const d = { shift: $('kSh').value, jamMasuk: $('kIn').value, catatan: $('kCat').value };
     if ($('kOut').value) { d.jamPulang = $('kOut').value; d.tglPulang = $('kTgl').value; }
     done(d, (x) => (x.flag || '').includes('KOREKSI'));
+  });
+}
+
+function openTidakSah(r, uid_, pulih) {
+  openGen(`<h2>${pulih ? '↩ Pulihkan Absen' : '⛔ Tandai Tidak Sah'}</h2><div class="small dim" style="margin-bottom:10px">${esc(r.nama)} · ${fmtDate(r.tanggal)} · ${esc(r.jamMasuk)}${r.jamPulang ? '–' + esc(r.jamPulang) : ''}</div>
+    <div class="banner ${pulih ? '' : 'red'}">${pulih ? 'Absen akan dihitung kembali di rekap.' : 'Absen ini <b>tidak dihitung</b> di hari hadir, total jam, dan Excel. Data, foto, dan lokasi tetap tersimpan sebagai bukti. Pastikan sudah diklarifikasi ke karyawan.'}</div>
+    <div class="field" style="margin-top:10px"><label>Alasan ${pulih ? '(opsional)' : '(wajib)'}</label><textarea id="tsAlasan" rows="3" maxlength="200" placeholder="${pulih ? 'mis. salah tandai' : 'mis. foto bukan karyawan ybs, dikonfirmasi tgl …'}"></textarea></div>
+    <div class="foot"><button class="btn" id="tsBatal">Kembali</button><button class="btn btn-primary" id="tsOk">${pulih ? 'Pulihkan' : 'Tandai Tidak Sah'}</button></div>`);
+  $('tsBatal').addEventListener('click', () => openKoreksi(r, uid_));
+  $('tsOk').addEventListener('click', async () => {
+    const alasan = $('tsAlasan').value.trim();
+    if (!pulih && alasan.length < 5) return toast('Tulis alasan (minimal 5 huruf)', true);
+    $('tsOk').disabled = true; $('tsBatal').disabled = true;
+    try {
+      const r2 = await sendAndConfirm('tidakSah', { id: r.id, tanggal: r.tanggal, alasan, pulihkan: pulih ? 1 : 0 }, () => apiGet('rekap', { period: tmKey }), (d) => { const x = d.rows.find((y) => y.id === r.id); return x && (flagsOf(x).includes('TIDAK_SAH') === !pulih); });
+      if (r2) { tmData = r2; toast(pulih ? '✅ Absen dipulihkan' : '✅ Ditandai tidak sah'); closeGen(); renderTim(); openEmployee(uid_); }
+      else { toast(NOT_CONFIRMED, true); $('tsOk').disabled = false; $('tsBatal').disabled = false; }
+    } catch (e) { toast(e.message, true); $('tsOk').disabled = false; $('tsBatal').disabled = false; }
   });
 }
 
@@ -1336,14 +1363,14 @@ function buildRekapWb(EJ, o) {
     };
   }
   // ---- Sheet Rekap
-  const cols = [{ header: 'No', width: 6 }, { header: 'Nama', width: 30 }, { header: 'Unit', width: 18 }, { header: 'Hari Hadir', width: 10 }, { header: 'Total Jam', width: 11 }, { header: 'Shift Pagi (P)', width: 10 }, { header: 'Shift Siang (S)', width: 10 }, { header: 'Shift Middle (D)', width: 10 }, { header: 'Shift Malam (M)', width: 10 }, { header: 'Shift Remote (R)', width: 10 }, { header: 'Total Shift', width: 10 }, { header: 'Absen di Libur', width: 10 }, { header: 'Perlu Dicek', width: 10 }, { header: 'Belum Pulang', width: 10 }];
+  const cols = [{ header: 'No', width: 6 }, { header: 'Nama', width: 30 }, { header: 'Unit', width: 18 }, { header: 'Hari Hadir', width: 10 }, { header: 'Total Jam', width: 11 }, { header: 'Shift Pagi (P)', width: 10 }, { header: 'Shift Siang (S)', width: 10 }, { header: 'Shift Middle (D)', width: 10 }, { header: 'Shift Malam (M)', width: 10 }, { header: 'Shift Remote (R)', width: 10 }, { header: 'Total Shift', width: 10 }, { header: 'Absen di Libur', width: 10 }, { header: 'Perlu Dicek', width: 10 }, { header: 'Belum Pulang', width: 10 }, { header: 'Tidak Sah', width: 10 }];
   const R = sheet('Rekap', 'REKAP ABSENSI KARYAWAN', cols);
-  const agg = (list) => { const t = { hari: 0, menit: 0, P: 0, S: 0, D: 0, M: 0, R: 0, L: 0, cek: 0, belum: 0 }; list.forEach((s) => { Object.keys(t).forEach((k) => { t[k] += (s[k] || 0); }); }); return t; };
-  const nums = (t) => [t.hari, +(t.menit / 60).toFixed(1), t.P, t.S, t.D, t.M, t.R, shTot(t), t.L, t.cek, t.belum];
+  const agg = (list) => { const t = { hari: 0, menit: 0, P: 0, S: 0, D: 0, M: 0, R: 0, L: 0, cek: 0, belum: 0, tidak: 0 }; list.forEach((s) => { Object.keys(t).forEach((k) => { t[k] += (s[k] || 0); }); }); return t; };
+  const nums = (t) => [t.hari, +(t.menit / 60).toFixed(1), t.P, t.S, t.D, t.M, t.R, shTot(t), t.L, t.cek, t.belum, t.tidak];
   const groups = byUnit(o.sum);
   groups.forEach(([u, list]) => {
     R.band('UNIT: ' + u + '   (' + list.length + ' karyawan)');
-    list.slice().sort((a, b) => a.nama.localeCompare(b.nama)).forEach((s, i) => R.row([i + 1, s.nama, s.unit, s.hari, +(s.menit / 60).toFixed(1), s.P || 0, s.S || 0, s.D || 0, s.M || 0, s.R || 0, shTot(s), s.L || 0, s.cek || 0, s.belum || 0]));
+    list.slice().sort((a, b) => a.nama.localeCompare(b.nama)).forEach((s, i) => R.row([i + 1, s.nama, s.unit, s.hari, +(s.menit / 60).toFixed(1), s.P || 0, s.S || 0, s.D || 0, s.M || 0, s.R || 0, shTot(s), s.L || 0, s.cek || 0, s.belum || 0, s.tidak || 0]));
     R.sub(['', 'Sub total ' + u, ''].concat(nums(agg(list))));
   });
   if (groups.length > 1) R.total(['', 'TOTAL KESELURUHAN', ''].concat(nums(agg(o.sum))));
@@ -1353,7 +1380,7 @@ function buildRekapWb(EJ, o) {
   byUnit(o.rows).forEach(([u, list]) => {
     D.band('UNIT: ' + u + '   (' + list.length + ' absen)');
     list.slice().sort((a, b) => (a.nama < b.nama ? -1 : a.nama > b.nama ? 1 : a.tanggal < b.tanggal ? -1 : 1)).forEach((r) => D.row([r.tanggal, r.nama, r.unit, SHIFT_NAME[r.shift] || r.shift, r.jamMasuk, r.jamPulang || '', r.durasi != null ? fmtDur(r.durasi) : '', flagsOf(r).map((f) => FLAG_LABEL[f] || f).join(', '), lapForUser(o.laporan, r.userId, r.tanggal, r.shift), r.catatan || '']));
-    D.sub(['', 'Sub total ' + u, '', '', '', '', fmtDur(list.reduce((a, r) => a + (r.durasi || 0), 0)), list.length + ' absen', '', '']);
+    D.sub(['', 'Sub total ' + u, '', '', '', '', fmtDur(list.reduce((a, r) => a + (flagsOf(r).includes('TIDAK_SAH') ? 0 : (r.durasi || 0)), 0)), list.filter((r) => !flagsOf(r).includes('TIDAK_SAH')).length + ' absen', '', '']);
   });
   return wb;
 }

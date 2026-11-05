@@ -19,7 +19,7 @@ var FOTO_HDR = ['userId', 'foto', 'updatedAt'];
 var SH_RESET = 'ResetReq';
 var RESET_HDR = ['id', 'userId', 'username', 'nama', 'unit', 'createdAt', 'status'];
 var MAX_FOTO_PROFIL = 45000;     // karakter base64 (foto profil 160px ~ 8-12 KB)
-var API_VERSION = 13;             // dinaikkan tiap ada aksi baru; dipakai aplikasi untuk mendeteksi backend lama
+var API_VERSION = 14;             // dinaikkan tiap ada aksi baru; dipakai aplikasi untuk mendeteksi backend lama
 var TEMP_PW_MENIT_EMAIL = 60;
 var TEMP_PW_MENIT_ADMIN = 24 * 60;
 var ABSEN_HDR = ['id', 'tanggal', 'userId', 'nama', 'unit', 'shift', 'jamMasuk', 'jamPulang', 'tglPulang',
@@ -847,7 +847,7 @@ function jamBeda_(jam, serverTs) {
 }
 function validJam_(j) { return /^([01]\d|2[0-3]):[0-5]\d$/.test(j || ''); }
 function validDate_(d) { return /^\d{4}-\d{2}-\d{2}$/.test(d || ''); }
-function isOpen_(o) { return o.serverMasuk && !o.serverPulang && !hasFlag_(o.flag, 'LUPA_PULANG'); }
+function isOpen_(o) { return o.serverMasuk && !o.serverPulang && !hasFlag_(o.flag, 'LUPA_PULANG') && !hasFlag_(o.flag, 'TIDAK_SAH'); }
 
 /** Cari absen terbuka milik user (periode sekarang + sebelumnya). Menutup otomatis yang sudah > 20 jam. */
 function findOpen_(userId, nowTs, autoClose) {
@@ -1031,7 +1031,7 @@ function summarize_(rows, users) {
   var map = {}, order = [];
   function ensure(r) {
     if (!map[r.userId]) {
-      map[r.userId] = { userId: r.userId, nama: r.nama, unit: r.unit, hari: 0, menit: 0, P: 0, S: 0, D: 0, M: 0, R: 0, L: 0, cek: 0, belum: 0 };
+      map[r.userId] = { userId: r.userId, nama: r.nama, unit: r.unit, hari: 0, menit: 0, P: 0, S: 0, D: 0, M: 0, R: 0, L: 0, cek: 0, belum: 0, tidak: 0 };
       order.push(r.userId);
     }
     return map[r.userId];
@@ -1041,6 +1041,7 @@ function summarize_(rows, users) {
   }
   for (var j = 0; j < rows.length; j++) {
     var r = rows[j], s = ensure(r);
+    if (hasFlag_(r.flag, 'TIDAK_SAH')) { s.tidak++; continue; }
     if (r.shift === 'L') { s.L++; }
     else if (r.jamPulang) {
       s.hari++; if (r.durasi) s.menit += r.durasi;
@@ -1122,6 +1123,34 @@ function actKoreksi_(u, p) {
   }
   o.catatan = String(p.catatan !== undefined ? p.catatan : o.catatan).substring(0, 300);
   o.flag = addFlag_(o.flag, 'KOREKSI');
+  o.flag = addFlag_(o.flag, 'DICEK');
+  writeRow_(sh, ABSEN_HDR, f.row, o);
+  dropUserCache_(o.userId, [periodKey_(tgl)]);
+  return { ok: true };
+}
+
+/** Tandai absen TIDAK SAH (mis. absen palsu/titipan) atau pulihkan. Baris, foto dan lokasi tetap disimpan sebagai bukti. */
+function actTidakSah_(u, p) {
+  if (!isManager_(u)) throw fail_('Tidak punya akses.');
+  var tgl = String(p.tanggal || '');
+  if (!validDate_(tgl)) throw fail_('Tanggal tidak valid.');
+  var sh = absenSheet_(periodKey_(tgl), false);
+  if (!sh) throw fail_('Data tidak ditemukan.');
+  var f = findRowById_(sh, ABSEN_HDR, String(p.id || ''));
+  if (!f) throw fail_('Data tidak ditemukan.');
+  var o = f.o;
+  if (!canSee_(u, o.unit)) throw fail_('Tidak punya akses ke unit ini.');
+  var alasan = String(p.alasan || '').replace(/[\r\n]+/g, ' ').trim();
+  var stamp = '(' + u.nama + ', ' + nowJ_().substring(0, 16) + ')';
+  if (p.pulihkan) {
+    if (!hasFlag_(o.flag, 'TIDAK_SAH')) throw fail_('Absen ini tidak ditandai tidak sah.');
+    o.flag = removeFlag_(o.flag, 'TIDAK_SAH');
+    o.catatan = ('Dipulihkan ' + stamp + (alasan ? ': ' + alasan : '')).substring(0, 300);
+  } else {
+    if (alasan.length < 5) throw fail_('Tulis alasan (minimal 5 huruf).');
+    o.flag = addFlag_(o.flag, 'TIDAK_SAH');
+    o.catatan = ('Tidak sah ' + stamp + ': ' + alasan).substring(0, 300);
+  }
   o.flag = addFlag_(o.flag, 'DICEK');
   writeRow_(sh, ABSEN_HDR, f.row, o);
   dropUserCache_(o.userId, [periodKey_(tgl)]);
@@ -1346,6 +1375,7 @@ function doPost(e) {
       case 'saveLaporan': r = actSaveLaporan_(u, p); break;
       case 'hapusLaporan': r = actHapusLaporan_(u, p); break;
       case 'koreksi': r = actKoreksi_(u, p); CacheService.getScriptCache().remove('JAGA'); break;
+      case 'tidakSah': r = actTidakSah_(u, p); CacheService.getScriptCache().remove('JAGA'); break;
       case 'saveConfig': r = actSaveConfig_(u, p); break;
       case 'saveSemangat': r = actSaveSemangat_(u, p); break;
       case 'karyawanSave': r = actKaryawanSave_(u, p); break;

@@ -564,7 +564,7 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
       <div class="small dim" style="margin-bottom:10px">Daftar petugas yang sudah absen masuk dan belum pulang, per unit. Diperbarui otomatis tiap 30 detik. <span id="jgAt"></span></div>
       <div class="jg-filter">
         <label class="jgf"><span>🏥 Unit</span><select id="jgUnit"></select></label>
-        <label class="jgf"><span>🕒 Shift</span><select id="jgShift"><option value="">Semua shift</option><option value="P">🌅 Pagi</option><option value="S">☀️ Siang</option><option value="D">🌤️ Middle</option><option value="M">🌙 Malam</option><option value="R">🏠 Remote</option></select></label>
+        <label class="jgf"><span>🕒 Shift</span><select id="jgShift"><option value="">Semua shift</option><option value="P">🌅 Pagi</option><option value="S">☀️ Siang</option><option value="D">🌤️ Middle</option><option value="M">🌙 Malam</option><option value="R">⏰ Lembur</option></select></label>
       </div>
       <div class="sum-grid" id="jgSum"></div>
       <div id="jgList"></div>
@@ -688,7 +688,7 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
   <div class="field" id="abShiftWrap"><label>🗂️ Pilih shift hari ini</label>
     <div class="shift-pick" id="abShift">
       <button data-s="P"><span class="e">🌅</span>Pagi<small>P</small></button><button data-s="S"><span class="e">☀️</span>Siang<small>S</small></button>
-      <button data-s="D"><span class="e">🌤️</span>Middle<small>D</small></button><button data-s="M"><span class="e">🌙</span>Malam<small>M</small></button><button data-s="R"><span class="e">🏠</span>Remote<small>R</small></button>
+      <button data-s="D"><span class="e">🌤️</span>Middle<small>D</small></button><button data-s="M"><span class="e">🌙</span>Malam<small>M</small></button><button data-s="R"><span class="e">⏰</span>Lembur<small>R</small></button>
     </div></div>
   <div class="field"><label id="abJamLbl">Jam masuk</label><div class="ab-time"><span class="ab-clk">🕒</span><input type="time" id="abJam"><small>ketuk untuk mengubah</small></div></div>
   <div class="field"><label>📷 Foto selfie</label>
@@ -713,20 +713,20 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 /* ============================================================
    KONFIGURASI — isi dengan URL Web App Apps Script Anda
    ============================================================ */
-const API_URL = "https://script.google.com/macros/s/AKfycbz1HnaROVwf5x23neJb0d50EKShtz3W6VkEntF0wz3fsYH3aqizkuUk2zG_P5APgCRH/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyS_7ZdlzXXEp65zHkP6MDriFd3dUvugrhqpSDfvJfIXvKHJepCJ0NaFaWMywUngF5Y/exec";
 
 /* ---------------- util ---------------- */
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const MONTHS = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
 const DAYS = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-const SHIFT_NAME = { P: 'Pagi', S: 'Siang', D: 'Middle', M: 'Malam', R: 'Remote', L: 'Libur' };
+const SHIFT_NAME = { P: 'Pagi', S: 'Siang', D: 'Middle', M: 'Malam', R: 'Lembur', L: 'Libur' };
 const SH_ALL = ['P', 'S', 'D', 'M', 'R'];
 const shTot = (s) => SH_ALL.reduce((a, k) => a + ((s && s[k]) || 0), 0);
 const NEED_VER_UI = 4;
-const FLAG_LABEL = { LOKASI_JAUH: 'Lokasi jauh', GPS_GAGAL: 'GPS gagal', JAM_BEDA: 'Jam beda dgn server', JADWAL_L: 'Absen di hari libur', LUPA_PULANG: 'Lupa pulang', KOREKSI: 'Dikoreksi', DICEK: 'Sudah dicek', TIDAK_SAH: '⛔ Tidak sah' };
+const FLAG_LABEL = { LOKASI_JAUH: 'Lokasi jauh', GPS_GAGAL: 'GPS gagal', JAM_BEDA: 'Jam beda dgn server', JADWAL_L: 'Absen di hari libur', LUPA_PULANG: 'Lupa pulang', KOREKSI: 'Dikoreksi', DICEK: 'Sudah dicek', TIDAK_SAH: '⛔ Tidak sah', GPS_CURIGA: 'GPS mencurigakan' };
 const isInvalid = (r) => flagsOf(r).includes('TIDAK_SAH');
-const FLAG_CEK = ['LOKASI_JAUH', 'GPS_GAGAL', 'JAM_BEDA', 'JADWAL_L'];
+const FLAG_CEK = ['LOKASI_JAUH', 'GPS_GAGAL', 'JAM_BEDA', 'JADWAL_L', 'GPS_CURIGA'];
 const pad = (n) => (n < 10 ? '0' : '') + n;
 const uid = () => (crypto.randomUUID ? crypto.randomUUID().replace(/-/g, '').slice(0, 20) : Date.now().toString(36) + Math.random().toString(36).slice(2, 10));
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -741,7 +741,7 @@ function flagsOf(r) { return r.flag ? r.flag.split(',').filter(Boolean) : []; }
 function needCheck(r) { const f = flagsOf(r); return !f.includes('DICEK') && f.some((x) => FLAG_CEK.includes(x)); }
 function flagHtml(r) {
   return flagsOf(r).map((f) => {
-    const cls = f === 'LUPA_PULANG' || f === 'GPS_GAGAL' || f === 'LOKASI_JAUH' || f === 'TIDAK_SAH' ? 'bad' : (f === 'DICEK' || f === 'KOREKSI' ? 'ok' : '');
+    const cls = f === 'LUPA_PULANG' || f === 'GPS_GAGAL' || f === 'LOKASI_JAUH' || f === 'TIDAK_SAH' || f === 'GPS_CURIGA' ? 'bad' : (f === 'DICEK' || f === 'KOREKSI' ? 'ok' : '');
     return `<span class="flag ${cls}">${esc(FLAG_LABEL[f] || f)}</span>`;
   }).join('');
 }
@@ -751,7 +751,7 @@ function toast(msg, err) { const t = $('toast'); t.textContent = msg; t.classNam
 /* ---------------- API ---------------- */
 const API_READY = API_URL && API_URL.indexOf('PASTE_URL') < 0;
 let pubInfo = { waAdmin: '' };
-const NEED_VER = 14;
+const NEED_VER = 15;
 async function loadPubInfo() {
   if (!API_READY) return;
   try { pubInfo = await apiGet('infoPublik', { token: '' }); if (!pubInfo.ver || pubInfo.ver < NEED_VER) $('verWarn').classList.remove('hidden'); }
@@ -1111,7 +1111,7 @@ $('abFile').addEventListener('change', async (e) => {
 $('abSend').addEventListener('click', async () => {
   if (abBusy || !abPhoto) return;
   const jam = $('abJam').value; if (!jam) return toast('Isi jam terlebih dahulu', true);
-  const payload = { id: abId, jam, foto: abPhoto, lat: abGeo ? abGeo.lat : '', lng: abGeo ? abGeo.lng : '' };
+  const payload = { id: abId, jam, foto: abPhoto, lat: abGeo ? abGeo.lat : '', lng: abGeo ? abGeo.lng : '', akurasi: abGeo ? Math.round(abGeo.acc * 10) / 10 : '' };
   let action = abMode;
   if (abMode === 'masuk') { const s = selShift(); if (!s) return toast('Pilih shift dahulu', true); payload.shift = s; localStorage.setItem('absensi_last_shift', s); }
   abBusy = true; $('abSend').innerHTML = '<span class="spin"></span> Mengirim…'; $('abSend').disabled = true;
@@ -1363,7 +1363,7 @@ function buildRekapWb(EJ, o) {
     };
   }
   // ---- Sheet Rekap
-  const cols = [{ header: 'No', width: 6 }, { header: 'Nama', width: 30 }, { header: 'Unit', width: 18 }, { header: 'Hari Hadir', width: 10 }, { header: 'Total Jam', width: 11 }, { header: 'Shift Pagi (P)', width: 10 }, { header: 'Shift Siang (S)', width: 10 }, { header: 'Shift Middle (D)', width: 10 }, { header: 'Shift Malam (M)', width: 10 }, { header: 'Shift Remote (R)', width: 10 }, { header: 'Total Shift', width: 10 }, { header: 'Absen di Libur', width: 10 }, { header: 'Perlu Dicek', width: 10 }, { header: 'Belum Pulang', width: 10 }, { header: 'Tidak Sah', width: 10 }];
+  const cols = [{ header: 'No', width: 6 }, { header: 'Nama', width: 30 }, { header: 'Unit', width: 18 }, { header: 'Hari Hadir', width: 10 }, { header: 'Total Jam', width: 11 }, { header: 'Shift Pagi (P)', width: 10 }, { header: 'Shift Siang (S)', width: 10 }, { header: 'Shift Middle (D)', width: 10 }, { header: 'Shift Malam (M)', width: 10 }, { header: 'Shift Lembur (R)', width: 10 }, { header: 'Total Shift', width: 10 }, { header: 'Absen di Libur', width: 10 }, { header: 'Perlu Dicek', width: 10 }, { header: 'Belum Pulang', width: 10 }, { header: 'Tidak Sah', width: 10 }];
   const R = sheet('Rekap', 'REKAP ABSENSI KARYAWAN', cols);
   const agg = (list) => { const t = { hari: 0, menit: 0, P: 0, S: 0, D: 0, M: 0, R: 0, L: 0, cek: 0, belum: 0, tidak: 0 }; list.forEach((s) => { Object.keys(t).forEach((k) => { t[k] += (s[k] || 0); }); }); return t; };
   const nums = (t) => [t.hari, +(t.menit / 60).toFixed(1), t.P, t.S, t.D, t.M, t.R, shTot(t), t.L, t.cek, t.belum, t.tidak];
@@ -1691,7 +1691,7 @@ function renderJaga() {
   units.sort((a, b) => (b.unit === me.unit) - (a.unit === me.unit));
   const all = units.reduce((a, x) => a.concat(x.orang.map((o) => Object.assign({ unit: x.unit }, o))), []);
   const byS = { P: 0, S: 0, D: 0, M: 0, R: 0 }; all.forEach((o) => { if (byS[o.shift] !== undefined) byS[o.shift]++; });
-  $('jgSum').innerHTML = `<div><b>${all.length}</b><span>Sedang jaga</span></div><div><b>${byS.P}<i class="sep">|</i>${byS.S}</b><span>Pagi <i class="sep">|</i> Siang</span></div><div><b>${byS.D}<i class="sep">|</i>${byS.M}</b><span>Middle <i class="sep">|</i> Malam</span></div><div><b>${byS.R}</b><span>Remote</span></div>`;
+  $('jgSum').innerHTML = `<div><b>${all.length}</b><span>Sedang jaga</span></div><div><b>${byS.P}<i class="sep">|</i>${byS.S}</b><span>Pagi <i class="sep">|</i> Siang</span></div><div><b>${byS.D}<i class="sep">|</i>${byS.M}</b><span>Middle <i class="sep">|</i> Malam</span></div><div><b>${byS.R}</b><span>Lembur</span></div>`;
   $('jgAt').textContent = 'Terakhir: ' + (jagaData.now || '').substring(11, 19);
   if (view === 'shift') {
     const order = SH_ALL;

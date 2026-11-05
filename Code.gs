@@ -19,7 +19,7 @@ var FOTO_HDR = ['userId', 'foto', 'updatedAt'];
 var SH_RESET = 'ResetReq';
 var RESET_HDR = ['id', 'userId', 'username', 'nama', 'unit', 'createdAt', 'status'];
 var MAX_FOTO_PROFIL = 45000;     // karakter base64 (foto profil 160px ~ 8-12 KB)
-var API_VERSION = 14;             // dinaikkan tiap ada aksi baru; dipakai aplikasi untuk mendeteksi backend lama
+var API_VERSION = 15;             // dinaikkan tiap ada aksi baru; dipakai aplikasi untuk mendeteksi backend lama
 var TEMP_PW_MENIT_EMAIL = 60;
 var TEMP_PW_MENIT_ADMIN = 24 * 60;
 var ABSEN_HDR = ['id', 'tanggal', 'userId', 'nama', 'unit', 'shift', 'jamMasuk', 'jamPulang', 'tglPulang',
@@ -27,11 +27,11 @@ var ABSEN_HDR = ['id', 'tanggal', 'userId', 'nama', 'unit', 'shift', 'jamMasuk',
   'flag', 'serverMasuk', 'serverPulang', 'catatan', 'pulangId'];
 var LAPOR_HDR = ['id', 'tanggal', 'userId', 'nama', 'isi', 'updatedAt', 'shift'];   // laporan per tanggal + shift (shift kosong = laporan lama)
 var LAPOR_HARI = 7;              // laporan boleh diisi/diubah sampai 7 hari ke belakang
-var SHIFTS = ['P', 'S', 'D', 'M', 'R', 'L'];   // P=Pagi, S=Siang, D=Middle, M=Malam, R=Remote, L=Libur (lama, hanya koreksi)
+var SHIFTS = ['P', 'S', 'D', 'M', 'R', 'L'];   // P=Pagi, S=Siang, D=Middle, M=Malam, R=Lembur, L=Libur (lama, hanya koreksi)
 var SHIFTS_PICK = ['P', 'S', 'D', 'M', 'R'];
 var SH_UNIT = 'Unit';
 var UNIT_HDR = ['nama'];
-var FLAG_CEK = ['LOKASI_JAUH', 'GPS_GAGAL', 'JAM_BEDA', 'JADWAL_L'];
+var FLAG_CEK = ['LOKASI_JAUH', 'GPS_GAGAL', 'JAM_BEDA', 'JADWAL_L', 'GPS_CURIGA'];
 var SESSION_HOURS = 12;
 var SESSION_HOURS_REMEMBER = 24 * 30;
 var MAX_FOTO_B64 = 450000;       // ~330 KB, foto dari aplikasi sudah dikompres (~40 KB)
@@ -826,6 +826,45 @@ function geoCheck_(p, cfg) {
   }
   return { flag: best > bestRad ? 'LOKASI_JAUH' : '', jarak: Math.round(best), lat: lat, lng: lng };
 }
+/**
+ * Deteksi GPS palsu (heuristik; browser tidak bisa membaca status "mock location").
+ * Ditandai GPS_CURIGA bila: (1) akurasi <= 1 m, (2) koordinat persis sama (6 desimal) dengan absen masuk user
+ * di >= 3 hari berbeda, (3) persis sama dengan absen orang lain dalam 48 jam, (4) berpindah > 5 km dengan kecepatan > 200 km/jam.
+ * Hanya menandai untuk dicek atasan, tidak menolak absen.
+ */
+function gpsCuriga_(userId, p, g, nowTs) {
+  try {
+    if (g.lat === '' || g.lat === undefined || g.lat === null) return false;
+    var acc = parseFloat(p.akurasi);
+    if (!isNaN(acc) && acc <= 1) return true;
+    var sh = absenSheet_(periodKey_(nowTs.substring(0, 10)), false);
+    if (!sh) return false;
+    var tail = readTail_(sh, ABSEN_HDR, TAIL_ROWS);
+    var key6 = Number(g.lat).toFixed(6) + ',' + Number(g.lng).toFixed(6), today = nowTs.substring(0, 10);
+    var days = {}, nDays = 0, last = null, nowMs = tsMs_(nowTs);
+    for (var i = tail.length - 1; i >= 0; i--) {
+      var o = tail[i].o;
+      var ck = (o.latMasuk !== '' && o.latMasuk !== undefined) ? Number(o.latMasuk).toFixed(6) + ',' + Number(o.lngMasuk).toFixed(6) : '';
+      if (o.userId === userId) {
+        if (last === null && o.serverMasuk) last = o;
+        if (ck === key6 && o.tanggal !== today && !days[o.tanggal]) { days[o.tanggal] = 1; nDays++; }
+      } else if (ck === key6 && o.serverMasuk && (nowMs - tsMs_(o.serverMasuk)) / 3600000 < 48) {
+        return true;
+      }
+    }
+    if (nDays >= 3) return true;
+    if (last) {
+      var useP = last.serverPulang && last.latPulang !== '' && last.latPulang !== undefined;
+      var la = useP ? last.latPulang : last.latMasuk, ln = useP ? last.lngPulang : last.lngMasuk, ts = useP ? last.serverPulang : last.serverMasuk;
+      if (la !== '' && la !== undefined && ts) {
+        var km = haversine_(Number(la), Number(ln), Number(g.lat), Number(g.lng)) / 1000;
+        var hrs = Math.max((nowMs - tsMs_(ts)) / 3600000, 1 / 60);
+        if (km > 5 && km / hrs > 200) return true;
+      }
+    }
+  } catch (e) { /* jangan sampai deteksi menggagalkan absen */ }
+  return false;
+}
 function addFlag_(flag, f) {
   if (!f) return flag;
   var a = flag ? flag.split(',') : [];
@@ -878,7 +917,7 @@ function actMasuk_(u, p) {
   var id = String(p.id || '');
   if (!/^[A-Za-z0-9_-]{8,64}$/.test(id)) throw fail_('ID absen tidak valid.');
   var shift = String(p.shift || '').toUpperCase();
-  if (SHIFTS_PICK.indexOf(shift) < 0) throw fail_('Pilih shift (Pagi, Siang, Middle, Malam atau Remote).');
+  if (SHIFTS_PICK.indexOf(shift) < 0) throw fail_('Pilih shift (Pagi, Siang, Middle, Malam atau Lembur).');
   if (!validJam_(p.jam)) throw fail_('Jam masuk tidak valid.');
   var now = nowJ_(), today = now.substring(0, 10), key = periodKey_(today);
   var sh = absenSheet_(key, true);
@@ -893,6 +932,7 @@ function actMasuk_(u, p) {
   var flag = '';
   flag = addFlag_(flag, g.flag);
   if (jamBeda_(p.jam, now)) flag = addFlag_(flag, 'JAM_BEDA');
+  if (gpsCuriga_(u.id, p, g, now)) flag = addFlag_(flag, 'GPS_CURIGA');
   if (shift === 'L') flag = addFlag_(flag, 'JADWAL_L');
   appendObj_(sh, ABSEN_HDR, {
     id: id, tanggal: today, userId: u.id, nama: u.nama, unit: u.unit, shift: shift,
@@ -928,6 +968,7 @@ function actPulang_(u, p) {
   o.serverPulang = now; o.pulangId = id;
   o.flag = addFlag_(o.flag, g.flag);
   if (jamBeda_(p.jam, now)) o.flag = addFlag_(o.flag, 'JAM_BEDA');
+  if (gpsCuriga_(u.id, p, g, now)) o.flag = addFlag_(o.flag, 'GPS_CURIGA');
   if (durMenit_(o) === null) o.flag = addFlag_(o.flag, 'JAM_BEDA');
   writeRow_(open.sh, ABSEN_HDR, open.row, o);
   return { ok: true };

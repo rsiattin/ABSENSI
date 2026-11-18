@@ -511,6 +511,62 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 .note-chips button{border:1.5px solid rgba(14,163,157,.5);background:rgba(255,255,255,.75);border-radius:999px;padding:5px 11px;font-size:12.5px;font-weight:600;color:#0b6f6a}
 .note-chips button:active{background:#d9f5f2}
 .rec-note{margin-top:6px;padding:6px 10px;border-radius:10px;background:#fff7e6;border:1px solid #f0c987;font-size:13px}
+
+/* ===== v19: tampilan modern Riwayat / Tim / Jadwal ===== */
+:root{--sP:#f2b705;--sS:#e8851a;--sD:#3b7de0;--sM:#6f4bd8;--sR:#d6489a;--sL:#aab4cc}
+.stat-tiles.flt{gap:8px;background:none!important;border:0!important;box-shadow:none!important;padding:0!important}
+.stat-tiles.flt .st b{color:#14213d!important;text-shadow:none!important}.stat-tiles.flt .st span{color:#6b7a99!important;text-shadow:none!important}
+.stat-tiles.flt .st.c1 b{color:#0b7a60!important}.stat-tiles.flt .st.c2 b{color:#1d4fa8!important}.stat-tiles.flt .st.c3 b{color:#6d4bd0!important}.stat-tiles.flt .st.c4 b,.stat-tiles.flt .st.c6 b{color:#a96100!important}.stat-tiles.flt .st.c5 b{color:#b3283f!important}
+.stat-tiles.flt .st i{filter:none!important;background:none!important;box-shadow:none!important}.stat-tiles.flt .st{padding:12px 4px;border-radius:16px;background:#fff;box-shadow:0 6px 16px rgba(30,60,120,.10);border:1px solid #e3eaf7;cursor:default}
+.stat-tiles.flt .st i{font-size:16px}.stat-tiles.flt .st b{font-size:21px;margin-top:2px}.stat-tiles.flt .st span{font-size:10.5px;font-weight:600;color:#6b7a99}
+.stat-tiles.flt.tap .st{cursor:pointer}.stat-tiles.flt .st.on{outline:2px solid #0ea39d}
+.v-sec{font-size:12px;font-weight:800;letter-spacing:1px;color:#6b7a99;margin:14px 4px 8px;text-transform:uppercase}
+.cal{background:#fff;border-radius:20px;padding:12px;box-shadow:0 6px 16px rgba(30,60,120,.10);border:1px solid #e3eaf7;margin-bottom:6px}
+.cal .g{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;font-size:12px}
+.cal .h{color:#8a97b3;font-weight:700;font-size:11px;padding-bottom:2px}
+.cal .d{padding:5px 0 4px;border-radius:10px;font-weight:700;min-height:40px;cursor:default}.cal .d.has{cursor:pointer}.cal .d.has:active{background:#eef3fc}
+.cal .d.t{background:#0ea39d;color:#fff}.cal .d.out{opacity:.35}
+.cal .dots{display:flex;justify-content:center;gap:3px;margin-top:3px;min-height:8px}.cal .dots i{width:8px;height:8px;border-radius:50%}
+.legend{display:flex;flex-wrap:wrap;gap:6px 12px;margin:8px 2px 2px;font-size:11px;color:#6b7a99;font-weight:600}.legend span{display:inline-flex;align-items:center;gap:5px}.legend i{width:9px;height:9px;border-radius:50%}
+.sh-P{background:var(--sP)}.sh-S{background:var(--sS)}.sh-D{background:var(--sD)}.sh-M{background:var(--sM)}.sh-R{background:var(--sR)}.sh-L{background:var(--sL)}
+.item.rc{padding:0;overflow:hidden;border-radius:18px;margin-bottom:9px;background:#fff;box-shadow:0 5px 14px rgba(30,60,120,.09);border:1px solid #e3eaf7}
+.rc-head{display:flex;gap:10px;align-items:center;padding:11px 12px 11px 0;cursor:pointer}
+.rc-bar{align-self:stretch;width:6px;border-radius:0 6px 6px 0;flex:none}
+.rc-dt{width:44px;text-align:center;line-height:1.1;flex:none}.rc-dt b{font-size:20px;display:block}.rc-dt span{font-size:10.5px;color:#6b7a99;font-weight:700}
+.rc-mid{flex:1;min-width:0}.rc-nm{font-weight:800;font-size:13.5px}.rc-tm{font-size:15px;font-weight:800}.rc-tm em{font-style:normal;color:#8a97b3;font-weight:600;font-size:12px;margin-left:6px}
+.rc-sub{font-size:11.5px;color:#6b7a99;margin-top:2px}
+.rc-bd{font-size:10.5px;font-weight:800;padding:4px 9px;border-radius:999px;white-space:nowrap;flex:none}
+.rc-bd.ok{background:#d9f5ee;color:#0b7a60}.rc-bd.lt{background:#fff0d1;color:#a96100}.rc-bd.fr{background:#ffe0e5;color:#b3283f}.rc-bd.work{background:#dfeaff;color:#1d4fa8}
+.rc-chev{color:#9aa7c2;font-size:16px;transition:transform .2s;flex:none}.item.rc.open .rc-chev{transform:rotate(180deg)}
+.rc-more{display:none;padding:0 14px 14px;border-top:1px dashed #dbe4f4;margin:0 0 0 6px;padding-top:10px}.item.rc.open .rc-more{display:block}
+.item.rc.invalid{border-color:#f2a3b0;background:#fff6f7}
+.rec-note{margin-top:5px}
+.tm-row{display:flex;gap:11px;align-items:center;background:#fff;border-radius:18px;padding:11px 12px;margin-bottom:9px;box-shadow:0 5px 14px rgba(30,60,120,.09);border:1px solid #e3eaf7;cursor:pointer}
+.tm-row:active{background:#f3f7ff}
+.tm-av{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:17px;flex:none;position:relative}
+.tm-av u{position:absolute;right:-1px;bottom:-1px;width:13px;height:13px;border-radius:50%;border:2.5px solid #fff;text-decoration:none}
+.tm-mid{flex:1;min-width:0}.tm-nm{font-weight:800;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tm-un{font-size:11.5px;color:#6b7a99}
+.tm-st{font-size:12.5px;margin-top:3px;font-weight:700}.tm-st.mute{color:#8a97b3;font-weight:600}
+.tm-r{text-align:right;display:flex;flex-direction:column;gap:4px;align-items:flex-end;flex:none}.tm-r .ind{display:flex;gap:8px;font-size:11.5px;color:#6b7a99;font-weight:600;white-space:nowrap}.tm-r .ind b{color:#14213d;font-size:12.5px}
+.tm-r .b{font-size:10.5px;font-weight:800;padding:3px 8px;border-radius:999px}.b.cek{background:#ffe0e5;color:#b3283f}.b.bel{background:#fff0d1;color:#a96100}
+.tm-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}.tm-tags i{font-style:normal;font-size:10px;font-weight:800;color:#fff;padding:2px 7px;border-radius:999px}
+.jd-leg{margin:0 0 8px}
+.jd-grid{background:#fff;border-radius:20px;padding:10px;box-shadow:0 6px 16px rgba(30,60,120,.10);border:1px solid #e3eaf7}
+.jd-grid .g{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.jd-grid .h{text-align:center;font-size:11px;font-weight:800;color:#8a97b3;padding-bottom:3px}.jd-grid .h.sun,.jd-grid .jc.sun .n{color:#d33}
+.jc{min-height:58px;border-radius:12px;background:#f3f6fc;padding:4px 2px;text-align:center;border:1.5px solid transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
+.jc .n{font-size:12.5px;font-weight:800}.jc.past{opacity:.5;cursor:default}.jc.today{border-color:#0ea39d;box-shadow:0 0 0 2px rgba(14,163,157,.2);background:#fff}
+.jc.edited{border-color:#e8851a}
+.jc .p{font-size:10px;font-weight:800;color:#fff;border-radius:7px;padding:1px 0;width:90%}
+.jc.off{background:#eceff5}.jc.empty:not(.past){background:#fff;border:1.5px dashed #c9d4ea}
+.pick-sh{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 12px}
+.pick-sh button{border:2px solid #d5def0;background:#fff;border-radius:14px;padding:12px 4px;font-weight:800;font-size:14px;display:flex;flex-direction:column;align-items:center;gap:3px}
+.pick-sh button i{font-style:normal;font-size:20px}.pick-sh button.on{color:#fff;border-color:transparent;box-shadow:0 8px 16px -6px rgba(0,0,0,.35);text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.pick-sh button.on.sh-P{background:var(--sP)}.pick-sh button.on.sh-S{background:var(--sS)}.pick-sh button.on.sh-D{background:var(--sD)}.pick-sh button.on.sh-M{background:var(--sM)}.pick-sh button.on.sh-R{background:var(--sR)}.pick-sh button.on.sh-L{background:#7f8ba6}
+.pick-sh button:disabled{opacity:.35}
+.stat-tiles.flt .st{border:1px solid #d7e1f3!important;box-shadow:0 12px 18px -8px rgba(19,40,90,.45),0 2px 4px rgba(19,40,90,.10),0 1px 0 #fff inset!important;background:linear-gradient(180deg,#fff,#f1f5fc)!important}
+.stat-tiles.flt .st:active{transform:translateY(2px);box-shadow:0 5px 9px -5px rgba(19,40,90,.45)!important}
+.stat-tiles.flt{margin-bottom:12px}
+.sum-grid.emp4{grid-template-columns:repeat(4,1fr)}.sum-grid.emp4 b{font-size:16px}.sum-grid.emp4 span{font-size:10px}
 </style>
 </head>
 <body>
@@ -633,12 +689,12 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
         <select class="inp grow" id="tmUnit" style="min-width:120px"></select>
         <input class="inp grow" id="tmSearch" placeholder="🔍 Cari nama…" style="min-width:120px">
       </div>
-      <div class="chips" id="tmChips">
-        <button class="chip active" data-f="all">Semua</button><button class="chip" data-f="cek">⚠ Perlu dicek</button><button class="chip" data-f="belum">⏳ Belum pulang</button>
-      </div>
       <div id="tmSum"></div>
-      <div class="glass card" style="padding:8px 10px"><div class="scroll-x"><table id="tmTable"><thead><tr><th>Nama</th><th class="n">Hari</th><th class="n">Jam</th><th class="n">Shift</th><th class="n">⚠</th></tr></thead><tbody></tbody></table></div></div>
-      <button class="btn btn-primary btn-block" id="btnExport" style="padding:14px">⬇ Export Excel</button>
+      <div class="chips" id="tmChips">
+        <button class="chip active" data-f="all">Semua</button><button class="chip" data-f="hadir">✅ Hadir hari ini</button><button class="chip" data-f="belumabsen">💤 Belum absen</button><button class="chip" data-f="cek">⚠ Perlu dicek</button><button class="chip" data-f="belum">⏳ Belum pulang</button>
+      </div>
+      <div id="tmList"></div>
+      <button class="btn btn-primary btn-block" id="btnExport" style="padding:14px;margin-top:6px">⬇ Export Excel</button>
     </section>
 
     <!-- AKUN -->
@@ -745,13 +801,14 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 
 <!-- ============ SHEET UMUM ============ -->
 <div class="overlay" id="ovGen"><div class="sheet glass" id="genBody"></div></div>
+<div class="overlay" id="ovFoto"><div class="sheet glass" id="fotoBody"></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
 /* ============================================================
    KONFIGURASI — isi dengan URL Web App Apps Script Anda
    ============================================================ */
-const API_URL = "https://script.google.com/macros/s/AKfycbz9xr_Xww7cu-j3LyeYFYppLf70buftckkhp1y3TXSSuUr2FHkODWyTioUFjP8ppxbc/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwg37JmfgSujNlJ7Ro5sNNbj6pAr-9AxVy_lCOoBnIOmvKXL8jLsF4ostMTFjty9KZt/exec";
 
 /* ---------------- util ---------------- */
 const $ = (id) => document.getElementById(id);
@@ -1026,32 +1083,42 @@ async function loadThumbs(root) {
     } catch (e) { if (e.message === 'Sesi berakhir') return; }
   }
 }
-function recItem(r, showName) {
-  const dd = fmtDateFull(r.tanggal).split(', ');
-  const st = isInvalid(r) ? '<span class="pill bad">⛔ Tidak sah</span>' : r.jamPulang ? `<span class="pill">✔ Selesai</span>` : (r.open ? '<span class="pill work">Sedang bekerja</span>' : '<span class="pill warn">Belum pulang</span>');
-  return `<div class="item rec${isInvalid(r) ? ' invalid' : ''}" data-id="${esc(r.id)}" data-tgl="${esc(r.tanggal)}">
-    <div class="att-top"><div>${showName ? `<div class="small" style="font-weight:700;margin-bottom:2px">${esc(r.nama)}</div>` : ''}<div class="att-day" style="font-size:16px">${esc(dd[0])}</div><div class="att-date">${esc(dd[1])}</div></div>
-      <div class="att-right"><span class="tag tag-${esc(r.shift)}">${esc(SHIFT_NAME[r.shift] || r.shift)}</span>${st}</div></div>
-    <div class="att-times"><div><small>Masuk</small><b>${esc(r.jamMasuk)}</b></div><div class="arr">→</div><div><small>Pulang</small><b>${r.jamPulang ? esc(r.jamPulang) : '—'}</b></div><div><small>Durasi</small><b>${r.durasi != null ? fmtDur(r.durasi) : '…'}</b></div></div>
-    ${r.jarakMasuk !== '' && r.jarakMasuk != null ? `<div class="m">📍 ${esc(r.jarakMasuk)} m dari titik absen</div>` : ''}
-    <div>${flagHtml(r)}</div>${noteHtml(r)}${r.catatan ? `<div class="small" style="margin-top:4px">📌 ${esc(r.catatan)}</div>` : ''}
+function recBadge(r) {
+  if (isInvalid(r)) return ['fr', '⛔ Tidak sah'];
+  if (needCheck(r)) return ['fr', '⚠ Perlu dicek'];
+  if (!r.jamPulang) return r.open ? ['work', 'Bertugas'] : ['lt', 'Belum pulang'];
+  return ['ok', '✔ Selesai'];
+}
+function recItem(r, showName, lapTxt) {
+  const p = r.tanggal.split('-'), dt = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2])), bd = recBadge(r);
+  const sub = [(r.jarakMasuk !== '' && r.jarakMasuk != null) ? '📍 ' + esc(r.jarakMasuk) + ' m' : ''].filter(Boolean).join(' · ');
+  return `<div class="item rec rc${isInvalid(r) ? ' invalid' : ''}" data-id="${esc(r.id)}" data-tgl="${esc(r.tanggal)}">
+    <div class="rc-head"><i class="rc-bar sh-${esc(r.shift)}"></i><div class="rc-dt"><b>${+p[2]}</b><span>${DAYS[dt.getUTCDay()].slice(0, 3)}</span></div>
+      <div class="rc-mid">${showName ? `<div class="rc-nm">${esc(r.nama)}</div>` : ''}<div class="rc-tm">${esc(r.jamMasuk)} → ${r.jamPulang ? esc(r.jamPulang) : '…'}<em>${r.durasi != null ? fmtDur(r.durasi) : ''}</em></div>
+        <div class="rc-sub"><span class="tag tag-${esc(r.shift)}">${esc(SHIFT_NAME[r.shift] || r.shift)}</span>${sub ? ' · ' + sub : ''}</div>${noteHtml(r)}</div>
+      <span class="rc-bd ${bd[0]}">${bd[1]}</span><span class="rc-chev">⌄</span></div>
+    <div class="rc-more"><div>${flagHtml(r)}</div>${r.catatan ? `<div class="small" style="margin-top:4px">📌 ${esc(r.catatan)}</div>` : ''}${lapTxt ? `<div class="lap-text">${esc(lapTxt)}</div>` : ''}
     <div class="row wrap" style="margin-top:8px;gap:6px">
       ${r.fotoM ? `<button class="btn btn-sm" data-foto="masuk">📷 Foto masuk</button>` : ''}${r.fotoP ? `<button class="btn btn-sm" data-foto="pulang">📷 Foto pulang</button>` : ''}
       ${r.fotoDihapus ? '<span class="small dim">Foto sudah dihapus otomatis</span>' : ''}
-    </div></div>`;
+    </div></div></div>`;
 }
+document.addEventListener('click', (e) => { const h = e.target.closest && e.target.closest('.rc-head'); if (h) h.parentElement.classList.toggle('open'); });
 function bindRecButtons(root) {
   root.querySelectorAll('[data-foto]').forEach((b) => b.addEventListener('click', () => {
     const it = b.closest('.item'); showFoto(it.dataset.id, it.dataset.tgl, b.dataset.foto);
   }));
 }
+function closeFoto() { $('ovFoto').classList.remove('show'); }
 async function showFoto(id, tgl, which) {
-  openGen(`<h2>📷 Foto ${which}</h2><div class="empty"><span class="spin dk"></span></div>`);
+  const fb = $('fotoBody'); fb.innerHTML = `<h2>📷 Foto ${which}</h2><div class="empty"><span class="spin dk"></span></div>`; $('ovFoto').className = 'overlay show';
   try {
     const r = await apiGet('foto', { id, tanggal: tgl, which });
-    $('genBody').innerHTML = `<h2>📷 Foto ${which}</h2><img src="${r.dataUrl}" style="width:100%;border-radius:16px"><div class="foot"><button class="btn" onclick="closeGen()">Tutup</button></div>`;
-  } catch (e) { $('genBody').innerHTML = `<h2>📷 Foto</h2><div class="banner red">${esc(e.message)}</div><div class="foot"><button class="btn" onclick="closeGen()">Tutup</button></div>`; }
+    fb.innerHTML = `<h2>📷 Foto ${which}</h2><img src="${r.dataUrl}" style="width:100%;border-radius:16px"><div class="foot"><button class="btn" id="fotoClose">Tutup</button></div>`;
+  } catch (e) { fb.innerHTML = `<h2>📷 Foto</h2><div class="banner red">${esc(e.message)}</div><div class="foot"><button class="btn" id="fotoClose">Tutup</button></div>`; }
+  $('fotoClose').addEventListener('click', closeFoto);
 }
+$('ovFoto').addEventListener('click', (e) => { if (e.target === $('ovFoto')) closeFoto(); });
 function openGen(html, cls) { $('genBody').innerHTML = html; $('ovGen').className = 'overlay show' + (cls ? ' ' + cls : ''); }
 function closeGen() { $('ovGen').classList.remove('show'); }
 $('ovGen').addEventListener('click', (e) => { if (e.target === $('ovGen')) closeGen(); });
@@ -1274,17 +1341,29 @@ $('btnSaveLaporan').addEventListener('click', async () => {
 });
 
 /* ---------------- RIWAYAT ---------------- */
+const SHC = { P: '#f2b705', S: '#e8851a', D: '#3b7de0', M: '#6f4bd8', R: '#d6489a', L: '#aab4cc' };
+function periodDays(key) {
+  const p = key.split('-'), y = +p[0], m = +p[1], out = []; let t = Date.UTC(y, m - 1, 27); const e = Date.UTC(m === 12 ? y + 1 : y, m === 12 ? 0 : m, 26);
+  for (; t <= e; t += 86400000) { const d = new Date(t); out.push({ d: d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()), w: d.getUTCDay(), n: d.getUTCDate() }); }
+  return out;
+}
+function legendHtml(keys) { return '<div class="legend">' + keys.map((k) => `<span><i style="background:${SHC[k]}"></i>${SHIFT_NAME[k]}</span>`).join('') + '</div>'; }
+function rwCalendar(rows, key) {
+  const by = {}; rows.forEach((r) => { if (!isInvalid(r)) (by[r.tanggal] = by[r.tanggal] || []).push(r.shift); });
+  const days = periodDays(key), today = S ? S.today : nowJ().date; let h = '<div class="cal"><div class="g">' + ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'].map((x) => `<div class="h">${x}</div>`).join('');
+  for (let i = 0; i < days[0].w; i++) h += '<div></div>';
+  days.forEach((x) => { const sh = by[x.d] || []; h += `<div class="d ${sh.length ? 'has' : ''} ${x.d === today ? 't' : ''}" data-d="${x.d}">${x.n}<div class="dots">${sh.map((k) => `<i style="background:${x.d === today ? '#fff' : SHC[k]}"></i>`).join('')}</div></div>`; });
+  return h + '</div>' + legendHtml(['P', 'S', 'D', 'M', 'R']) + '</div>';
+}
 let rwKey = null;
 async function loadRiwayat() {
   if (!rwKey) rwKey = periodKeyOf(S ? S.today : nowJ().date);
   $('rwLabel').textContent = periodLabel(rwKey); $('rwList').innerHTML = '<div class="empty"><span class="spin dk"></span></div>';
   try {
     const r = await apiGet('riwayat', { period: rwKey }); const s = r.summary || { hari: 0, menit: 0, P: 0, S: 0, D: 0, M: 0, R: 0, cek: 0, belum: 0 };
-    $('rwSum').innerHTML = statTiles([['c1', '✅', s.hari, 'Hari hadir'], ['c2', '⏱️', fmtDur(s.menit), 'Total jam'], ['c3', '🔁', shTot(s), 'Total shift'], ['c4', '⏳', s.belum, 'Belum pulang']]) + shiftBox(s);
-    $('rwList').innerHTML = r.rows.length ? r.rows.map((x) => recItem(x) + '').map((h, i) => {
-      const lap = lapForUser(r.laporan, me.id, r.rows[i].tanggal, r.rows[i].shift);
-      return lap ? h.replace(/<\/div><\/div>$/, `</div>${'<div class="lap-text">' + esc(lap) + '</div>'}</div>`) : h;
-    }).join('') : '<div class="empty">Belum ada absen pada periode ini.</div>';
+    $('rwSum').innerHTML = statTiles([['c1', '✅', s.hari, 'Hari hadir'], ['c3', '🔁', shTot(s), 'Total shift'], ['c2', '🕒', fmtDur(r.rows.reduce((a, x) => a + (x.shift === 'R' && !isInvalid(x) && x.durasi != null ? x.durasi : 0), 0)), 'Jam lembur'], ['c4', '⏳', s.belum, 'Belum pulang']], 'flt') + '<div class="v-sec">Kalender shift</div>' + rwCalendar(r.rows, rwKey) + shiftBox(s);
+    $('rwList').innerHTML = (r.rows.length ? '<div class="v-sec">Riwayat absen</div>' : '') + (r.rows.length ? r.rows.map((x) => recItem(x, false, lapForUser(r.laporan, me.id, x.tanggal, x.shift))).join('') : '<div class="empty">Belum ada absen pada periode ini.</div>');
+    $('rwSum').querySelectorAll('.d.has').forEach((d) => d.addEventListener('click', () => { const it = $('rwList').querySelector('.item[data-tgl="' + d.dataset.d + '"]'); if (it) { it.classList.add('open'); it.scrollIntoView({ behavior: 'smooth', block: 'center' }); } }));
     bindRecButtons($('rwList'));
   } catch (e) { $('rwList').innerHTML = `<div class="banner red">${esc(e.message)}</div>`; }
 }
@@ -1295,24 +1374,38 @@ $('rwNext').addEventListener('click', () => { rwKey = shiftKey(rwKey, 1); loadRi
 let tmKey = null, tmData = null, tmFilter = 'all';
 async function loadTim() {
   if (!tmKey) tmKey = periodKeyOf(S ? S.today : nowJ().date);
-  $('tmLabel').textContent = periodLabel(tmKey); $('tmTable').querySelector('tbody').innerHTML = '<tr><td colspan="5" class="empty"><span class="spin dk"></span></td></tr>';
-  try { tmData = await apiGet('rekap', { period: tmKey }); } catch (e) { $('tmTable').querySelector('tbody').innerHTML = `<tr><td colspan="5"><div class="banner red">${esc(e.message)}</div></td></tr>`; return; }
-  const cur = $('tmUnit').value; $('tmUnit').innerHTML = '<option value="">Semua unit</option>' + tmData.units.map((u) => `<option>${esc(u)}</option>`).join(''); $('tmUnit').value = cur;
+  $('tmLabel').textContent = periodLabel(tmKey); $('tmList').innerHTML = '<div class="empty"><span class="spin dk"></span></div>';
+  try { tmData = await apiGet('rekap', { period: tmKey }); } catch (e) { $('tmList').innerHTML = `<div class="banner red">${esc(e.message)}</div>`; return; }
+  { const lm = lemMap(tmData.rows); tmData.summary.forEach((x) => { x.lembur = lm[x.userId] || 0; }); }
+  const cur = $('tmUnit').value; $('tmUnit').innerHTML = '<option value="">Semua unit</option>' + tmData.units.filter((u) => String(u || '').trim()).map((u) => `<option>${esc(u)}</option>`).join('') + (tmData.summary.some((x) => !String(x.unit || '').trim()) ? '<option value="__none">(Tanpa unit)</option>' : ''); $('tmUnit').value = cur;
   renderTim();
 }
 function statTiles(items, cls) { return '<div class="stat-tiles ' + (cls || '') + '">' + items.map((i) => `<div class="st ${i[0]}"><i>${i[1]}</i><b>${i[2]}</b><span>${i[3]}</span></div>`).join('') + '</div>'; }
 function shiftBox(c) { return '<div class="shift-box"><span class="shift-ttl">Rincian shift</span><div class="shift-chips">' + SH_ALL.map((k) => `<span class="tag tag-${k} sc ${(c[k] || 0) ? '' : 'zero'}">${SHIFT_NAME[k]} <b>${c[k] || 0}</b></span>`).join('') + '</div></div>'; }
+const AVC = ['#0ea39d', '#3b7de0', '#6f4bd8', '#e8851a', '#d6489a', '#2a9d5c', '#c2540a', '#4f6bd8'];
+function avColor(n) { let h = 0; for (const c of String(n)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return AVC[h % AVC.length]; }
 function renderTim() {
-  const unit = $('tmUnit').value, q = $('tmSearch').value.trim().toLowerCase();
-  let rows = tmData.summary.filter((s) => (!unit || s.unit === unit) && (!q || s.nama.toLowerCase().includes(q)));
+  const unit = $('tmUnit').value, q = $('tmSearch').value.trim().toLowerCase(), today = S ? S.today : nowJ().date, isCur = tmKey === periodKeyOf(today);
+  const todayBy = {}; if (isCur) tmData.rows.forEach((r) => { if (r.tanggal === today && !isInvalid(r)) (todayBy[r.userId] = todayBy[r.userId] || []).push(r); });
+  const tot = tmData.summary.filter((s) => !unit || (unit === '__none' ? !String(s.unit || '').trim() : s.unit === unit));
+  const hadirN = tot.filter((s) => todayBy[s.userId]).length, cek = tot.reduce((a, s) => a + s.cek, 0), bel = tot.reduce((a, s) => a + s.belum, 0);
+  const sh = { P: 0, S: 0, D: 0, M: 0, R: 0 }; tot.forEach((x) => { SH_ALL.forEach((k) => { sh[k] += (x[k] || 0); }); });
+  const tiles = isCur ? [['c1', '✅', hadirN, 'Hadir hari ini', 'hadir'], ['c2', '💤', tot.length - hadirN, 'Belum absen', 'belumabsen'], ['c5', '⚠️', cek, 'Perlu dicek', 'cek'], ['c6', '⏳', bel, 'Belum pulang', 'belum']] : [['c1', '👥', tot.length, 'Karyawan', 'all'], ['c2', '✅', tot.filter((s) => s.hari > 0).length, 'Pernah hadir', 'all'], ['c5', '⚠️', cek, 'Perlu dicek', 'cek'], ['c6', '⏳', bel, 'Belum pulang', 'belum']];
+  $('tmSum').innerHTML = '<div class="stat-tiles flt tap">' + tiles.map((i) => `<div class="st ${i[0]} ${tmFilter === i[4] ? 'on' : ''}" data-f="${i[4]}"><i>${i[1]}</i><b>${i[2]}</b><span>${i[3]}</span></div>`).join('') + '</div>' + shiftBox(sh);
+  $('tmSum').querySelectorAll('.st').forEach((t) => t.addEventListener('click', () => { tmFilter = tmFilter === t.dataset.f ? 'all' : t.dataset.f; $('tmChips').querySelectorAll('.chip').forEach((x) => x.classList.toggle('active', x.dataset.f === tmFilter)); renderTim(); }));
+  let rows = tot.filter((s) => !q || s.nama.toLowerCase().includes(q));
   if (tmFilter === 'cek') rows = rows.filter((s) => s.cek > 0); else if (tmFilter === 'belum') rows = rows.filter((s) => s.belum > 0);
-  const tot = tmData.summary.filter((s) => !unit || s.unit === unit);
-  const hadir = tot.filter((s) => s.hari > 0).length, cek = tot.reduce((a, s) => a + s.cek, 0), bel = tot.reduce((a, s) => a + s.belum, 0);
-  const sh = { P: 0, S: 0, D: 0, M: 0, R: 0 }; let mnt = 0; tot.forEach((x) => { SH_ALL.forEach((k) => { sh[k] += (x[k] || 0); }); mnt += x.menit; });
-  $('tmSum').innerHTML = statTiles([['c1', '👥', tot.length, 'Karyawan'], ['c2', '✅', hadir, 'Pernah hadir'], ['c3', '🔁', shTot(sh), 'Total shift'], ['c4', '⏱️', fmtDur(mnt), 'Total jam'], ['c5', '⚠️', cek, 'Perlu dicek'], ['c6', '⏳', bel, 'Belum pulang']], 'tim6') + shiftBox(sh);
-  const tb = $('tmTable').querySelector('tbody');
-  tb.innerHTML = rows.length ? rows.map((s) => `<tr class="click" data-u="${esc(s.userId)}"><td><b>${esc(s.nama)}</b><div class="small dim">${esc(s.unit || '')}</div><div>${SH_ALL.filter((k) => (s[k] || 0) > 0).map((k) => `<span class="tag tag-${k} mini">${SHIFT_NAME[k]} ${s[k]}</span>`).join('')}</div></td><td class="n">${s.hari}</td><td class="n mono">${fmtDur(s.menit)}</td><td class="n"><b>${shTot(s)}</b></td><td class="n">${s.cek ? '<span class="flag">' + s.cek + '</span>' : ''}${s.belum ? '<span class="flag bad">' + s.belum + '</span>' : ''}${s.tidak ? '<span class="flag bad" title="Absen tidak sah">⛔' + s.tidak + '</span>' : ''}</td></tr>`).join('') : '<tr><td colspan="5" class="empty">Tidak ada data.</td></tr>';
-  tb.querySelectorAll('tr.click').forEach((tr) => tr.addEventListener('click', () => openEmployee(tr.dataset.u)));
+  else if (tmFilter === 'hadir') rows = rows.filter((s) => todayBy[s.userId]); else if (tmFilter === 'belumabsen') rows = rows.filter((s) => !todayBy[s.userId]);
+  $('tmList').innerHTML = rows.length ? rows.map((s) => {
+    const tr = todayBy[s.userId] || [], last = tr[tr.length - 1];
+    let st = '', dot = '#c7cfe0';
+    if (isCur) { if (last) { dot = s.cek ? '#e8851a' : '#18b97a'; st = `<div class="tm-st">${esc(last.jamMasuk)} → ${last.jamPulang ? esc(last.jamPulang) : '<span style="color:#1d4fa8">masih bertugas</span>'}</div>`; } else st = '<div class="tm-st mute">Belum absen hari ini</div>'; }
+    else st = `<div class="tm-st mute">${s.hari} hari hadir</div>`;
+    return `<div class="tm-row" data-u="${esc(s.userId)}"><div class="tm-av" style="background:${avColor(s.nama)}">${esc((s.nama || '?').trim().charAt(0).toUpperCase())}<u style="background:${dot}"></u></div>
+      <div class="tm-mid"><div class="tm-nm">${esc(s.nama)}</div><div class="tm-un">${esc(s.unit || '')}</div>${st}<div class="tm-tags">${SH_ALL.filter((k) => (s[k] || 0) > 0).map((k) => `<i style="background:${SHC[k]}">${SHIFT_NAME[k]} ${s[k]}</i>`).join('')}</div></div>
+      <div class="tm-r"><div class="ind"><span title="Hari hadir">✅ <b>${s.hari}</b></span><span title="Total shift">🔁 <b>${shTot(s)}</b></span></div><div class="ind"><span title="Jam lembur">🕒 <b>${fmtDur(s.lembur || 0)}</b></span></div>${s.cek ? `<span class="b cek">⚠ ${s.cek} cek</span>` : ''}${s.belum ? `<span class="b bel">⏳ ${s.belum}</span>` : ''}${s.tidak ? `<span class="b cek">⛔${s.tidak}</span>` : ''}</div></div>`;
+  }).join('') : '<div class="empty">Tidak ada data.</div>';
+  $('tmList').querySelectorAll('.tm-row').forEach((tr) => tr.addEventListener('click', () => openEmployee(tr.dataset.u)));
 }
 $('tmPrev').addEventListener('click', () => { tmKey = shiftKey(tmKey, -1); loadTim(); });
 $('tmNext').addEventListener('click', () => { tmKey = shiftKey(tmKey, 1); loadTim(); });
@@ -1321,13 +1414,14 @@ $('tmChips').querySelectorAll('.chip').forEach((c) => c.addEventListener('click'
 function openEmployee(uid_) {
   const s = tmData.summary.find((x) => x.userId === uid_); const rows = tmData.rows.filter((r) => r.userId === uid_);
   openGen(`<div class="row" style="margin-bottom:10px"><div class="avatar md" id="emAv"></div><div><h2 style="margin:0">${esc(s.nama)}</h2><div class="small dim">${esc(s.unit || '')} · ${periodLabel(tmKey)}</div></div></div>
-    <div class="sum-grid"><div><b>${s.hari}</b><span>Hari</span></div><div><b>${fmtDur(s.menit)}</b><span>Jam</span></div><div><b>${s.cek}</b><span>Cek</span></div></div>
+    <div class="sum-grid emp4"><div><b>${s.hari}</b><span>Hari hadir</span></div><div><b>${shTot(s)}</b><span>Total shift</span></div><div><b>${fmtDur(s.lembur || 0)}</b><span>Jam lembur</span></div><div><b>${s.cek}</b><span>Cek</span></div></div>
     <div id="empList">${rows.length ? rows.map((r) => {
       const lap = lapForUser(tmData.laporan, r.userId, r.tanggal, r.shift);
       return recItem(r).replace(/<div class="row wrap" style="margin-top:8px;gap:6px">/, (lap ? `<div class="lap-text">${esc(lap)}</div>` : '') + '<div class="row wrap" style="margin-top:8px;gap:6px">' + ((me.role === 'admin' || s.unit === me.unit) ? '<button class="btn btn-sm btn-primary" data-kor="1">✎ Koreksi / Cek</button>' : ''));
     }).join('') : '<div class="empty">Belum ada absen.</div>'}</div>
     <div class="foot"><button class="btn" onclick="closeGen()">Tutup</button></div>`);
   setAvatar($('emAv'), '', s.nama); apiGet('profilFoto', { id: uid_ }).then((x) => setAvatar($('emAv'), x.foto, s.nama)).catch(() => {});
+  $('empList').querySelectorAll('.rc').forEach((x) => x.classList.add('open'));
   bindRecButtons($('empList'));
   $('empList').querySelectorAll('[data-kor]').forEach((b) => b.addEventListener('click', () => { const it = b.closest('.item'); openKoreksi(rows.find((r) => r.id === it.dataset.id), uid_); }));
 }
@@ -1408,14 +1502,15 @@ function buildRekapWb(EJ, o) {
     };
   }
   // ---- Sheet Rekap
-  const cols = [{ header: 'No', width: 6 }, { header: 'Nama', width: 30 }, { header: 'Unit', width: 18 }, { header: 'Hari Hadir', width: 10 }, { header: 'Total Jam', width: 11 }, { header: 'Shift Pagi (P)', width: 10 }, { header: 'Shift Siang (S)', width: 10 }, { header: 'Shift Middle (D)', width: 10 }, { header: 'Shift Malam (M)', width: 10 }, { header: 'Shift Lembur (R)', width: 10 }, { header: 'Total Shift', width: 10 }, { header: 'Absen di Libur', width: 10 }, { header: 'Perlu Dicek', width: 10 }, { header: 'Belum Pulang', width: 10 }, { header: 'Tidak Sah', width: 10 }];
+  const cols = [{ header: 'No', width: 6 }, { header: 'Nama', width: 30 }, { header: 'Unit', width: 18 }, { header: 'Hari Hadir', width: 10 }, { header: 'Jam Lembur', width: 11 }, { header: 'Shift Pagi (P)', width: 10 }, { header: 'Shift Siang (S)', width: 10 }, { header: 'Shift Middle (D)', width: 10 }, { header: 'Shift Malam (M)', width: 10 }, { header: 'Shift Lembur (R)', width: 10 }, { header: 'Total Shift', width: 10 }, { header: 'Absen di Libur', width: 10 }, { header: 'Perlu Dicek', width: 10 }, { header: 'Belum Pulang', width: 10 }, { header: 'Tidak Sah', width: 10 }];
   const R = sheet('Rekap', 'REKAP ABSENSI KARYAWAN', cols);
-  const agg = (list) => { const t = { hari: 0, menit: 0, P: 0, S: 0, D: 0, M: 0, R: 0, L: 0, cek: 0, belum: 0, tidak: 0 }; list.forEach((s) => { Object.keys(t).forEach((k) => { t[k] += (s[k] || 0); }); }); return t; };
-  const nums = (t) => [t.hari, +(t.menit / 60).toFixed(1), t.P, t.S, t.D, t.M, t.R, shTot(t), t.L, t.cek, t.belum, t.tidak];
+  const agg = (list) => { const t = { hari: 0, lembur: 0, P: 0, S: 0, D: 0, M: 0, R: 0, L: 0, cek: 0, belum: 0, tidak: 0 }; list.forEach((s) => { Object.keys(t).forEach((k) => { t[k] += (s[k] || 0); }); }); return t; };
+  const nums = (t) => [t.hari, +(t.lembur / 60).toFixed(1), t.P, t.S, t.D, t.M, t.R, shTot(t), t.L, t.cek, t.belum, t.tidak];
+  { const lm = lemMap(o.rows); o.sum.forEach((x) => { x.lembur = lm[x.userId] || 0; }); }
   const groups = byUnit(o.sum);
   groups.forEach(([u, list]) => {
     R.band('UNIT: ' + u + '   (' + list.length + ' karyawan)');
-    list.slice().sort((a, b) => a.nama.localeCompare(b.nama)).forEach((s, i) => R.row([i + 1, s.nama, s.unit, s.hari, +(s.menit / 60).toFixed(1), s.P || 0, s.S || 0, s.D || 0, s.M || 0, s.R || 0, shTot(s), s.L || 0, s.cek || 0, s.belum || 0, s.tidak || 0]));
+    list.slice().sort((a, b) => a.nama.localeCompare(b.nama)).forEach((s, i) => R.row([i + 1, s.nama, s.unit, s.hari, +((s.lembur || 0) / 60).toFixed(1), s.P || 0, s.S || 0, s.D || 0, s.M || 0, s.R || 0, shTot(s), s.L || 0, s.cek || 0, s.belum || 0, s.tidak || 0]));
     R.sub(['', 'Sub total ' + u, ''].concat(nums(agg(list))));
   });
   if (groups.length > 1) R.total(['', 'TOTAL KESELURUHAN', ''].concat(nums(agg(o.sum))));
@@ -1704,6 +1799,8 @@ const DAYN = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
 let jdKey = '', jdData = null, jdEdit = {}, jdWhich = 'cur';
 function nextKeyJs(k) { let y = +k.slice(0, 4), m = +k.slice(5, 7) + 1; if (m > 12) { m = 1; y++; } return y + '-' + pad(m); }
 function noteHtml(r) { const a = []; if (r.noteMasuk) a.push('<b>Masuk:</b> ' + esc(r.noteMasuk)); if (r.notePulang) a.push('<b>Pulang:</b> ' + esc(r.notePulang)); return a.length ? '<div class="rec-note">💬 ' + a.join('<br>') + '</div>' : ''; }
+/** Menit lembur per userId: hanya shift Lembur (R), absen tidak sah tidak dihitung. */
+function lemMap(rows) { const m = {}; (rows || []).forEach((r) => { if (r.shift === 'R' && !isInvalid(r) && r.durasi != null) m[r.userId] = (m[r.userId] || 0) + r.durasi; }); return m; }
 function shNames(v) { return String(v || '').split('+').map((x) => SHIFT_NAME[x] || x).join(' + '); }
 function jdTag(s) { return s ? `<span class="tag tag-${esc(s)}">${esc(SHIFT_NAME[s] || s)}</span>` : ''; }
 function renderJadwalBanner() {
@@ -1744,33 +1841,41 @@ async function loadJadwal(which) {
     jdData = await apiGet('jadwal', { key: jdKey }); renderJadwal();
   } catch (e) { if (e.message !== 'Sesi berakhir') { $('jdList').innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; } }
 }
+function jdCellHtml(x, today) {
+  const v = jdVal(x.d), past = x.d < today, ed = x.d in jdEdit;
+  const chips = v === 'L' ? '<span class="p sh-L">Libur</span>' : v.split('+').filter(Boolean).map((k) => `<span class="p sh-${k}">${SHIFT_NAME[k].slice(0, 3)}</span>`).join('');
+  return `<div class="jc ${past ? 'past' : ''} ${x.d === today ? 'today' : ''} ${x.w === 0 ? 'sun' : ''} ${v === 'L' ? 'off' : ''} ${!v ? 'empty' : ''} ${ed ? 'edited' : ''}" data-d="${x.d}"><span class="n">${x.n}</span>${chips}</div>`;
+}
 function renderJadwal() {
-  const per = jdData.period, today = jdData.today;
+  const per = jdData.period, today = jdData.today, days = jdDates(per).map((x) => Object.assign(x, { n: +x.d.slice(8, 10) }));
   $('jdPer').textContent = fmtDate(per.start) + ' s/d ' + fmtDate(per.end);
-  $('jdList').innerHTML = jdDates(per).map((x) => {
-    const past = x.d < today, v = jdVal(x.d);
-    const pr = v.split('+'), v1 = pr[0] || '', v2 = pr[1] || '', can2 = !past && v1 && v1 !== 'L';
-    const o1 = JD_OPT.map((o) => `<option value="${o[0]}" ${o[0] === v1 ? 'selected' : ''}>${o[1]}</option>`).join('');
-    const o2 = [['', '＋ Shift ke-2 (dobel)']].concat(JD_OPT.filter((o) => o[0] && o[0] !== 'L')).map((o) => `<option value="${o[0]}" ${o[0] === v2 ? 'selected' : ''}>${o[1]}</option>`).join('');
-    return `<div class="jd-row ${x.d === today ? 'today' : ''} ${past ? 'past' : ''} ${x.w === 0 ? 'sun' : ''}" data-d="${x.d}"><div class="jd-d">${esc(fmtDateShort(x.d))}<small>${DAYN[x.w]}${x.d === today ? ' · hari ini' : ''}</small></div><div class="jd-sels"><select class="s1" ${past ? 'disabled' : ''}>${o1}</select><select class="s2 ${v2 ? 'on' : ''}" ${can2 ? '' : 'disabled'}>${o2}</select></div></div>`;
-  }).join('');
-  $('jdList').querySelectorAll('.jd-row').forEach((row) => {
-    const s1 = row.querySelector('.s1'), s2 = row.querySelector('.s2');
-    const upd = () => {
-      if (!s1.value || s1.value === 'L') { s2.value = ''; s2.disabled = true; } else s2.disabled = false;
-      if (s2.value && s2.value === s1.value) s2.value = '';
-      s2.classList.toggle('on', !!s2.value);
-      jdEdit[row.dataset.d] = s1.value ? (s2.value ? s1.value + '+' + s2.value : s1.value) : ''; jdSummary();
-    };
-    s1.addEventListener('change', upd); s2.addEventListener('change', upd);
-  });
+  let h = '<div class="jd-grid"><div class="g">' + ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'].map((d, k) => `<div class="h ${k === 0 ? 'sun' : ''}">${d}</div>`).join('');
+  for (let i = 0; i < days[0].w; i++) h += '<div></div>';
+  days.forEach((x) => { h += jdCellHtml(x, today); });
+  $('jdList').innerHTML = h + '</div>' + legendHtml(['P', 'S', 'D', 'M', 'R', 'L']).replace('class="legend"', 'class="legend jd-leg" style="margin-top:10px"') + '<div class="small dim" style="margin:6px 2px 0">Ketuk tanggal untuk memilih shift. Tanggal yang sudah lewat tidak bisa diubah.</div>';
+  $('jdList').querySelectorAll('.jc:not(.past)').forEach((c) => c.addEventListener('click', () => jdOpenPick(c.dataset.d)));
   jdSummary();
-  const t = $('jdList').querySelector('.jd-row.today'); if (t && !jdEdit._scrolled) setTimeout(() => { const y = t.getBoundingClientRect().top + window.scrollY - 90; window.scrollTo(0, y); }, 60);
+}
+function jdOpenPick(d) {
+  const v = jdVal(d).split('+'); let a = v[0] || '', b = v[1] || '';
+  const w = new Date(Date.UTC(+d.slice(0, 4), +d.slice(5, 7) - 1, +d.slice(8, 10))).getUTCDay();
+  const IC = { P: '🌅', S: '☀️', D: '🌤️', M: '🌙', R: '⏰', L: '🏠' };
+  const btns = (cur, none, kinds) => kinds.map((k) => `<button type="button" data-k="${k}" class="${cur === k ? 'on sh-' + k : ''}"><i>${IC[k]}</i>${SHIFT_NAME[k]}</button>`).join('') + `<button type="button" data-k="" class="${cur === '' ? 'on sh-L' : ''}"><i>➖</i>${none}</button>`;
+  openGen(`<h2>🗓️ ${esc(DAYN[w])}, ${esc(fmtDateShort(d))}</h2><div class="small dim">Shift utama</div><div class="pick-sh" id="pk1"></div><div class="small dim">Shift ke-2 (dobel, opsional)</div><div class="pick-sh" id="pk2"></div>
+    <div class="foot"><button class="btn" onclick="closeGen()">Batal</button><button class="btn btn-primary" id="pkOk">Terapkan</button></div>`);
+  const draw = () => {
+    $('pk1').innerHTML = btns(a, 'Kosong', ['P', 'S', 'D', 'M', 'R', 'L']); $('pk2').innerHTML = btns(b, 'Tidak ada', ['P', 'S', 'D', 'M', 'R']);
+    $('pk2').querySelectorAll('button').forEach((x) => { if (!a || a === 'L' || (x.dataset.k && x.dataset.k === a)) x.disabled = true; });
+    $('pk1').querySelectorAll('button').forEach((x) => x.addEventListener('click', () => { a = x.dataset.k; if (!a || a === 'L' || b === a) b = ''; draw(); }));
+    $('pk2').querySelectorAll('button').forEach((x) => x.addEventListener('click', () => { b = x.dataset.k; draw(); }));
+  };
+  draw();
+  $('pkOk').addEventListener('click', () => { const nv = a ? (b && a !== 'L' ? a + '+' + b : a) : ''; const old = (jdData.jadwal[d] || ''); if (nv === old) delete jdEdit[d]; else jdEdit[d] = nv; closeGen(); renderJadwal(); });
 }
 function jdSummary() {
   const cnt = {}; let kosong = 0, dobel = 0;
   jdDates(jdData.period).forEach((x) => { const v = jdVal(x.d); if (v.includes('+')) dobel++; if (v) v.split('+').forEach((k) => { cnt[k] = (cnt[k] || 0) + 1; }); else if (x.d >= jdData.today) kosong++; });
-  $('jdSum').innerHTML = ['P', 'S', 'D', 'M', 'R', 'L'].filter((k) => cnt[k]).map((k) => `<span class="tag tag-${k}">${SHIFT_NAME[k]} <b>${cnt[k]}</b></span>`).join('') + (dobel ? `<span class="small dim">${dobel} hari dobel shift</span>` : '') + (kosong ? `<span class="small dim">${kosong} hari belum diisi</span>` : '');
+  $('jdSum').innerHTML = ['P', 'S', 'D', 'M', 'R', 'L'].filter((k) => cnt[k]).map((k) => `<span class="tag" style="background:${SHC[k]};color:#fff">${SHIFT_NAME[k]} <b>${cnt[k]}</b></span>`).join('') + (dobel ? `<span class="small dim">${dobel} hari dobel shift</span>` : '') + (kosong ? `<span class="small dim">${kosong} hari belum diisi</span>` : '');
   $('jdSave').disabled = !Object.keys(jdEdit).length;
   $('jdSave').textContent = Object.keys(jdEdit).length ? 'Simpan jadwal (' + Object.keys(jdEdit).length + ' perubahan)' : 'Simpan jadwal';
 }

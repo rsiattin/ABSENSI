@@ -1,5 +1,5 @@
 /* Service worker sederhana: shell aplikasi dari cache, data (Apps Script) selalu dari jaringan */
-const CACHE = 'absensi-rsi-v18';
+const CACHE = 'absensi-rsi-v19d';
 const SHELL = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));

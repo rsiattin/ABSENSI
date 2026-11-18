@@ -501,11 +501,16 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 .jd-row.today{border-color:var(--teal);box-shadow:0 0 0 2px rgba(14,163,157,.2)}
 .jd-row.past{opacity:.55}.jd-row.sun .jd-d{color:#d33}
 .jd-d{width:74px;font-weight:700;font-size:14px;line-height:1.2}.jd-d small{display:block;font-weight:500;opacity:.7}
-.jd-row select{flex:1;padding:9px 8px;border-radius:12px;font-size:15px;font-weight:600}
+.jd-sels{flex:1;display:flex;flex-direction:column;gap:6px;min-width:0}.jd-row select{width:100%;padding:9px 8px;border-radius:12px;font-size:15px;font-weight:600}.jd-row select.s2{padding:6px 8px;font-size:13px;font-weight:500;opacity:.75}.jd-row select.s2.on{opacity:1;font-weight:700;border-color:var(--teal)}
 .jd-sum{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px}
 .jd-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}.jd-tools select{flex:1;min-width:120px;padding:9px;border-radius:12px}
 .jd-ban{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:18px;margin-bottom:12px;background:linear-gradient(135deg,#e6f7f6,#eef2ff);border:1.5px solid rgba(14,163,157,.4)}
 .jd-ban .ic{font-size:26px}.jd-ban b{font-size:16px}
+.ab-note input{width:100%}
+.note-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.note-chips button{border:1.5px solid rgba(14,163,157,.5);background:rgba(255,255,255,.75);border-radius:999px;padding:5px 11px;font-size:12.5px;font-weight:600;color:#0b6f6a}
+.note-chips button:active{background:#d9f5f2}
+.rec-note{margin-top:6px;padding:6px 10px;border-radius:10px;background:#fff7e6;border:1px solid #f0c987;font-size:13px}
 </style>
 </head>
 <body>
@@ -724,6 +729,10 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
     <div class="photo-box" id="abPhotoBox"></div>
     <input type="file" id="abFile" accept="image/*" capture="user" class="hidden">
   </div>
+  <div class="field ab-note"><label id="abNoteLbl">📝 Catatan (opsional)</label>
+    <input type="text" id="abNote" maxlength="200" autocomplete="off" placeholder="Alasan bila terlambat / pulang lebih awal">
+    <div class="note-chips" id="abChips"></div>
+  </div>
   <div class="field"><label>📍 Lokasi GPS</label><div class="gps" id="abGps">Mencari lokasi…</div></div>
   <div class="foot"><button class="btn" id="abCancel">Batal</button><button class="btn btn-primary" id="abSend" disabled>Kirim</button></div>
 </div></div>
@@ -742,7 +751,7 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 /* ============================================================
    KONFIGURASI — isi dengan URL Web App Apps Script Anda
    ============================================================ */
-const API_URL = "https://script.google.com/macros/s/AKfycbyxKiWO0OtKdnKJHeSkdqPbDIjRfcLAKW-vnMI9uCuTLyqL093qQmtUMeMWHfxVu9q5/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbz9xr_Xww7cu-j3LyeYFYppLf70buftckkhp1y3TXSSuUr2FHkODWyTioUFjP8ppxbc/exec";
 
 /* ---------------- util ---------------- */
 const $ = (id) => document.getElementById(id);
@@ -1005,7 +1014,7 @@ function attCard(r) {
     <div class="att-times"><div><small>Masuk</small><b>${esc(r.jamMasuk)}</b></div><div class="arr">→</div><div><small>Pulang</small><b>${r.jamPulang ? esc(r.jamPulang) : '—'}</b></div><div><small>Durasi</small><b>${r.durasi != null ? fmtDur(r.durasi) : '…'}</b></div></div>
     <div class="att-photos">${ph('masuk', r.fotoM, 'Masuk')}${ph('pulang', r.fotoP, 'Pulang')}</div>
     <div class="att-loc">${geoLine('Masuk', r.latMasuk, r.lngMasuk, r.jarakMasuk)}${r.jamPulang || r.fotoP ? geoLine('Pulang', r.latPulang, r.lngPulang, r.jarakPulang) : ''}</div>
-    <div style="margin-top:8px">${flagHtml(r)}</div>${r.catatan ? `<div class="small" style="margin-top:4px">📌 ${esc(r.catatan)}</div>` : ''}</div>`;
+    <div style="margin-top:8px">${flagHtml(r)}</div>${noteHtml(r)}${r.catatan ? `<div class="small" style="margin-top:4px">📌 ${esc(r.catatan)}</div>` : ''}</div>`;
 }
 async function loadThumbs(root) {
   const btns = Array.from(root.querySelectorAll('[data-th]'));
@@ -1025,7 +1034,7 @@ function recItem(r, showName) {
       <div class="att-right"><span class="tag tag-${esc(r.shift)}">${esc(SHIFT_NAME[r.shift] || r.shift)}</span>${st}</div></div>
     <div class="att-times"><div><small>Masuk</small><b>${esc(r.jamMasuk)}</b></div><div class="arr">→</div><div><small>Pulang</small><b>${r.jamPulang ? esc(r.jamPulang) : '—'}</b></div><div><small>Durasi</small><b>${r.durasi != null ? fmtDur(r.durasi) : '…'}</b></div></div>
     ${r.jarakMasuk !== '' && r.jarakMasuk != null ? `<div class="m">📍 ${esc(r.jarakMasuk)} m dari titik absen</div>` : ''}
-    <div>${flagHtml(r)}</div>${r.catatan ? `<div class="small" style="margin-top:4px">📌 ${esc(r.catatan)}</div>` : ''}
+    <div>${flagHtml(r)}</div>${noteHtml(r)}${r.catatan ? `<div class="small" style="margin-top:4px">📌 ${esc(r.catatan)}</div>` : ''}
     <div class="row wrap" style="margin-top:8px;gap:6px">
       ${r.fotoM ? `<button class="btn btn-sm" data-foto="masuk">📷 Foto masuk</button>` : ''}${r.fotoP ? `<button class="btn btn-sm" data-foto="pulang">📷 Foto pulang</button>` : ''}
       ${r.fotoDihapus ? '<span class="small dim">Foto sudah dihapus otomatis</span>' : ''}
@@ -1059,8 +1068,14 @@ function openAbsen(mode) {
   $('abJamLbl').textContent = mode === 'masuk' ? 'Jam masuk (bisa diubah)' : 'Jam pulang (bisa diubah)';
   $('abShiftWrap').classList.toggle('hidden', mode !== 'masuk');
   const n = nowJ(); $('abJam').value = n.hhmm;
-  let last = (S && SH_ALL.indexOf(S.jadwalHariIni) >= 0) ? S.jadwalHariIni : (localStorage.getItem('absensi_last_shift') || 'P'); if (SH_ALL.indexOf(last) < 0) last = 'P';
+  const jp = (S && S.jadwalHariIni ? S.jadwalHariIni.split('+') : []).filter((x) => SH_ALL.indexOf(x) >= 0), done = (S && S.todayRecords ? S.todayRecords.map((r) => r.shift) : []);
+  let last = jp.length ? (jp.find((x) => done.indexOf(x) < 0) || jp[0]) : (localStorage.getItem('absensi_last_shift') || 'P'); if (SH_ALL.indexOf(last) < 0) last = 'P';
   document.querySelectorAll('#abShift button').forEach((b) => b.classList.toggle('sel', b.dataset.s === last));
+  $('abNote').value = '';
+  const CH = mode === 'masuk' ? ['Macet', 'Terlambat: urusan keluarga', 'Kendaraan bermasalah', 'Hujan deras', 'Lembur shift sebelumnya'] : ['Izin pulang lebih awal', 'Sakit', 'Urusan keluarga', 'Dinas / tugas luar', 'Menunggu serah terima'];
+  $('abChips').innerHTML = CH.map((t) => `<button type="button">${esc(t)}</button>`).join('');
+  $('abChips').querySelectorAll('button').forEach((b) => b.addEventListener('click', () => { $('abNote').value = b.textContent; }));
+  $('abNoteLbl').textContent = mode === 'masuk' ? '📝 Catatan (opsional) — isi bila terlambat' : '📝 Catatan (opsional) — isi bila pulang lebih awal';
   $('abPhotoBox').innerHTML = PH_HTML;
   $('abSend').disabled = true; $('abSend').textContent = 'Kirim';
   $('ovAbsen').classList.add('show'); getGps();
@@ -1141,7 +1156,7 @@ $('abFile').addEventListener('change', async (e) => {
 $('abSend').addEventListener('click', async () => {
   if (abBusy || !abPhoto) return;
   const jam = $('abJam').value; if (!jam) return toast('Isi jam terlebih dahulu', true);
-  const payload = { id: abId, jam, foto: abPhoto, lat: abGeo ? abGeo.lat : '', lng: abGeo ? abGeo.lng : '', akurasi: abGeo ? Math.round(abGeo.acc * 10) / 10 : '' };
+  const payload = { id: abId, jam, note: $('abNote').value.trim().slice(0, 200), foto: abPhoto, lat: abGeo ? abGeo.lat : '', lng: abGeo ? abGeo.lng : '', akurasi: abGeo ? Math.round(abGeo.acc * 10) / 10 : '' };
   let action = abMode;
   if (abMode === 'masuk') { const s = selShift(); if (!s) return toast('Pilih shift dahulu', true); payload.shift = s; localStorage.setItem('absensi_last_shift', s); }
   abBusy = true; $('abSend').innerHTML = '<span class="spin"></span> Mengirim…'; $('abSend').disabled = true;
@@ -1409,7 +1424,7 @@ function buildRekapWb(EJ, o) {
   const D = sheet('Detail', 'DETAIL ABSENSI KARYAWAN', dcols);
   byUnit(o.rows).forEach(([u, list]) => {
     D.band('UNIT: ' + u + '   (' + list.length + ' absen)');
-    list.slice().sort((a, b) => (a.nama < b.nama ? -1 : a.nama > b.nama ? 1 : a.tanggal < b.tanggal ? -1 : 1)).forEach((r) => D.row([r.tanggal, r.nama, r.unit, SHIFT_NAME[r.shift] || r.shift, r.jamMasuk, r.jamPulang || '', r.durasi != null ? fmtDur(r.durasi) : '', flagsOf(r).map((f) => FLAG_LABEL[f] || f).join(', '), lapForUser(o.laporan, r.userId, r.tanggal, r.shift), r.catatan || '']));
+    list.slice().sort((a, b) => (a.nama < b.nama ? -1 : a.nama > b.nama ? 1 : a.tanggal < b.tanggal ? -1 : 1)).forEach((r) => D.row([r.tanggal, r.nama, r.unit, SHIFT_NAME[r.shift] || r.shift, r.jamMasuk, r.jamPulang || '', r.durasi != null ? fmtDur(r.durasi) : '', flagsOf(r).map((f) => FLAG_LABEL[f] || f).join(', '), lapForUser(o.laporan, r.userId, r.tanggal, r.shift), [r.noteMasuk ? 'Masuk: ' + r.noteMasuk : '', r.notePulang ? 'Pulang: ' + r.notePulang : '', r.catatan || ''].filter(Boolean).join(' | ')]));
     D.sub(['', 'Sub total ' + u, '', '', '', '', fmtDur(list.reduce((a, r) => a + (flagsOf(r).includes('TIDAK_SAH') ? 0 : (r.durasi || 0)), 0)), list.filter((r) => !flagsOf(r).includes('TIDAK_SAH')).length + ' absen', '', '']);
   });
   return wb;
@@ -1688,12 +1703,14 @@ const JD_OPT = [['', '— belum diisi'], ['P', '🌅 Pagi'], ['S', '☀️ Siang
 const DAYN = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
 let jdKey = '', jdData = null, jdEdit = {}, jdWhich = 'cur';
 function nextKeyJs(k) { let y = +k.slice(0, 4), m = +k.slice(5, 7) + 1; if (m > 12) { m = 1; y++; } return y + '-' + pad(m); }
+function noteHtml(r) { const a = []; if (r.noteMasuk) a.push('<b>Masuk:</b> ' + esc(r.noteMasuk)); if (r.notePulang) a.push('<b>Pulang:</b> ' + esc(r.notePulang)); return a.length ? '<div class="rec-note">💬 ' + a.join('<br>') + '</div>' : ''; }
+function shNames(v) { return String(v || '').split('+').map((x) => SHIFT_NAME[x] || x).join(' + '); }
 function jdTag(s) { return s ? `<span class="tag tag-${esc(s)}">${esc(SHIFT_NAME[s] || s)}</span>` : ''; }
 function renderJadwalBanner() {
   const el = $('jadwalBanner'); if (!el || !S) return;
   const h = S.jadwalHariIni, b = S.jadwalBesok;
   if (!h && !b) { el.innerHTML = ''; return; }
-  el.innerHTML = `<div class="jd-ban" data-go="jadwal"><span class="ic">🗓️</span><div class="grow"><div class="small dim">Shift Anda hari ini</div><div>${h ? '<b>' + esc(SHIFT_NAME[h] || h) + '</b>' : '<b>belum dijadwalkan</b>'}${b ? ' <span class="small dim">· besok ' + esc(SHIFT_NAME[b] || b) + '</span>' : ''}</div></div>${h ? jdTag(h) : ''}</div>`;
+  el.innerHTML = `<div class="jd-ban" data-go="jadwal"><span class="ic">🗓️</span><div class="grow"><div class="small dim">Shift Anda hari ini</div><div>${h ? '<b>' + esc(shNames(h)) + '</b>' : '<b>belum dijadwalkan</b>'}${b ? ' <span class="small dim">· besok ' + esc(shNames(b)) + '</span>' : ''}</div></div>${h ? h.split('+').map(jdTag).join('') : ''}</div>`;
   el.firstChild.addEventListener('click', () => go('jadwal'));
   notifShift();
 }
@@ -1702,7 +1719,7 @@ function notifShift() {
     const h = S.jadwalHariIni; if (!h || !('Notification' in window) || Notification.permission !== 'granted') return;
     const mark = S.today + ':' + h; if (localStorage.getItem('jd_notif') === mark) return;
     localStorage.setItem('jd_notif', mark);
-    const title = '🗓️ Shift hari ini: ' + (SHIFT_NAME[h] || h), opt = { body: h === 'L' ? 'Hari ini jadwal libur. Selamat beristirahat.' : 'Jangan lupa absen masuk dan pulang.', icon: 'icon-192.png', tag: 'shift-hari-ini' };
+    const title = '🗓️ Shift hari ini: ' + shNames(h), opt = { body: h === 'L' ? 'Hari ini jadwal libur. Selamat beristirahat.' : 'Jangan lupa absen masuk dan pulang.', icon: 'icon-192.png', tag: 'shift-hari-ini' };
     if (navigator.serviceWorker && navigator.serviceWorker.ready) navigator.serviceWorker.ready.then((r) => r.showNotification(title, opt)).catch(() => { try { new Notification(title, opt); } catch (e) {} });
     else new Notification(title, opt);
   } catch (e) { /* notifikasi tidak didukung */ }
@@ -1732,16 +1749,28 @@ function renderJadwal() {
   $('jdPer').textContent = fmtDate(per.start) + ' s/d ' + fmtDate(per.end);
   $('jdList').innerHTML = jdDates(per).map((x) => {
     const past = x.d < today, v = jdVal(x.d);
-    return `<div class="jd-row ${x.d === today ? 'today' : ''} ${past ? 'past' : ''} ${x.w === 0 ? 'sun' : ''}"><div class="jd-d">${esc(fmtDateShort(x.d))}<small>${DAYN[x.w]}${x.d === today ? ' · hari ini' : ''}</small></div><select data-d="${x.d}" ${past ? 'disabled' : ''}>${JD_OPT.map((o) => `<option value="${o[0]}" ${o[0] === v ? 'selected' : ''}>${o[1]}</option>`).join('')}</select></div>`;
+    const pr = v.split('+'), v1 = pr[0] || '', v2 = pr[1] || '', can2 = !past && v1 && v1 !== 'L';
+    const o1 = JD_OPT.map((o) => `<option value="${o[0]}" ${o[0] === v1 ? 'selected' : ''}>${o[1]}</option>`).join('');
+    const o2 = [['', '＋ Shift ke-2 (dobel)']].concat(JD_OPT.filter((o) => o[0] && o[0] !== 'L')).map((o) => `<option value="${o[0]}" ${o[0] === v2 ? 'selected' : ''}>${o[1]}</option>`).join('');
+    return `<div class="jd-row ${x.d === today ? 'today' : ''} ${past ? 'past' : ''} ${x.w === 0 ? 'sun' : ''}" data-d="${x.d}"><div class="jd-d">${esc(fmtDateShort(x.d))}<small>${DAYN[x.w]}${x.d === today ? ' · hari ini' : ''}</small></div><div class="jd-sels"><select class="s1" ${past ? 'disabled' : ''}>${o1}</select><select class="s2 ${v2 ? 'on' : ''}" ${can2 ? '' : 'disabled'}>${o2}</select></div></div>`;
   }).join('');
-  $('jdList').querySelectorAll('select').forEach((sel) => sel.addEventListener('change', () => { jdEdit[sel.dataset.d] = sel.value; jdSummary(); }));
+  $('jdList').querySelectorAll('.jd-row').forEach((row) => {
+    const s1 = row.querySelector('.s1'), s2 = row.querySelector('.s2');
+    const upd = () => {
+      if (!s1.value || s1.value === 'L') { s2.value = ''; s2.disabled = true; } else s2.disabled = false;
+      if (s2.value && s2.value === s1.value) s2.value = '';
+      s2.classList.toggle('on', !!s2.value);
+      jdEdit[row.dataset.d] = s1.value ? (s2.value ? s1.value + '+' + s2.value : s1.value) : ''; jdSummary();
+    };
+    s1.addEventListener('change', upd); s2.addEventListener('change', upd);
+  });
   jdSummary();
   const t = $('jdList').querySelector('.jd-row.today'); if (t && !jdEdit._scrolled) setTimeout(() => { const y = t.getBoundingClientRect().top + window.scrollY - 90; window.scrollTo(0, y); }, 60);
 }
 function jdSummary() {
-  const cnt = {}; let kosong = 0;
-  jdDates(jdData.period).forEach((x) => { const v = jdVal(x.d); if (v) cnt[v] = (cnt[v] || 0) + 1; else if (x.d >= jdData.today) kosong++; });
-  $('jdSum').innerHTML = ['P', 'S', 'D', 'M', 'R', 'L'].filter((k) => cnt[k]).map((k) => `<span class="tag tag-${k}">${SHIFT_NAME[k]} <b>${cnt[k]}</b></span>`).join('') + (kosong ? `<span class="small dim">${kosong} hari belum diisi</span>` : '');
+  const cnt = {}; let kosong = 0, dobel = 0;
+  jdDates(jdData.period).forEach((x) => { const v = jdVal(x.d); if (v.includes('+')) dobel++; if (v) v.split('+').forEach((k) => { cnt[k] = (cnt[k] || 0) + 1; }); else if (x.d >= jdData.today) kosong++; });
+  $('jdSum').innerHTML = ['P', 'S', 'D', 'M', 'R', 'L'].filter((k) => cnt[k]).map((k) => `<span class="tag tag-${k}">${SHIFT_NAME[k]} <b>${cnt[k]}</b></span>`).join('') + (dobel ? `<span class="small dim">${dobel} hari dobel shift</span>` : '') + (kosong ? `<span class="small dim">${kosong} hari belum diisi</span>` : '');
   $('jdSave').disabled = !Object.keys(jdEdit).length;
   $('jdSave').textContent = Object.keys(jdEdit).length ? 'Simpan jadwal (' + Object.keys(jdEdit).length + ' perubahan)' : 'Simpan jadwal';
 }

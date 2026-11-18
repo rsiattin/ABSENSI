@@ -24,7 +24,8 @@ var TEMP_PW_MENIT_EMAIL = 60;
 var TEMP_PW_MENIT_ADMIN = 24 * 60;
 var ABSEN_HDR = ['id', 'tanggal', 'userId', 'nama', 'unit', 'shift', 'jamMasuk', 'jamPulang', 'tglPulang',
   'fotoMasuk', 'fotoPulang', 'latMasuk', 'lngMasuk', 'latPulang', 'lngPulang', 'jarakMasuk', 'jarakPulang',
-  'flag', 'serverMasuk', 'serverPulang', 'catatan', 'pulangId'];
+  'flag', 'serverMasuk', 'serverPulang', 'catatan', 'pulangId', 'noteMasuk', 'notePulang'];
+var ABSEN_COLS_OK = {};          // sheet absen yang kolomnya sudah dipastikan lengkap (per eksekusi)
 var LAPOR_HDR = ['id', 'tanggal', 'userId', 'nama', 'isi', 'updatedAt', 'shift'];   // laporan per tanggal + shift (shift kosong = laporan lama)
 var LAPOR_HARI = 7;              // laporan boleh diisi/diubah sampai 7 hari ke belakang
 var SHIFTS = ['P', 'S', 'D', 'M', 'R', 'L'];   // P=Pagi, S=Siang, D=Middle, M=Malam, R=Lembur, L=Libur (lama, hanya koreksi)
@@ -288,6 +289,7 @@ function absenSheet_(key, create) {
   var name = PFX_ABSEN + key;
   var sh = ss.getSheetByName(name);
   if (!sh && create) sh = ensureSheet_(ss, name, ABSEN_HDR);
+  if (sh && !ABSEN_COLS_OK[name]) { ensureColumns_(sh, ABSEN_HDR); ABSEN_COLS_OK[name] = true; }
   return sh;
 }
 function laporSheet_(key, create) {
@@ -940,7 +942,7 @@ function actMasuk_(u, p) {
     id: id, tanggal: today, userId: u.id, nama: u.nama, unit: u.unit, shift: shift,
     jamMasuk: p.jam, jamPulang: '', tglPulang: '', fotoMasuk: fotoId, fotoPulang: '',
     latMasuk: g.lat, lngMasuk: g.lng, latPulang: '', lngPulang: '', jarakMasuk: g.jarak, jarakPulang: '',
-    flag: flag, serverMasuk: now, serverPulang: '', catatan: '', pulangId: ''
+    flag: flag, serverMasuk: now, serverPulang: '', catatan: '', pulangId: '', noteMasuk: noteClean_(p.note), notePulang: ''
   });
   return { ok: true };
 }
@@ -967,7 +969,7 @@ function actPulang_(u, p) {
   var o = open.o;
   o.jamPulang = p.jam; o.tglPulang = today; o.fotoPulang = fotoId;
   o.latPulang = g.lat; o.lngPulang = g.lng; o.jarakPulang = g.jarak;
-  o.serverPulang = now; o.pulangId = id;
+  o.serverPulang = now; o.pulangId = id; o.notePulang = noteClean_(p.note);
   o.flag = addFlag_(o.flag, g.flag);
   if (jamBeda_(p.jam, now)) o.flag = addFlag_(o.flag, 'JAM_BEDA');
   if (gpsCuriga_(u.id, p, g, now)) o.flag = addFlag_(o.flag, 'GPS_CURIGA');
@@ -976,6 +978,8 @@ function actPulang_(u, p) {
   return { ok: true };
 }
 
+/** Catatan alasan dari karyawan saat absen (mis. terlambat / pulang awal), maks 200 karakter. */
+function noteClean_(v) { return String(v || '').replace(/\s+/g, ' ').replace(/^\s+|\s+$/g, '').substring(0, 200); }
 function durMenit_(o) {
   if (!o.jamMasuk || !o.jamPulang || !o.tglPulang) return null;
   var d = utcMin_(o.tglPulang, o.jamPulang) - utcMin_(o.tanggal, o.jamMasuk);
@@ -986,7 +990,7 @@ function pubRecord_(o) {
   return {
     id: o.id, tanggal: o.tanggal, userId: o.userId, nama: o.nama, unit: o.unit, shift: o.shift,
     jamMasuk: o.jamMasuk, jamPulang: o.jamPulang, tglPulang: o.tglPulang,
-    flag: o.flag, catatan: o.catatan, durasi: durMenit_(o),
+    flag: o.flag, catatan: o.catatan, noteMasuk: o.noteMasuk || '', notePulang: o.notePulang || '', durasi: durMenit_(o),
     jarakMasuk: o.jarakMasuk, jarakPulang: o.jarakPulang,
     latMasuk: o.latMasuk, lngMasuk: o.lngMasuk, latPulang: o.latPulang, lngPulang: o.lngPulang,
     fotoM: !!o.fotoMasuk && o.fotoMasuk !== 'dihapus', fotoP: !!o.fotoPulang && o.fotoPulang !== 'dihapus',
@@ -1373,6 +1377,17 @@ function nextKey_(key) {
   return y + '-' + pad_(m);
 }
 /** Peta {tanggal: shift} milik satu pengguna pada satu periode (di-cache 6 jam). */
+/** Normalisasi isi jadwal: '' (kosong), 'L' (libur), satu shift, atau dobel 'P+S' (maks 2 shift berbeda, tanpa Libur). null = tidak valid. */
+function jadwalNorm_(v) {
+  var s = String(v || '').toUpperCase().replace(/\s/g, '');
+  if (!s) return '';
+  if (s === 'L') return 'L';
+  var a = s.split('+');
+  if (a.length > 2) return null;
+  for (var i = 0; i < a.length; i++) if (SHIFTS_PICK.indexOf(a[i]) < 0) return null;
+  if (a.length === 2 && a[0] === a[1]) return null;
+  return a.join('+');
+}
 function jadwalMap_(userId, key) {
   var cache = CacheService.getScriptCache(), ck = 'JD_' + userId + '_' + key;
   var hit = cache.get(ck);
@@ -1406,8 +1421,8 @@ function actSaveJadwal_(u, p) {
   for (var d in items) {
     if (!validDate_(d) || d < per.start || d > per.end) continue;
     if (d < today) continue;                         // hari yang sudah lewat tidak bisa diubah
-    var s = String(items[d] || '').toUpperCase();
-    if (s && SHIFTS.indexOf(s) < 0) continue;
+    var s = jadwalNorm_(items[d]);
+    if (s === null) continue;
     if (idx[d]) sh.getRange(idx[d], 3).setValue(s); else if (s) add.push([u.id, d, s]);
     n++;
   }

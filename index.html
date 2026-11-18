@@ -543,7 +543,7 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 .rec-note{margin-top:5px}
 .tm-row{display:flex;gap:11px;align-items:center;background:#fff;border-radius:18px;padding:11px 12px;margin-bottom:9px;box-shadow:0 5px 14px rgba(30,60,120,.09);border:1px solid #e3eaf7;cursor:pointer}
 .tm-row:active{background:#f3f7ff}
-.tm-av{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:17px;flex:none;position:relative}
+.tm-avw{position:relative;flex:none}.tm-avw u{position:absolute;right:-1px;bottom:-1px;width:14px;height:14px;border-radius:50%;border:2.5px solid #fff;text-decoration:none;z-index:2}.tm-av{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:17px;flex:none;position:relative}
 .tm-av u{position:absolute;right:-1px;bottom:-1px;width:13px;height:13px;border-radius:50%;border:2.5px solid #fff;text-decoration:none}
 .tm-mid{flex:1;min-width:0}.tm-nm{font-weight:800;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tm-un{font-size:11.5px;color:#6b7a99}
 .tm-st{font-size:12.5px;margin-top:3px;font-weight:700}.tm-st.mute{color:#8a97b3;font-weight:600}
@@ -594,6 +594,12 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 .jgf select,#jdBulk{padding:11px 10px;cursor:pointer}
 .jd-bar button.sel{box-shadow:0 12px 18px -9px rgba(11,157,150,.65),inset 0 2px 0 rgba(255,255,255,.55),inset 0 -4px 7px rgba(0,90,85,.25)!important;border-radius:15px!important}
 .stat-tiles.flt .st{background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(206,222,250,.62))!important;border:1.5px solid rgba(255,255,255,.95)!important;outline:1px solid rgba(70,110,190,.30);outline-offset:-1px;box-shadow:0 14px 20px -9px rgba(19,40,90,.55),0 3px 5px rgba(19,40,90,.12),inset 0 2px 0 rgba(255,255,255,.98),inset 0 -5px 8px rgba(110,145,215,.28)!important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+
+#lpPrintBtn,#lpPer{background:linear-gradient(180deg,rgba(255,255,255,.97),rgba(206,222,250,.68))!important;border:1.5px solid rgba(255,255,255,.95)!important;outline:1px solid rgba(70,110,190,.38);outline-offset:-1px;box-shadow:0 12px 18px -9px rgba(19,40,90,.55),0 3px 5px rgba(19,40,90,.12),inset 0 2px 0 rgba(255,255,255,.98),inset 0 -4px 7px rgba(110,145,215,.30)!important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#0b3a7a!important;font-weight:800!important;border-radius:15px!important;text-shadow:0 1px 0 rgba(255,255,255,.8)}
+#lpPrintBtn:active{transform:translateY(2px);box-shadow:0 5px 8px -5px rgba(19,40,90,.55),inset 0 2px 5px rgba(110,145,215,.35)!important}
+.paper .lp-ent{border:1px solid #9aa6bd;border-radius:6px;margin-bottom:8px;break-inside:avoid;overflow:hidden}
+.paper .lp-h{background:#e8effa;padding:4px 8px;font-weight:800;display:flex;justify-content:space-between;gap:8px;font-size:11.5px}.paper .lp-h span{font-weight:600;color:#44557a}
+.paper .lp-b{padding:6px 8px 6px 10px}.paper .lp-b ol{margin:0;padding-left:18px}.paper .lp-b li{margin:1px 0}.paper .lp-b.kosong{color:#9aa6bd;font-style:italic}
 </style>
 </head>
 <body>
@@ -698,6 +704,11 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
         <button class="btn btn-teal btn-block" id="btnSaveLaporan" style="padding:14px">Simpan Laporan</button>
       </div>
       <div class="glass card"><h3>🗂️ Laporan Terakhir</h3><div id="lpHistory"></div></div>
+      <div class="glass card"><h3>🖨️ Cetak Laporan Periode</h3>
+        <div class="small dim" style="margin-bottom:8px">Pilih periode, lalu lihat tampilan cetak seluruh laporan harian Anda pada periode tersebut.</div>
+        <div class="field"><label>Periode</label><select id="lpPer"></select></div>
+        <button class="btn btn-block" id="lpPrintBtn" style="padding:13px">📄 Lihat &amp; Cetak Laporan</button>
+      </div>
     </section>
 
     <!-- RIWAYAT -->
@@ -1019,7 +1030,7 @@ function go(p) {
   document.querySelectorAll('.page').forEach((x) => x.classList.toggle('hidden', x.id !== 'pg-' + p));
   $('nav').querySelectorAll('button').forEach((b) => b.classList.toggle('active', b.dataset.p === p));
   $('menu').classList.add('hidden'); window.scrollTo(0, 0);
-  if (p === 'home') { refreshHome(); loadSemangat(); } else if (p === 'laporan') initLaporan(); else if (p === 'riwayat') loadRiwayat(); else if (p === 'tim') loadTim(); else if (p === 'admin') initAdmin(); else if (p === 'akun') renderAkun(); else if (p === 'jaga') loadJaga(); else if (p === 'jadwal') initJadwal();
+  if (p === 'home') { refreshHome(); loadSemangat(); } else if (p === 'laporan') { initLaporan(); fillLpPeriods(); } else if (p === 'riwayat') loadRiwayat(); else if (p === 'tim') loadTim(); else if (p === 'admin') initAdmin(); else if (p === 'akun') renderAkun(); else if (p === 'jaga') loadJaga(); else if (p === 'jadwal') initJadwal();
   clearInterval(jagaT); jagaT = null; if (p === 'jaga') jagaT = setInterval(() => { if (!document.hidden) loadJaga(true); }, 30000);
 }
 
@@ -1433,6 +1444,44 @@ $('rwRekap').addEventListener('click', openRekap);
 $('rkClose').addEventListener('click', () => $('ovRekap').classList.remove('show'));
 $('rkPrint').addEventListener('click', () => { try { window.print(); } catch (e) { toast('Cetak tidak didukung di perangkat ini', true); } });
 
+
+/* ---------------- CETAK LAPORAN PERIODE (karyawan) ---------------- */
+function prevKeyJs(k) { let y = +k.slice(0, 4), m = +k.slice(5, 7) - 1; if (m < 1) { m = 12; y--; } return y + '-' + pad(m); }
+function fillLpPeriods() {
+  const el = $('lpPer'); if (!el || !S || el.options.length) return; let k = S.period.key, h = '';
+  for (let i = 0; i < 8; i++) { h += `<option value="${k}">${esc(periodLabel(k))}${i === 0 ? ' (periode ini)' : ''}</option>`; k = prevKeyJs(k); }
+  el.innerHTML = h;
+}
+async function openLapPrint() {
+  const key = $('lpPer').value, b = $('lpPrintBtn'); b.disabled = true; const old = b.innerHTML; b.innerHTML = '<span class="spin dk"></span> Memuat…';
+  try {
+    const r = await apiGet('riwayat', { period: key });
+    const lap = r.laporan || {}, used = {}, ents = [];
+    r.rows.filter((x) => !isInvalid(x)).forEach((x) => {
+      const k1 = me.id + '_' + x.tanggal + '_' + x.shift, k2 = me.id + '_' + x.tanggal + '_'; const t = lap[k1] || lap[k2] || ''; used[lap[k1] ? k1 : k2] = 1;
+      ents.push({ d: x.tanggal, sh: x.shift, jam: x.jamMasuk + ' → ' + (x.jamPulang || '…'), t });
+    });
+    Object.keys(lap).forEach((k) => { if (used[k] || !k.startsWith(me.id + '_')) return; const p = k.split('_'); ents.push({ d: p[1], sh: p[2] || '', jam: '', t: lap[k] }); });
+    ents.sort((a, b) => (a.d + a.sh < b.d + b.sh ? -1 : 1));
+    const filled = ents.filter((e) => e.t).length, hari = new Set(ents.map((e) => e.d)).size;
+    const logo = $('lgLogo') ? $('lgLogo').src : '', nw = nowJ();
+    const body = ents.map((e) => {
+      const lines = String(e.t || '').split(/\r?\n/).map((x) => x.replace(/^\s*[-•*\d.)]+\s*/, '').trim()).filter(Boolean);
+      return `<div class="lp-ent"><div class="lp-h"><div>${esc(fmtDate(e.d))}</div><span>${esc(SHIFT_NAME[e.sh] || e.sh || '')}${e.jam ? ' · ' + esc(e.jam) : ''}</span></div>${lines.length ? `<div class="lp-b"><ol>${lines.map((l) => `<li>${esc(l)}</li>`).join('')}</ol></div>` : '<div class="lp-b kosong">Belum ada laporan.</div>'}</div>`;
+    }).join('');
+    $('rkPaper').innerHTML = `<div class="kop">${logo ? `<img src="${logo}" alt="">` : ''}<div><b>RSI At-Tin Husada Ngawi</b><span>Laporan Kerja Harian Karyawan</span></div></div>
+      <h2>LAPORAN KERJA HARIAN</h2><div class="per">${esc(periodLabel(key))}</div>
+      <div class="idt"><span>Nama</span><b>${esc(me.nama)}</b><span>NIP</span><div>${esc(me.nip || '-')}</div><span>Unit</span><div>${esc(me.unit || '-')}</div></div>
+      <table><tr><th>Keterangan</th><th class="n" style="width:90px">Jumlah</th></tr><tr><td>Hari kerja</td><td class="n">${hari}</td></tr><tr><td>Laporan terisi</td><td class="n">${filled}</td></tr><tr class="tot"><td>Laporan belum diisi</td><td class="n">${ents.length - filled}</td></tr></table>
+      <div class="sec">Uraian Pekerjaan</div>${ents.length ? body : '<div class="mut">Tidak ada data pada periode ini.</div>'}
+      <div class="ttd"><div>Karyawan<b>${esc(me.nama)}</b></div><div>Atasan / Kepala Unit<b>&nbsp;</b></div></div>
+      <div class="foot2">Dicetak dari aplikasi Absensi RSI At-Tin Husada · ${esc(fmtDate(nw.date))} ${esc(nw.hhmm)}</div>`;
+    $('ovRekap').className = 'overlay show'; $('ovRekap').scrollTop = 0;
+  } catch (e) { if (e.message !== 'Sesi berakhir') toast(e.message, true); }
+  b.disabled = false; b.innerHTML = old;
+}
+$('lpPrintBtn').addEventListener('click', openLapPrint);
+
 /* ---------------- TIM (atasan/admin) ---------------- */
 let tmKey = null, tmData = null, tmFilter = 'all';
 async function loadTim() {
@@ -1445,6 +1494,34 @@ async function loadTim() {
 }
 function statTiles(items, cls) { return '<div class="stat-tiles ' + (cls || '') + '">' + items.map((i) => `<div class="st ${i[0]}"><i>${i[1]}</i><b>${i[2]}</b><span>${i[3]}</span></div>`).join('') + '</div>'; }
 function shiftBox(c) { return '<div class="shift-box"><span class="shift-ttl">Rincian shift</span><div class="shift-chips">' + SH_ALL.map((k) => `<span class="tag tag-${k} sc ${(c[k] || 0) ? '' : 'zero'}">${SHIFT_NAME[k]} <b>${c[k] || 0}</b></span>`).join('') + '</div></div>'; }
+
+/* foto profil di daftar Tim: dimuat bertahap saat barisnya terlihat (memakai cache foto Jaga) */
+let tmObs = null, tmPend = new Set(), tmTimer = null, tmBusy = false;
+function paintFotos(root) { (root || document).querySelectorAll('.jg-ava').forEach((el) => { const f = jgFoto[el.dataset.uid]; if (f && !el.querySelector('img')) el.innerHTML = `<img alt="" src="${f}">`; }); }
+async function flushTmFotos() {
+  if (tmBusy) return; tmBusy = true;
+  try {
+    while (tmPend.size) {
+      const ids = Array.from(tmPend).slice(0, 20); ids.forEach((i) => tmPend.delete(i));
+      const need = ids.filter((i) => jgFoto[i] === undefined); if (!need.length) continue;
+      try { const r = await apiGet('fotoBanyak', { ids: need.join(',') }); need.forEach((id) => { jgFoto[id] = (r.map && r.map[id]) || ''; }); } catch (e) { break; }
+      paintFotos($('tmList'));
+    }
+  } catch (e) { /* abaikan */ }
+  tmBusy = false;
+}
+function watchTmFotos() {
+  if (me && me.foto && jgFoto[me.id] === undefined) jgFoto[me.id] = me.foto;
+  paintFotos($('tmList'));
+  if (tmObs) tmObs.disconnect();
+  if (!('IntersectionObserver' in window)) { $('tmList').querySelectorAll('.tm-row').forEach((r) => { if (jgFoto[r.dataset.u] === undefined) tmPend.add(r.dataset.u); }); flushTmFotos(); return; }
+  tmObs = new IntersectionObserver((es) => {
+    es.forEach((e) => { if (e.isIntersecting) { tmObs.unobserve(e.target); if (jgFoto[e.target.dataset.u] === undefined) tmPend.add(e.target.dataset.u); } });
+    clearTimeout(tmTimer); tmTimer = setTimeout(flushTmFotos, 150);
+  }, { rootMargin: '200px' });
+  $('tmList').querySelectorAll('.tm-row').forEach((r) => tmObs.observe(r));
+}
+
 const AVC = ['#0ea39d', '#3b7de0', '#6f4bd8', '#e8851a', '#d6489a', '#2a9d5c', '#c2540a', '#4f6bd8'];
 function avColor(n) { let h = 0; for (const c of String(n)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return AVC[h % AVC.length]; }
 function renderTim() {
@@ -1464,11 +1541,12 @@ function renderTim() {
     let st = '', dot = '#c7cfe0';
     if (isCur) { if (last) { dot = s.cek ? '#e8851a' : '#18b97a'; st = `<div class="tm-st">${esc(last.jamMasuk)} → ${last.jamPulang ? esc(last.jamPulang) : '<span style="color:#1d4fa8">masih bertugas</span>'}</div>`; } else st = '<div class="tm-st mute">Belum absen hari ini</div>'; }
     else st = `<div class="tm-st mute">${s.hari} hari hadir</div>`;
-    return `<div class="tm-row" data-u="${esc(s.userId)}"><div class="tm-av" style="background:${avColor(s.nama)}">${esc((s.nama || '?').trim().charAt(0).toUpperCase())}<u style="background:${dot}"></u></div>
+    return `<div class="tm-row" data-u="${esc(s.userId)}"><div class="tm-avw"><div class="jg-ava" data-uid="${esc(s.userId)}">${jgAva(s.userId)}</div><u style="background:${dot}"></u></div>
       <div class="tm-mid"><div class="tm-nm">${esc(s.nama)}</div><div class="tm-un">${esc(s.unit || '')}</div>${st}<div class="tm-tags">${SH_ALL.filter((k) => (s[k] || 0) > 0).map((k) => `<i style="background:${SHC[k]}">${SHIFT_NAME[k]} ${s[k]}</i>`).join('')}</div></div>
       <div class="tm-r"><div class="ind"><span title="Hari hadir">✅ <b>${s.hari}</b></span><span title="Total shift">🔁 <b>${shTot(s)}</b></span></div><div class="ind"><span title="Jam lembur">🕒 <b>${fmtDur(s.lembur || 0)}</b></span></div>${s.cek ? `<span class="b cek">⚠ ${s.cek} cek</span>` : ''}${s.belum ? `<span class="b bel">⏳ ${s.belum}</span>` : ''}${s.tidak ? `<span class="b cek">⛔${s.tidak}</span>` : ''}</div></div>`;
   }).join('') : '<div class="empty">Tidak ada data.</div>';
   $('tmList').querySelectorAll('.tm-row').forEach((tr) => tr.addEventListener('click', () => openEmployee(tr.dataset.u)));
+  watchTmFotos();
 }
 $('tmPrev').addEventListener('click', () => { tmKey = shiftKey(tmKey, -1); loadTim(); });
 $('tmNext').addEventListener('click', () => { tmKey = shiftKey(tmKey, 1); loadTim(); });

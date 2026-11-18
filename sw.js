@@ -1,5 +1,5 @@
 /* Service worker sederhana: shell aplikasi dari cache, data (Apps Script) selalu dari jaringan */
-const CACHE = 'absensi-rsi-v17';
+const CACHE = 'absensi-rsi-v18';
 const SHELL = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
@@ -17,4 +17,9 @@ self.addEventListener('fetch', (e) => {
       return res;
     }).catch(() => caches.match(req).then((r) => r || caches.match('./index.html')))
   );
+});
+
+self.addEventListener('notificationclick', (e) => {
+  e.notification.close();
+  e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((cs) => { for (const c of cs) { if ('focus' in c) return c.focus(); } return self.clients.openWindow('./'); }));
 });

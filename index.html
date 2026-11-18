@@ -494,6 +494,18 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 .item.rec.invalid{border-left:6px solid #d62839;background:linear-gradient(160deg,#fff,#fff0f1);} .item.rec.invalid .att-times b{text-decoration:line-through;opacity:.55;}
 .pill.bad{background:#fde1e4;color:#8f1d2a;}
 .btn-danger-soft{color:#b3202f;background:linear-gradient(160deg,#fff,#ffeef0);border:1.5px solid #f3b3ba;font-weight:700;}
+
+.jd-bar{display:flex;gap:8px;margin-bottom:10px}.jd-bar button{flex:1}
+.jd-bar button.sel{background:linear-gradient(145deg,#2fe0c8,#0b9d96)!important;color:#fff!important;text-shadow:0 1px 1px rgba(0,0,0,.25);border-color:#0b9d96}
+.jd-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:14px;margin-bottom:8px;border:1.5px solid rgba(120,140,190,.35);background:rgba(255,255,255,.6)}
+.jd-row.today{border-color:var(--teal);box-shadow:0 0 0 2px rgba(14,163,157,.2)}
+.jd-row.past{opacity:.55}.jd-row.sun .jd-d{color:#d33}
+.jd-d{width:74px;font-weight:700;font-size:14px;line-height:1.2}.jd-d small{display:block;font-weight:500;opacity:.7}
+.jd-row select{flex:1;padding:9px 8px;border-radius:12px;font-size:15px;font-weight:600}
+.jd-sum{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px}
+.jd-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}.jd-tools select{flex:1;min-width:120px;padding:9px;border-radius:12px}
+.jd-ban{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:18px;margin-bottom:12px;background:linear-gradient(135deg,#e6f7f6,#eef2ff);border:1.5px solid rgba(14,163,157,.4)}
+.jd-ban .ic{font-size:26px}.jd-ban b{font-size:16px}
 </style>
 </head>
 <body>
@@ -548,6 +560,7 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
         </div>
       </div>
       <div class="glass card quote hidden" id="hQuote"><div class="q-ic"><img id="qLogo" alt="RSI At-Tin Husada"></div><div class="grow"><div class="q-ttl">Papan Informasi</div><div class="q-tx" id="hQuoteTx"></div><div class="q-dt" id="hQuoteDt"></div></div></div>
+      <div id="jadwalBanner"></div>
       <div id="olderBanner"></div>
       <div class="act-grid" id="absenAction">
         <button class="act-tile act-in" id="btnMasuk"><span class="act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg></span><b>Absen Masuk</b><small id="tlMasuk">Klik untuk absen saat datang kerja</small></button>
@@ -568,6 +581,22 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
       </div>
       <div class="sum-grid" id="jgSum"></div>
       <div id="jgList"></div>
+    </section>
+
+    <!-- JADWAL -->
+    <section class="page hidden" id="pg-jadwal">
+      <div class="pg-head" data-c="teal"><div class="pg-ic">🗓️</div><div class="pg-tx"><h2>Jadwal Shift</h2><p>Rencanakan shift Anda satu periode</p></div></div>
+      <div class="jd-bar"><button class="btn sel" id="jdCur">Periode ini</button><button class="btn" id="jdNext">Periode depan</button></div>
+      <div class="small dim" id="jdPer" style="margin-bottom:8px"></div>
+      <div class="jd-tools">
+        <select id="jdBulk"><option value="P">🌅 Pagi</option><option value="S">☀️ Siang</option><option value="D">🌤️ Middle</option><option value="M">🌙 Malam</option></select>
+        <button class="btn btn-sm" id="jdFill">Isi hari kosong</button>
+        <button class="btn btn-sm" id="jdSun">Minggu = Libur</button>
+      </div>
+      <div class="jd-sum" id="jdSum"></div>
+      <div id="jdList"></div>
+      <div class="row" style="gap:8px;margin:12px 0"><button class="btn btn-teal grow" id="jdSave" disabled>Simpan jadwal</button></div>
+      <div class="glass card small dim" id="jdNotifBox" style="display:none"><div style="margin-bottom:8px">🔔 Aktifkan notifikasi agar HP memberi tahu shift Anda hari ini saat aplikasi dibuka.</div><button class="btn btn-sm" id="jdNotif">Aktifkan notifikasi</button></div>
     </section>
 
     <!-- LAPORAN -->
@@ -713,7 +742,7 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 /* ============================================================
    KONFIGURASI — isi dengan URL Web App Apps Script Anda
    ============================================================ */
-const API_URL = "https://script.google.com/macros/s/AKfycbyS_7ZdlzXXEp65zHkP6MDriFd3dUvugrhqpSDfvJfIXvKHJepCJ0NaFaWMywUngF5Y/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyxKiWO0OtKdnKJHeSkdqPbDIjRfcLAKW-vnMI9uCuTLyqL093qQmtUMeMWHfxVu9q5/exec";
 
 /* ---------------- util ---------------- */
 const $ = (id) => document.getElementById(id);
@@ -751,7 +780,7 @@ function toast(msg, err) { const t = $('toast'); t.textContent = msg; t.classNam
 /* ---------------- API ---------------- */
 const API_READY = API_URL && API_URL.indexOf('PASTE_URL') < 0;
 let pubInfo = { waAdmin: '' };
-const NEED_VER = 15;
+const NEED_VER = 16;
 async function loadPubInfo() {
   if (!API_READY) return;
   try { pubInfo = await apiGet('infoPublik', { token: '' }); if (!pubInfo.ver || pubInfo.ver < NEED_VER) $('verWarn').classList.remove('hidden'); }
@@ -875,7 +904,7 @@ async function startApp() {
 }
 function tick() { const n = nowJ(); $('hClock').textContent = n.hhmm + ':' + n.sec; $('hDate').textContent = fmtDate(n.date); if (S && S.open) updateDur(); }
 function buildNav() {
-  const items = [['home', '🏠', 'Beranda'], ['jaga', '🩺', 'Jaga'], ['laporan', '📝', 'Laporan'], ['riwayat', '🕘', 'Riwayat']];
+  const items = [['home', '🏠', 'Beranda'], ['jaga', '🩺', 'Jaga'], ['jadwal', '🗓️', 'Jadwal'], ['laporan', '📝', 'Laporan'], ['riwayat', '🕘', 'Riwayat']];
   if (me.role === 'atasan' || me.role === 'admin') items.push(['tim', '👥', 'Tim']);
   if (me.role === 'admin') items.push(['admin', '⚙️', 'Admin']);
   items.push(['akun', '👤', 'Akun']);
@@ -894,7 +923,7 @@ function go(p) {
   document.querySelectorAll('.page').forEach((x) => x.classList.toggle('hidden', x.id !== 'pg-' + p));
   $('nav').querySelectorAll('button').forEach((b) => b.classList.toggle('active', b.dataset.p === p));
   $('menu').classList.add('hidden'); window.scrollTo(0, 0);
-  if (p === 'home') { refreshHome(); loadSemangat(); } else if (p === 'laporan') initLaporan(); else if (p === 'riwayat') loadRiwayat(); else if (p === 'tim') loadTim(); else if (p === 'admin') initAdmin(); else if (p === 'akun') renderAkun(); else if (p === 'jaga') loadJaga();
+  if (p === 'home') { refreshHome(); loadSemangat(); } else if (p === 'laporan') initLaporan(); else if (p === 'riwayat') loadRiwayat(); else if (p === 'tim') loadTim(); else if (p === 'admin') initAdmin(); else if (p === 'akun') renderAkun(); else if (p === 'jaga') loadJaga(); else if (p === 'jadwal') initJadwal();
   clearInterval(jagaT); jagaT = null; if (p === 'jaga') jagaT = setInterval(() => { if (!document.hidden) loadJaga(true); }, 30000);
 }
 
@@ -936,6 +965,7 @@ function renderHome() {
   $('hDur').textContent = last ? (last.durasi != null ? fmtDur(last.durasi) : '…') : '—';
   $('olderBanner').innerHTML = open && open.tanggal !== S.today
     ? `<div class="banner red">⚠ Absen Masuk tanggal <b>${fmtDate(open.tanggal)}</b> belum Pulang. Silakan absen Pulang di bawah.</div>` : '';
+  renderJadwalBanner();
   $('btnMasuk').disabled = !!open; $('btnPulang').disabled = !open;
   $('tlMasuk').textContent = open ? 'Sudah masuk pukul ' + open.jamMasuk : 'Klik untuk absen saat datang kerja';
   $('tlPulang').textContent = open ? 'Klik untuk absen saat selesai kerja' : 'Absen masuk dulu';
@@ -1029,7 +1059,7 @@ function openAbsen(mode) {
   $('abJamLbl').textContent = mode === 'masuk' ? 'Jam masuk (bisa diubah)' : 'Jam pulang (bisa diubah)';
   $('abShiftWrap').classList.toggle('hidden', mode !== 'masuk');
   const n = nowJ(); $('abJam').value = n.hhmm;
-  let last = localStorage.getItem('absensi_last_shift') || 'P'; if (SH_ALL.indexOf(last) < 0) last = 'P';
+  let last = (S && SH_ALL.indexOf(S.jadwalHariIni) >= 0) ? S.jadwalHariIni : (localStorage.getItem('absensi_last_shift') || 'P'); if (SH_ALL.indexOf(last) < 0) last = 'P';
   document.querySelectorAll('#abShift button').forEach((b) => b.classList.toggle('sel', b.dataset.s === last));
   $('abPhotoBox').innerHTML = PH_HTML;
   $('abSend').disabled = true; $('abSend').textContent = 'Kirim';
@@ -1652,6 +1682,83 @@ async function makeTemp(userId, btn) {
 }
 
 /* ---------------- JAGA SEKARANG ---------------- */
+
+/* ---------------- JADWAL SHIFT ---------------- */
+const JD_OPT = [['', '— belum diisi'], ['P', '🌅 Pagi'], ['S', '☀️ Siang'], ['D', '🌤️ Middle'], ['M', '🌙 Malam'], ['R', '⏰ Lembur'], ['L', '🏠 Libur']];
+const DAYN = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+let jdKey = '', jdData = null, jdEdit = {}, jdWhich = 'cur';
+function nextKeyJs(k) { let y = +k.slice(0, 4), m = +k.slice(5, 7) + 1; if (m > 12) { m = 1; y++; } return y + '-' + pad(m); }
+function jdTag(s) { return s ? `<span class="tag tag-${esc(s)}">${esc(SHIFT_NAME[s] || s)}</span>` : ''; }
+function renderJadwalBanner() {
+  const el = $('jadwalBanner'); if (!el || !S) return;
+  const h = S.jadwalHariIni, b = S.jadwalBesok;
+  if (!h && !b) { el.innerHTML = ''; return; }
+  el.innerHTML = `<div class="jd-ban" data-go="jadwal"><span class="ic">🗓️</span><div class="grow"><div class="small dim">Shift Anda hari ini</div><div>${h ? '<b>' + esc(SHIFT_NAME[h] || h) + '</b>' : '<b>belum dijadwalkan</b>'}${b ? ' <span class="small dim">· besok ' + esc(SHIFT_NAME[b] || b) + '</span>' : ''}</div></div>${h ? jdTag(h) : ''}</div>`;
+  el.firstChild.addEventListener('click', () => go('jadwal'));
+  notifShift();
+}
+function notifShift() {
+  try {
+    const h = S.jadwalHariIni; if (!h || !('Notification' in window) || Notification.permission !== 'granted') return;
+    const mark = S.today + ':' + h; if (localStorage.getItem('jd_notif') === mark) return;
+    localStorage.setItem('jd_notif', mark);
+    const title = '🗓️ Shift hari ini: ' + (SHIFT_NAME[h] || h), opt = { body: h === 'L' ? 'Hari ini jadwal libur. Selamat beristirahat.' : 'Jangan lupa absen masuk dan pulang.', icon: 'icon-192.png', tag: 'shift-hari-ini' };
+    if (navigator.serviceWorker && navigator.serviceWorker.ready) navigator.serviceWorker.ready.then((r) => r.showNotification(title, opt)).catch(() => { try { new Notification(title, opt); } catch (e) {} });
+    else new Notification(title, opt);
+  } catch (e) { /* notifikasi tidak didukung */ }
+}
+function jdDates(per) {
+  const out = []; let t = Date.UTC(+per.start.slice(0, 4), +per.start.slice(5, 7) - 1, +per.start.slice(8, 10));
+  const e = Date.UTC(+per.end.slice(0, 4), +per.end.slice(5, 7) - 1, +per.end.slice(8, 10));
+  for (; t <= e; t += 86400000) { const d = new Date(t); out.push({ d: d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()), w: d.getUTCDay() }); }
+  return out;
+}
+function jdVal(d) { return d in jdEdit ? jdEdit[d] : ((jdData && jdData.jadwal[d]) || ''); }
+async function initJadwal() {
+  $('jdNotifBox').style.display = ('Notification' in window && Notification.permission === 'default') ? 'block' : 'none';
+  await loadJadwal(jdWhich);
+}
+async function loadJadwal(which) {
+  jdWhich = which; jdEdit = {};
+  $('jdCur').classList.toggle('sel', which === 'cur'); $('jdNext').classList.toggle('sel', which === 'next');
+  $('jdList').innerHTML = '<div class="empty">Memuat…</div>';
+  try {
+    const base = S ? S.period.key : null; jdKey = which === 'cur' ? base : nextKeyJs(base);
+    jdData = await apiGet('jadwal', { key: jdKey }); renderJadwal();
+  } catch (e) { if (e.message !== 'Sesi berakhir') { $('jdList').innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; } }
+}
+function renderJadwal() {
+  const per = jdData.period, today = jdData.today;
+  $('jdPer').textContent = fmtDate(per.start) + ' s/d ' + fmtDate(per.end);
+  $('jdList').innerHTML = jdDates(per).map((x) => {
+    const past = x.d < today, v = jdVal(x.d);
+    return `<div class="jd-row ${x.d === today ? 'today' : ''} ${past ? 'past' : ''} ${x.w === 0 ? 'sun' : ''}"><div class="jd-d">${esc(fmtDateShort(x.d))}<small>${DAYN[x.w]}${x.d === today ? ' · hari ini' : ''}</small></div><select data-d="${x.d}" ${past ? 'disabled' : ''}>${JD_OPT.map((o) => `<option value="${o[0]}" ${o[0] === v ? 'selected' : ''}>${o[1]}</option>`).join('')}</select></div>`;
+  }).join('');
+  $('jdList').querySelectorAll('select').forEach((sel) => sel.addEventListener('change', () => { jdEdit[sel.dataset.d] = sel.value; jdSummary(); }));
+  jdSummary();
+  const t = $('jdList').querySelector('.jd-row.today'); if (t && !jdEdit._scrolled) setTimeout(() => { const y = t.getBoundingClientRect().top + window.scrollY - 90; window.scrollTo(0, y); }, 60);
+}
+function jdSummary() {
+  const cnt = {}; let kosong = 0;
+  jdDates(jdData.period).forEach((x) => { const v = jdVal(x.d); if (v) cnt[v] = (cnt[v] || 0) + 1; else if (x.d >= jdData.today) kosong++; });
+  $('jdSum').innerHTML = ['P', 'S', 'D', 'M', 'R', 'L'].filter((k) => cnt[k]).map((k) => `<span class="tag tag-${k}">${SHIFT_NAME[k]} <b>${cnt[k]}</b></span>`).join('') + (kosong ? `<span class="small dim">${kosong} hari belum diisi</span>` : '');
+  $('jdSave').disabled = !Object.keys(jdEdit).length;
+  $('jdSave').textContent = Object.keys(jdEdit).length ? 'Simpan jadwal (' + Object.keys(jdEdit).length + ' perubahan)' : 'Simpan jadwal';
+}
+function jdSet(fn) { jdDates(jdData.period).forEach((x) => { if (x.d < jdData.today) return; const nv = fn(x, jdVal(x.d)); if (nv !== null && nv !== jdVal(x.d)) jdEdit[x.d] = nv; }); renderJadwal(); }
+$('jdCur').addEventListener('click', () => loadJadwal('cur')); $('jdNext').addEventListener('click', () => loadJadwal('next'));
+$('jdFill').addEventListener('click', () => { if (!jdData) return; const s = $('jdBulk').value; jdSet((x, v) => (v ? null : (x.w === 0 ? 'L' : s))); });
+$('jdSun').addEventListener('click', () => { if (!jdData) return; jdSet((x) => (x.w === 0 ? 'L' : null)); });
+$('jdNotif').addEventListener('click', async () => { try { const r = await Notification.requestPermission(); $('jdNotifBox').style.display = 'none'; toast(r === 'granted' ? '✅ Notifikasi aktif' : 'Notifikasi tidak diizinkan', r !== 'granted'); if (r === 'granted' && S) { localStorage.removeItem('jd_notif'); notifShift(); } } catch (e) { toast('Perangkat tidak mendukung notifikasi', true); } });
+$('jdSave').addEventListener('click', async () => {
+  const items = Object.assign({}, jdEdit), b = $('jdSave'); b.disabled = true; b.innerHTML = '<span class="spin"></span> Menyimpan…';
+  try {
+    const ok = (d) => Object.keys(items).every((k) => (d.jadwal[k] || '') === items[k]);
+    const r = await sendAndConfirm('saveJadwal', { key: jdKey, items }, () => apiGet('jadwal', { key: jdKey }), ok);
+    if (r) { jdData = r; jdEdit = {}; renderJadwal(); toast('✅ Jadwal tersimpan'); await loadState(); renderJadwalBanner(); } else { toast(NOT_CONFIRMED, true); jdSummary(); }
+  } catch (e) { toast(e.message, true); jdSummary(); }
+});
+
 let jagaT = null, jagaData = null;
 async function loadJaga(silent) {
   try { jagaData = await apiGet('jaga'); renderJaga(); }

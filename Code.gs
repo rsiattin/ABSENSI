@@ -19,7 +19,7 @@ var FOTO_HDR = ['userId', 'foto', 'updatedAt'];
 var SH_RESET = 'ResetReq';
 var RESET_HDR = ['id', 'userId', 'username', 'nama', 'unit', 'createdAt', 'status'];
 var MAX_FOTO_PROFIL = 45000;     // karakter base64 (foto profil 160px ~ 8-12 KB)
-var API_VERSION = 15;             // dinaikkan tiap ada aksi baru; dipakai aplikasi untuk mendeteksi backend lama
+var API_VERSION = 16;             // dinaikkan tiap ada aksi baru; dipakai aplikasi untuk mendeteksi backend lama
 var TEMP_PW_MENIT_EMAIL = 60;
 var TEMP_PW_MENIT_ADMIN = 24 * 60;
 var ABSEN_HDR = ['id', 'tanggal', 'userId', 'nama', 'unit', 'shift', 'jamMasuk', 'jamPulang', 'tglPulang',
@@ -30,6 +30,8 @@ var LAPOR_HARI = 7;              // laporan boleh diisi/diubah sampai 7 hari ke 
 var SHIFTS = ['P', 'S', 'D', 'M', 'R', 'L'];   // P=Pagi, S=Siang, D=Middle, M=Malam, R=Lembur, L=Libur (lama, hanya koreksi)
 var SHIFTS_PICK = ['P', 'S', 'D', 'M', 'R'];
 var SH_UNIT = 'Unit';
+var PFX_JADWAL = 'Jadwal_';
+var JADWAL_HDR = ['userId', 'tanggal', 'shift'];   // rencana shift per orang per tanggal (P/S/D/M/R/L)
 var UNIT_HDR = ['nama'];
 var FLAG_CEK = ['LOKASI_JAUH', 'GPS_GAGAL', 'JAM_BEDA', 'JADWAL_L', 'GPS_CURIGA'];
 var SESSION_HOURS = 12;
@@ -933,7 +935,7 @@ function actMasuk_(u, p) {
   flag = addFlag_(flag, g.flag);
   if (jamBeda_(p.jam, now)) flag = addFlag_(flag, 'JAM_BEDA');
   if (gpsCuriga_(u.id, p, g, now)) flag = addFlag_(flag, 'GPS_CURIGA');
-  if (shift === 'L') flag = addFlag_(flag, 'JADWAL_L');
+  if (shift === 'L' || (shift !== 'R' && jadwalFor_(u.id, today) === 'L')) flag = addFlag_(flag, 'JADWAL_L');
   appendObj_(sh, ABSEN_HDR, {
     id: id, tanggal: today, userId: u.id, nama: u.nama, unit: u.unit, shift: shift,
     jamMasuk: p.jam, jamPulang: '', tglPulang: '', fotoMasuk: fotoId, fotoPulang: '',
@@ -1064,7 +1066,8 @@ function actState_(u) {
     me: pubUserFull_(u), now: now, today: today, period: periodRange_(key),
     open: open ? pubRecord_(open.o) : null, todayRecords: recs, olderOpen: yRec,
     laporan: lapAll, lokasi: cfg.lokasi, defaultRadius: DEFAULT_RADIUS, units: getUnits_(),
-    counts: u.role === 'admin' ? adminCounts_() : null
+    counts: u.role === 'admin' ? adminCounts_() : null,
+    jadwalHariIni: jadwalFor_(u.id, today), jadwalBesok: jadwalFor_(u.id, addDays_(today, 1))
   };
 }
 
@@ -1359,6 +1362,60 @@ function arsipBulanLama_(hapus) {
 function arsipkanBulanLama() { return arsipBulanLama_(false); }
 function arsipkanDanHapusBulanLama() { return arsipBulanLama_(true); }
 
+
+/* ====================== JADWAL (rencana shift) ====================== */
+function addDays_(d, n) {
+  var p = d.split('-'); var t = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2] + n));
+  return t.getUTCFullYear() + '-' + pad_(t.getUTCMonth() + 1) + '-' + pad_(t.getUTCDate());
+}
+function nextKey_(key) {
+  var p = key.split('-'); var y = +p[0], m = +p[1] + 1; if (m > 12) { m = 1; y += 1; }
+  return y + '-' + pad_(m);
+}
+/** Peta {tanggal: shift} milik satu pengguna pada satu periode (di-cache 6 jam). */
+function jadwalMap_(userId, key) {
+  var cache = CacheService.getScriptCache(), ck = 'JD_' + userId + '_' + key;
+  var hit = cache.get(ck);
+  if (hit) { try { return JSON.parse(hit); } catch (e0) { /* baca ulang */ } }
+  var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(PFX_JADWAL + key);
+  var map = {};
+  if (sh) {
+    var rows = readAll_(sh);
+    for (var i = 0; i < rows.length; i++) if (rows[i].userId === userId && rows[i].shift) map[rows[i].tanggal] = rows[i].shift;
+  }
+  try { cache.put(ck, JSON.stringify(map), 21600); } catch (e1) { /* abaikan */ }
+  return map;
+}
+function jadwalFor_(userId, dateStr) { return jadwalMap_(userId, periodKey_(dateStr))[dateStr] || ''; }
+function actJadwal_(u, p) {
+  var today = nowJ_().substring(0, 10);
+  var key = validKey_(p.key) ? p.key : periodKey_(today);
+  return { period: periodRange_(key), today: today, jadwal: jadwalMap_(u.id, key) };
+}
+function actSaveJadwal_(u, p) {
+  var today = nowJ_().substring(0, 10), cur = periodKey_(today);
+  var key = String(p.key || '');
+  if (!validKey_(key) || (key !== cur && key !== nextKey_(cur))) throw fail_('Periode tidak valid.');
+  var per = periodRange_(key), items = p.items || {};
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ensureSheet_(ss, PFX_JADWAL + key, JADWAL_HDR);
+  var last = sh.getLastRow(), idx = {};
+  var vals = last >= 2 ? sh.getRange(2, 1, last - 1, 3).getValues() : [];
+  for (var i = 0; i < vals.length; i++) if (String(vals[i][0]) === u.id) idx[String(vals[i][1])] = i + 2;
+  var add = [], n = 0;
+  for (var d in items) {
+    if (!validDate_(d) || d < per.start || d > per.end) continue;
+    if (d < today) continue;                         // hari yang sudah lewat tidak bisa diubah
+    var s = String(items[d] || '').toUpperCase();
+    if (s && SHIFTS.indexOf(s) < 0) continue;
+    if (idx[d]) sh.getRange(idx[d], 3).setValue(s); else if (s) add.push([u.id, d, s]);
+    n++;
+  }
+  if (add.length) sh.getRange(sh.getLastRow() + 1, 1, add.length, 3).setValues(add);
+  CacheService.getScriptCache().remove('JD_' + u.id + '_' + key);
+  return { ok: true, n: n };
+}
+
 function doGet(e) {
   try {
     var p = e.parameter || {};
@@ -1390,6 +1447,7 @@ function doGet(e) {
         try { return out_(actResetBuat_(u, p)); } finally { try { lk.releaseLock(); } catch (e3) { /* tidak terkunci */ } }
       case 'config': { var cfgOut = getConfig_(); cfgOut.waGatewaySet = !!waToken_(); return out_(cfgOut); }
       case 'jaga': return out_(actJaga_(u));
+      case 'jadwal': return out_(actJadwal_(u, p));
       case 'semangat': return out_(actSemangat_());
       default: return out_({ error: 'Aksi tidak dikenal: ' + a });
     }
@@ -1415,6 +1473,7 @@ function doPost(e) {
       case 'pulang': r = actPulang_(u, p); CacheService.getScriptCache().remove('JAGA'); break;
       case 'saveLaporan': r = actSaveLaporan_(u, p); break;
       case 'hapusLaporan': r = actHapusLaporan_(u, p); break;
+      case 'saveJadwal': r = actSaveJadwal_(u, p); break;
       case 'koreksi': r = actKoreksi_(u, p); CacheService.getScriptCache().remove('JAGA'); break;
       case 'tidakSah': r = actTidakSah_(u, p); CacheService.getScriptCache().remove('JAGA'); break;
       case 'saveConfig': r = actSaveConfig_(u, p); break;

@@ -583,6 +583,17 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 .paper .ttd{display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center;margin-top:18px}.paper .ttd div{height:78px}.paper .ttd b{display:block;margin-top:50px;border-top:1px solid #14213d;padding-top:3px}
 .paper .foot2{margin-top:12px;font-size:10px;color:#6b7a99;text-align:right}
 @media print{body>*:not(#ovRekap){display:none!important}#ovRekap{position:static!important;display:block!important;background:#fff!important;overflow:visible!important;backdrop-filter:none!important}.rk-bar,.rk-hint{display:none!important}.rk-wrap{max-width:none;padding:0}.paper{box-shadow:none!important;border-radius:0;padding:0;font-size:11px}@page{size:A4;margin:14mm}}
+
+/* tombol timbul + kaca (glassy) */
+#jgRefresh,#jdFill,#jdSun,#rwRekap,#jdBulk,.jgf select,.jd-bar button:not(.sel){
+  background:linear-gradient(180deg,rgba(255,255,255,.97),rgba(206,222,250,.68))!important;
+  border:1.5px solid rgba(255,255,255,.95)!important;outline:1px solid rgba(70,110,190,.38);outline-offset:-1px;
+  box-shadow:0 12px 18px -9px rgba(19,40,90,.55),0 3px 5px rgba(19,40,90,.12),inset 0 2px 0 rgba(255,255,255,.98),inset 0 -4px 7px rgba(110,145,215,.30)!important;
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#0b3a7a!important;font-weight:800!important;border-radius:15px!important;text-shadow:0 1px 0 rgba(255,255,255,.8)}
+#jgRefresh:active,#jdFill:active,#jdSun:active,#rwRekap:active,.jd-bar button:active{transform:translateY(2px);box-shadow:0 5px 8px -5px rgba(19,40,90,.55),inset 0 2px 5px rgba(110,145,215,.35)!important}
+.jgf select,#jdBulk{padding:11px 10px;cursor:pointer}
+.jd-bar button.sel{box-shadow:0 12px 18px -9px rgba(11,157,150,.65),inset 0 2px 0 rgba(255,255,255,.55),inset 0 -4px 7px rgba(0,90,85,.25)!important;border-radius:15px!important}
+.stat-tiles.flt .st{background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(206,222,250,.62))!important;border:1.5px solid rgba(255,255,255,.95)!important;outline:1px solid rgba(70,110,190,.30);outline-offset:-1px;box-shadow:0 14px 20px -9px rgba(19,40,90,.55),0 3px 5px rgba(19,40,90,.12),inset 0 2px 0 rgba(255,255,255,.98),inset 0 -5px 8px rgba(110,145,215,.28)!important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 </style>
 </head>
 <body>
@@ -835,7 +846,8 @@ const MONTHS = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov
 const DAYS = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
 const SHIFT_NAME = { P: 'Pagi', S: 'Siang', D: 'Middle', M: 'Malam', R: 'Lembur', L: 'Libur' };
 const SH_ALL = ['P', 'S', 'D', 'M', 'R'];
-const shTot = (s) => SH_ALL.reduce((a, k) => a + ((s && s[k]) || 0), 0);
+/** Total shift = Pagi+Siang+Middle+Malam. Shift Lembur (R) tidak dihitung sebagai shift; hanya jam lembur-nya. */
+const shTot = (s) => ['P', 'S', 'D', 'M'].reduce((a, k) => a + ((s && s[k]) || 0), 0);
 const NEED_VER_UI = 4;
 const FLAG_LABEL = { LOKASI_JAUH: 'Lokasi jauh', GPS_GAGAL: 'GPS gagal', JAM_BEDA: 'Jam beda dgn server', JADWAL_L: 'Absen di hari libur', LUPA_PULANG: 'Lupa pulang', KOREKSI: 'Dikoreksi', DICEK: 'Sudah dicek', TIDAK_SAH: '⛔ Tidak sah', GPS_CURIGA: 'GPS mencurigakan' };
 const isInvalid = (r) => flagsOf(r).includes('TIDAK_SAH');
@@ -1396,7 +1408,7 @@ function openRekap() {
   const lem = rows.reduce((a, x) => a + (x.shift === 'R' && !isInvalid(x) && x.durasi != null ? x.durasi : 0), 0);
   const tidak = rows.filter(isInvalid).length, cek = rows.filter((x) => !isInvalid(x) && needCheck(x)).length;
   const logo = $('lgLogo') ? $('lgLogo').src : '', nw = nowJ();
-  const shRows = ['P', 'S', 'D', 'M', 'R'].map((k) => `<tr><td>${SHIFT_NAME[k]}</td><td class="n">${s[k] || 0}</td></tr>`).join('');
+  const shRows = ['P', 'S', 'D', 'M'].map((k) => `<tr><td>${SHIFT_NAME[k]}</td><td class="n">${s[k] || 0}</td></tr>`).join('');
   const det = rows.map((x, i) => {
     const ket = [isInvalid(x) ? 'Tidak sah (tidak dihitung)' : (needCheck(x) ? 'Perlu dicek' : ''), x.noteMasuk ? 'Masuk: ' + x.noteMasuk : '', x.notePulang ? 'Pulang: ' + x.notePulang : '', x.catatan || ''].filter(Boolean).join('; ');
     return `<tr class="${isInvalid(x) ? 'bad' : ''}"><td class="n">${i + 1}</td><td>${esc(fmtDate(x.tanggal).slice(0, 3) + ' ' + fmtDateShort(x.tanggal))}</td><td>${esc(SHIFT_NAME[x.shift] || x.shift)}</td><td class="n">${esc(x.jamMasuk)}</td><td class="n">${x.jamPulang ? esc(x.jamPulang) : '—'}</td><td class="n">${x.durasi != null ? fmtDur(x.durasi) : '—'}</td><td>${esc(ket)}</td></tr>`;

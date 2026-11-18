@@ -567,6 +567,22 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 .stat-tiles.flt .st:active{transform:translateY(2px);box-shadow:0 5px 9px -5px rgba(19,40,90,.45)!important}
 .stat-tiles.flt{margin-bottom:12px}
 .sum-grid.emp4{grid-template-columns:repeat(4,1fr)}.sum-grid.emp4 b{font-size:16px}.sum-grid.emp4 span{font-size:10px}
+
+#ovRekap{align-items:flex-start;overflow:auto;background:#c9d4ea;-webkit-overflow-scrolling:touch}
+.rk-wrap{width:100%;max-width:760px;margin:0 auto;padding:10px 10px 30px}
+.rk-bar{display:flex;gap:8px;position:sticky;top:0;z-index:2;padding:6px 0 10px;background:linear-gradient(#c9d4ea 70%,transparent)}.rk-bar .btn{flex:1}
+.rk-hint{font-size:12px;color:#44557a;text-align:center;margin-top:10px}
+.paper{background:#fff;color:#14213d;padding:18px 16px 22px;border-radius:6px;box-shadow:0 10px 30px -10px rgba(19,40,90,.45);font-size:12px;line-height:1.35}
+.paper .kop{display:flex;gap:10px;align-items:center;border-bottom:2.5px solid #0b2a5b;padding-bottom:8px;margin-bottom:10px}.paper .kop img{height:46px;width:auto}
+.paper .kop b{display:block;font-size:13px;color:#0b2a5b}.paper .kop span{font-size:10.5px;color:#5a6988}
+.paper h2{font-size:15px;text-align:center;margin:6px 0 2px;letter-spacing:.5px}.paper .per{text-align:center;color:#44557a;margin-bottom:10px}
+.paper .idt{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;margin-bottom:10px}.paper .idt span{color:#5a6988}
+.paper table{width:100%;border-collapse:collapse;margin-bottom:10px}.paper td,.paper th{font-size:11.5px}.paper table.det{table-layout:fixed}.paper table.det td,.paper table.det th{font-size:10px;padding:3px 2px;overflow-wrap:anywhere}.paper th{text-transform:none!important;letter-spacing:0!important}.paper table.det th{font-size:9.5px}.paper table.det th:nth-child(1){width:22px}.paper table.det th:nth-child(2){width:50px}.paper table.det th:nth-child(3){width:44px}.paper table.det th:nth-child(4),.paper table.det th:nth-child(5){width:40px}.paper table.det th:nth-child(6){width:44px}.paper th,.paper td{border:1px solid #9aa6bd;padding:4px 5px;text-align:left}.paper th{background:#e8effa;font-size:11px}
+.paper td.n,.paper th.n{text-align:center}.paper tr.tot td{font-weight:800;background:#f1f5fb}.paper tr.bad td{background:#fff0f2;color:#9c2236}
+.paper .sec{font-weight:800;margin:10px 0 4px;color:#0b2a5b}.paper .mut{color:#6b7a99;font-size:10.5px}
+.paper .ttd{display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center;margin-top:18px}.paper .ttd div{height:78px}.paper .ttd b{display:block;margin-top:50px;border-top:1px solid #14213d;padding-top:3px}
+.paper .foot2{margin-top:12px;font-size:10px;color:#6b7a99;text-align:right}
+@media print{body>*:not(#ovRekap){display:none!important}#ovRekap{position:static!important;display:block!important;background:#fff!important;overflow:visible!important;backdrop-filter:none!important}.rk-bar,.rk-hint{display:none!important}.rk-wrap{max-width:none;padding:0}.paper{box-shadow:none!important;border-radius:0;padding:0;font-size:11px}@page{size:A4;margin:14mm}}
 </style>
 </head>
 <body>
@@ -677,6 +693,7 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
     <section class="page hidden" id="pg-riwayat">
       <div class="pg-head" data-c="blue"><div class="pg-ic">🕘</div><div class="pg-tx"><h2>Riwayat Absensi</h2><p>Rekap kehadiran dan laporan per periode</p></div></div>
       <div class="periodbar"><button class="btn btn-sm" id="rwPrev">‹</button><div class="lbl" id="rwLabel">—</div><button class="btn btn-sm" id="rwNext">›</button></div>
+      <button class="btn btn-block" id="rwRekap" style="margin-bottom:10px;font-weight:800">📄 Rekap &amp; Cetak Periode</button>
       <div id="rwSum"></div>
       <div id="rwList"></div>
     </section>
@@ -801,6 +818,7 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 
 <!-- ============ SHEET UMUM ============ -->
 <div class="overlay" id="ovGen"><div class="sheet glass" id="genBody"></div></div>
+<div class="overlay" id="ovRekap"><div class="rk-wrap"><div class="rk-bar"><button class="btn" id="rkClose">✕ Tutup</button><button class="btn btn-primary" id="rkPrint">🖨️ Cetak / Simpan PDF</button></div><div class="paper" id="rkPaper"></div><div class="rk-hint">Tampilan ini sama dengan hasil cetak. Ketuk Cetak lalu pilih "Simpan sebagai PDF" untuk dibagikan.</div></div></div>
 <div class="overlay" id="ovFoto"><div class="sheet glass" id="fotoBody"></div></div>
 <div class="toast" id="toast"></div>
 
@@ -1355,12 +1373,12 @@ function rwCalendar(rows, key) {
   days.forEach((x) => { const sh = by[x.d] || []; h += `<div class="d ${sh.length ? 'has' : ''} ${x.d === today ? 't' : ''}" data-d="${x.d}">${x.n}<div class="dots">${sh.map((k) => `<i style="background:${x.d === today ? '#fff' : SHC[k]}"></i>`).join('')}</div></div>`; });
   return h + '</div>' + legendHtml(['P', 'S', 'D', 'M', 'R']) + '</div>';
 }
-let rwKey = null;
+let rwKey = null, rwLast = null;
 async function loadRiwayat() {
   if (!rwKey) rwKey = periodKeyOf(S ? S.today : nowJ().date);
   $('rwLabel').textContent = periodLabel(rwKey); $('rwList').innerHTML = '<div class="empty"><span class="spin dk"></span></div>';
   try {
-    const r = await apiGet('riwayat', { period: rwKey }); const s = r.summary || { hari: 0, menit: 0, P: 0, S: 0, D: 0, M: 0, R: 0, cek: 0, belum: 0 };
+    const r = await apiGet('riwayat', { period: rwKey }); rwLast = r; const s = r.summary || { hari: 0, menit: 0, P: 0, S: 0, D: 0, M: 0, R: 0, cek: 0, belum: 0 };
     $('rwSum').innerHTML = statTiles([['c1', '✅', s.hari, 'Hari hadir'], ['c3', '🔁', shTot(s), 'Total shift'], ['c2', '🕒', fmtDur(r.rows.reduce((a, x) => a + (x.shift === 'R' && !isInvalid(x) && x.durasi != null ? x.durasi : 0), 0)), 'Jam lembur'], ['c4', '⏳', s.belum, 'Belum pulang']], 'flt') + '<div class="v-sec">Kalender shift</div>' + rwCalendar(r.rows, rwKey) + shiftBox(s);
     $('rwList').innerHTML = (r.rows.length ? '<div class="v-sec">Riwayat absen</div>' : '') + (r.rows.length ? r.rows.map((x) => recItem(x, false, lapForUser(r.laporan, me.id, x.tanggal, x.shift))).join('') : '<div class="empty">Belum ada absen pada periode ini.</div>');
     $('rwSum').querySelectorAll('.d.has').forEach((d) => d.addEventListener('click', () => { const it = $('rwList').querySelector('.item[data-tgl="' + d.dataset.d + '"]'); if (it) { it.classList.add('open'); it.scrollIntoView({ behavior: 'smooth', block: 'center' }); } }));
@@ -1369,6 +1387,39 @@ async function loadRiwayat() {
 }
 $('rwPrev').addEventListener('click', () => { rwKey = shiftKey(rwKey, -1); loadRiwayat(); });
 $('rwNext').addEventListener('click', () => { rwKey = shiftKey(rwKey, 1); loadRiwayat(); });
+
+
+/* ---------------- REKAP & CETAK PERIODE (karyawan) ---------------- */
+function openRekap() {
+  if (!rwLast) return toast('Data belum dimuat', true);
+  const r = rwLast, s = r.summary || {}, rows = r.rows.slice().sort((a, b) => (a.tanggal + a.jamMasuk < b.tanggal + b.jamMasuk ? -1 : 1));
+  const lem = rows.reduce((a, x) => a + (x.shift === 'R' && !isInvalid(x) && x.durasi != null ? x.durasi : 0), 0);
+  const tidak = rows.filter(isInvalid).length, cek = rows.filter((x) => !isInvalid(x) && needCheck(x)).length;
+  const logo = $('lgLogo') ? $('lgLogo').src : '', nw = nowJ();
+  const shRows = ['P', 'S', 'D', 'M', 'R'].map((k) => `<tr><td>${SHIFT_NAME[k]}</td><td class="n">${s[k] || 0}</td></tr>`).join('');
+  const det = rows.map((x, i) => {
+    const ket = [isInvalid(x) ? 'Tidak sah (tidak dihitung)' : (needCheck(x) ? 'Perlu dicek' : ''), x.noteMasuk ? 'Masuk: ' + x.noteMasuk : '', x.notePulang ? 'Pulang: ' + x.notePulang : '', x.catatan || ''].filter(Boolean).join('; ');
+    return `<tr class="${isInvalid(x) ? 'bad' : ''}"><td class="n">${i + 1}</td><td>${esc(fmtDate(x.tanggal).slice(0, 3) + ' ' + fmtDateShort(x.tanggal))}</td><td>${esc(SHIFT_NAME[x.shift] || x.shift)}</td><td class="n">${esc(x.jamMasuk)}</td><td class="n">${x.jamPulang ? esc(x.jamPulang) : '—'}</td><td class="n">${x.durasi != null ? fmtDur(x.durasi) : '—'}</td><td>${esc(ket)}</td></tr>`;
+  }).join('');
+  $('rkPaper').innerHTML = `<div class="kop">${logo ? `<img src="${logo}" alt="">` : ''}<div><b>RSI At-Tin Husada Ngawi</b><span>Rekap Absensi Karyawan</span></div></div>
+    <h2>REKAP KEHADIRAN PER PERIODE</h2><div class="per">${esc(periodLabel(rwKey))}</div>
+    <div class="idt"><span>Nama</span><b>${esc(me.nama)}</b><span>NIP</span><div>${esc(me.nip || '-')}</div><span>Unit</span><div>${esc(me.unit || '-')}</div></div>
+    <div class="sec">Ringkasan</div>
+    <table><tr><th>Keterangan</th><th class="n" style="width:90px">Jumlah</th></tr>
+      <tr><td>Hari hadir</td><td class="n">${s.hari || 0}</td></tr>${shRows}
+      <tr class="tot"><td>Total shift</td><td class="n">${shTot(s)}</td></tr>
+      <tr><td>Jam lembur (shift Lembur)</td><td class="n">${fmtDur(lem)}</td></tr>
+      <tr><td>Belum absen pulang</td><td class="n">${s.belum || 0}</td></tr>
+      ${cek ? `<tr><td>Absen perlu dicek atasan</td><td class="n">${cek}</td></tr>` : ''}${tidak ? `<tr><td>Absen tidak sah (tidak dihitung)</td><td class="n">${tidak}</td></tr>` : ''}</table>
+    <div class="sec">Rincian Absen</div>
+    ${rows.length ? `<table class="det"><tr><th class="n">No</th><th>Tgl</th><th>Shift</th><th class="n">Masuk</th><th class="n">Pulang</th><th class="n">Durasi</th><th>Keterangan</th></tr>${det}</table>` : '<div class="mut">Tidak ada absen pada periode ini.</div>'}
+    <div class="ttd"><div>Karyawan<b>${esc(me.nama)}</b></div><div>Atasan / Kepala Unit<b>&nbsp;</b></div></div>
+    <div class="foot2">Dicetak dari aplikasi Absensi RSI At-Tin Husada · ${esc(fmtDate(nw.date))} ${esc(nw.hhmm)}</div>`;
+  $('ovRekap').className = 'overlay show'; $('ovRekap').scrollTop = 0;
+}
+$('rwRekap').addEventListener('click', openRekap);
+$('rkClose').addEventListener('click', () => $('ovRekap').classList.remove('show'));
+$('rkPrint').addEventListener('click', () => { try { window.print(); } catch (e) { toast('Cetak tidak didukung di perangkat ini', true); } });
 
 /* ---------------- TIM (atasan/admin) ---------------- */
 let tmKey = null, tmData = null, tmFilter = 'all';

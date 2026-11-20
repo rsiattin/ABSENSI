@@ -600,6 +600,60 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 .paper .lp-ent{border:1px solid #9aa6bd;border-radius:6px;margin-bottom:8px;break-inside:avoid;overflow:hidden}
 .paper .lp-h{background:#e8effa;padding:4px 8px;font-weight:800;display:flex;justify-content:space-between;gap:8px;font-size:11.5px}.paper .lp-h span{font-weight:600;color:#44557a}
 .paper .lp-b{padding:6px 8px 6px 10px}.paper .lp-b ol{margin:0;padding-left:18px}.paper .lp-b li{margin:1px 0}.paper .lp-b.kosong{color:#9aa6bd;font-style:italic}
+/* v23: shift Pagi = kuning (selaras indikator shift) */
+.tag-P,.tag.sc.tag-P,.tag.mini.tag-P{background:linear-gradient(135deg,#f7c61f,#f2b705);color:#4a3500;text-shadow:none;}
+.tag.sc.tag-P b{background:rgba(74,53,0,.16);color:#4a3500;}
+/* v23: dasbor manajemen */
+.tm-seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;border-radius:18px;background:rgba(255,255,255,.55);border:1px solid rgba(19,40,90,.1);margin-bottom:10px;box-shadow:0 1px 0 #fff inset}
+.tm-seg button{border:0;border-radius:14px;padding:11px 6px;font:800 14px 'Plus Jakarta Sans',sans-serif;color:#4a5878;background:linear-gradient(160deg,#fff,#EAF0FA);box-shadow:0 8px 12px -9px rgba(19,40,90,.55),0 1px 0 #fff inset;cursor:pointer}
+.tm-seg button.on{color:#fff;background:linear-gradient(145deg,#ffae5c,#e8650a);box-shadow:0 10px 14px -8px rgba(232,101,10,.8),0 1px 0 rgba(255,255,255,.55) inset;text-shadow:0 1px 2px rgba(120,50,0,.35)}
+.dsh-card{border-radius:20px;background:linear-gradient(155deg,rgba(255,255,255,.96),rgba(255,255,255,.7));border:1px solid #e3eaf7;box-shadow:0 14px 24px -16px rgba(19,40,90,.5);padding:14px 13px;margin-bottom:12px}
+.dsh-card h4{margin:0 0 2px;font:800 14.5px 'Plus Jakarta Sans',sans-serif;color:#14213d}.dsh-card .sub{font-size:11.5px;color:#6b7a99;margin-bottom:10px}
+.dsh-bars{display:flex;align-items:flex-end;gap:2px;height:118px;padding-top:6px;border-bottom:1px solid #dfe6f3}
+.dsh-bars .b{flex:1;min-width:0;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#4c9bf0,#1458b0);cursor:pointer;position:relative}
+.dsh-bars .b.wk{background:linear-gradient(180deg,#c3b6f2,#8a72d4)}.dsh-bars .b.td{background:linear-gradient(180deg,#ffae5c,#e8650a)}.dsh-bars .b.fu{background:#e6ebf5}
+.dsh-lbl{display:flex;gap:2px;margin-top:3px}.dsh-lbl span{flex:1;min-width:0;text-align:center;font-size:8.5px;color:#6b7a99;overflow:visible;white-space:nowrap}
+.dsh-note{font-size:11.5px;color:#4a5878;margin-top:8px;line-height:1.5}
+.dsh-u{display:grid;grid-template-columns:1fr auto;gap:2px 8px;margin-bottom:10px}.dsh-u .nm{font-weight:700;font-size:13.5px;color:#14213d}.dsh-u .vl{font-size:12px;color:#4a5878;text-align:right}
+.dsh-u .tr{grid-column:1/-1;height:9px;border-radius:6px;background:#e9eef8;overflow:hidden}.dsh-u .tr i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#2fe0c8,#0b9d96)}
+.dsh-u .ex{grid-column:1/-1;font-size:11px;color:#6b7a99}
+.dsh-att h5{margin:10px 0 6px;font:800 12.5px 'Plus Jakarta Sans',sans-serif;color:#14213d}.dsh-att h5:first-child{margin-top:0}
+.dsh-att .pl{display:flex;flex-wrap:wrap;gap:6px}.dsh-att .pl button{border:1px solid #e3eaf7;background:#fff;border-radius:12px;padding:6px 10px;font:600 12px 'Plus Jakarta Sans',sans-serif;color:#14213d;box-shadow:0 5px 9px -6px rgba(19,40,90,.5);cursor:pointer}
+.dsh-att .pl button b{color:#c2540a;margin-left:4px}.dsh-att .ok{font-size:12px;color:#18805a}
+.dsh-met{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.dsh-met button{border:1px solid #dbe4f5;border-radius:12px;padding:7px 11px;font:700 12px 'Plus Jakarta Sans',sans-serif;color:#4a5878;background:linear-gradient(160deg,#fff,#EAF0FA);box-shadow:0 6px 10px -7px rgba(19,40,90,.55),0 1px 0 #fff inset;cursor:pointer}
+.dsh-met button.on{color:#fff;border-color:transparent;background:linear-gradient(145deg,#4c9bf0,#1458b0);box-shadow:0 8px 12px -7px rgba(20,88,176,.8);text-shadow:0 1px 2px rgba(0,30,80,.35)}
+.dsh-u{margin-bottom:14px;padding-bottom:12px;border-bottom:1px dashed #e0e7f4}.dsh-u:last-of-type{border-bottom:0}
+.dsh-u .gr{grid-column:1/-1;display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:6px}.dsh-u .gr>div{background:#f2f6fd;border-radius:11px;padding:6px 2px;text-align:center;min-width:0}
+.dsh-u .gr em{display:block;font-style:normal;font-size:9.5px;font-weight:700;color:#4a5878;margin-bottom:2px;white-space:nowrap}.dsh-u .gr b{display:block;font:800 14px 'Space Grotesk',sans-serif;color:#14213d}.dsh-u .gr span{display:block;font-size:9.5px;color:#6b7a99;margin-top:1px;white-space:nowrap}
+.dsh-sec{margin:16px 2px 10px;font:800 15px 'Plus Jakarta Sans',sans-serif;color:#14213d;letter-spacing:.2px}
+.dsh-tw{overflow-x:auto;margin:0 -6px;padding:0}.dsh-t{width:100%;border-collapse:separate;border-spacing:0;font-size:11.5px;table-layout:auto}
+.dsh-t th,.dsh-t td{padding:8px 3px;text-align:center;border-bottom:1px solid #e6ecf7;white-space:nowrap}.dsh-t thead th{font:800 9.5px 'Plus Jakarta Sans',sans-serif;line-height:1.15;white-space:normal;color:#fff;background:linear-gradient(145deg,#4c9bf0,#1458b0);text-shadow:0 1px 2px rgba(0,30,80,.3)}
+.dsh-t thead th:first-child{border-radius:12px 0 0 0;text-align:left}.dsh-t thead th:last-child{border-radius:0 12px 0 0}
+.dsh-t tbody th{text-align:left;font-weight:700;color:#14213d;white-space:normal;font-size:10px;letter-spacing:-.2px;padding-left:6px}.dsh-t tbody tr:nth-child(even){background:#f5f8fd}
+.dsh-t tfoot th,.dsh-t tfoot td{font-weight:800;background:#e8f0fc;color:#14213d;border-bottom:0}.dsh-t tfoot th{text-align:left;border-radius:0 0 0 12px}.dsh-t tfoot td:last-child{border-radius:0 0 12px 0}
+.dsh-t .wr{color:#c2540a}
+.dsh-st{margin-bottom:11px}.dsh-st .top{display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:#14213d;margin-bottom:4px}.dsh-st .bar{display:flex;height:16px;border-radius:8px;overflow:hidden;background:#e9eef8;box-shadow:0 1px 0 #fff inset}.dsh-st .bar i{display:block;height:100%}
+.dsh-leg{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:11px;color:#4a5878}.dsh-leg span{display:flex;align-items:center;gap:4px}.dsh-leg i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.dsh-gp{margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed #e0e7f4}.dsh-gp:last-child{border-bottom:0;margin-bottom:0}.dsh-gp .nm{font-weight:800;font-size:13.5px;color:#14213d;margin-bottom:5px}
+.dsh-gp .r{display:grid;grid-template-columns:64px 1fr 46px;gap:7px;align-items:center;margin-bottom:4px;font-size:11px;color:#4a5878}.dsh-gp .r .tr{height:9px;border-radius:6px;background:#e9eef8;overflow:hidden}.dsh-gp .r .tr i{display:block;height:100%;border-radius:6px}.dsh-gp .r b{text-align:right;color:#14213d;font-size:11.5px}
+.dsh-t2 thead th{font-size:9.5px;padding:6px 2px}.dsh-t2 thead tr.sb th{font-size:8.5px;background:linear-gradient(145deg,#6aaef5,#2f6fc4)}.dsh-t2 td{font-size:11px;padding:8px 2px}.dsh-t2 thead th[rowspan]{vertical-align:middle}
+/* garis tepi orange seperti panel lain */
+.dsh-card,.cal,.jd-grid,.tm-seg{position:relative}
+.dsh-card::after,.cal::after,.jd-grid::after,.tm-seg::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;z-index:3;background:linear-gradient(135deg,#FF8A1F 0%,#FFB766 26%,#ffffff 56%,#FFC48C 80%,#FF9B3D 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.shift-box{position:relative}.shift-box::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;z-index:3;background:linear-gradient(135deg,#FF8A1F 0%,#FFB766 26%,#ffffff 56%,#FFC48C 80%,#FF9B3D 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.vch{display:flex;align-items:flex-end;gap:10px;overflow-x:auto;padding:6px 2px 4px;margin:0 -2px;scrollbar-width:thin}
+.vc{flex:0 0 68px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}.vc.g4{flex-basis:96px}
+.vv{font:800 12px 'Space Grotesk',sans-serif;color:#14213d;margin-bottom:4px;white-space:nowrap}.vv.s{font-size:9.5px;margin-bottom:2px}
+.vbar{width:34px;border-radius:12px 12px 4px 4px / 8px 8px 4px 4px;background:linear-gradient(90deg,color-mix(in srgb,var(--c) 78%,#000),var(--c) 45%,color-mix(in srgb,var(--c) 70%,#fff) 60%,var(--c) 85%);box-shadow:0 8px 12px -8px rgba(19,40,90,.55),inset 0 3px 3px rgba(255,255,255,.55);position:relative}
+.vbar::before{content:"";position:absolute;left:0;right:0;top:-1px;height:10px;border-radius:50%;background:rgba(255,255,255,.38)}
+.vbar.stk{display:flex;flex-direction:column-reverse;overflow:hidden;background:none;box-shadow:0 8px 12px -8px rgba(19,40,90,.55)}.vbar.stk::before{display:none}.vbar.stk i{display:block;width:100%}
+.vc.g4 .grp{display:flex;align-items:flex-end;gap:3px}.vc.g4 .gb{display:flex;flex-direction:column;align-items:center;width:19px}.vc.g4 .vbar{width:17px;border-radius:7px 7px 3px 3px / 5px 5px 3px 3px}.vc.g4 .vbar::before{height:6px}
+.vn{margin-top:6px;font-size:10px;font-weight:700;color:#4a5878;text-align:center;line-height:1.15;word-break:break-word;min-height:24px;max-width:68px;font-size:9.5px}.vc.g4 .vn{max-width:96px}
+.vch .vc{border-bottom:2px solid #dfe6f3}.vch{border-bottom:0}.vch .vc .vn{border-top:0}
+.dsh-hint{font-size:10px;color:#8a97b3;text-align:center;margin-top:6px}
+/* kalender: tiap tanggal berbingkai */
+.cal .d:not(:empty):not(.t){border:1.5px solid #ffc48c;background:linear-gradient(160deg,#fff,#fff7ee)}.cal .d.t{border:1.5px solid #e8650a}.cal .d.out{border-color:#ffe3c9!important}
+.jc{border-color:#ffc48c;background:linear-gradient(160deg,#fff,#fff7ee)}.jc.off{background:#eceff5}.jc.today{border-color:#0ea39d}.jc.edited{border-color:#e8851a}.jc.empty:not(.past){border:1.5px dashed #f0a860}
 </style>
 </head>
 <body>
@@ -724,6 +778,7 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
     <section class="page hidden" id="pg-tim">
       <div class="pg-head" data-c="orange"><div class="pg-ic">👥</div><div class="pg-tx"><h2>Tim & Rekap</h2><p>Pantau kehadiran karyawan dan ekspor Excel</p></div></div>
       <div class="periodbar"><button class="btn btn-sm" id="tmPrev">‹</button><div class="lbl" id="tmLabel">—</div><button class="btn btn-sm" id="tmNext">›</button></div>
+      <div class="tm-seg" id="tmSeg"><button class="on" data-m="pantau">👥 Pantau</button><button data-m="dasbor">📊 Dasbord</button></div>
       <div class="row wrap" style="margin-bottom:10px">
         <select class="inp grow" id="tmUnit" style="min-width:120px"></select>
         <input class="inp grow" id="tmSearch" placeholder="🔍 Cari nama…" style="min-width:120px">
@@ -732,6 +787,7 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
       <div class="chips" id="tmChips">
         <button class="chip active" data-f="all">Semua</button><button class="chip" data-f="hadir">✅ Hadir hari ini</button><button class="chip" data-f="belumabsen">💤 Belum absen</button><button class="chip" data-f="cek">⚠ Perlu dicek</button><button class="chip" data-f="belum">⏳ Belum pulang</button>
       </div>
+      <div id="tmDash" class="hidden"></div>
       <div id="tmList"></div>
       <button class="btn btn-primary btn-block" id="btnExport" style="padding:14px;margin-top:6px">⬇ Export Excel</button>
     </section>
@@ -799,6 +855,11 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
           <div class="small dim" style="margin-bottom:10px">Opsional. Jika diisi token gateway WhatsApp (layanan Fonnte, perlu daftar di fonnte.com dan menyambungkan 1 nomor WA rumah sakit), password sementara dikirim <b>otomatis</b> ke WhatsApp karyawan tanpa menunggu admin. Bila kosong atau gagal, permintaan masuk antrean Reset Password.</div>
           <div class="field"><label>Token gateway <span id="waTokState" class="small"></span></label><input id="setWaTok" type="password" autocomplete="off" placeholder="kosongkan = tidak diubah · isi - untuk menghapus"></div>
         </div>
+        <div class="glass card"><h3>📧 Rekap Excel Otomatis ke Email</h3>
+          <div class="field"><label>Alamat email penerima <span id="emailState" class="small"></span></label><textarea id="setEmail" rows="2" inputmode="email" autocomplete="off" placeholder="mis. direktur@rsi.id, kepalaunit@rsi.id (pisahkan koma, maksimal 10)"></textarea></div>
+          <div class="small dim" style="margin-bottom:10px">Dikirim otomatis <b>2× per periode</b>, sekitar pukul 08.00: <b>tanggal 15</b> (rekap tengah periode, data sampai saat itu) dan <b>tanggal 27</b> (rekap akhir periode yang baru selesai, 27 – 26, setelah absen pulang shift malam terakhir) ke alamat di atas. Isi: rekap per karyawan, ringkasan per unit, dan detail absen beserta laporan harian. Kosongkan untuk menonaktifkan. Klik <b>Simpan Pengaturan</b> di bawah setelah mengubah alamat.</div>
+          <button class="btn btn-block" id="btnEmailTest" style="font-weight:800">📨 Kirim contoh sekarang (periode berjalan)</button>
+        </div>
         <div class="glass card"><h3>🗑️ Penyimpanan Foto</h3>
           <div class="field"><label>Hapus foto setelah (hari)</label><input id="setRet" type="number" min="7" max="3650"></div>
           <div class="small dim">Foto lama dihapus otomatis tiap malam untuk menjaga ruang Google Drive. Data absen dan koordinat GPS tetap tersimpan.</div>
@@ -848,7 +909,7 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 /* ============================================================
    KONFIGURASI — isi dengan URL Web App Apps Script Anda
    ============================================================ */
-const API_URL = "https://script.google.com/macros/s/AKfycbwg37JmfgSujNlJ7Ro5sNNbj6pAr-9AxVy_lCOoBnIOmvKXL8jLsF4ostMTFjty9KZt/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycby2ZN56o-vifxuByAjH-jo7p_JdB5SsgQ2ZBPjkUd4PiZ67Uyh0ruB0jJceehn0-6_K/exec";
 
 /* ---------------- util ---------------- */
 const $ = (id) => document.getElementById(id);
@@ -1483,7 +1544,7 @@ async function openLapPrint() {
 $('lpPrintBtn').addEventListener('click', openLapPrint);
 
 /* ---------------- TIM (atasan/admin) ---------------- */
-let tmKey = null, tmData = null, tmFilter = 'all';
+let tmKey = null, tmData = null, tmFilter = 'all', tmMode = 'pantau', dsMetric = 'shift';
 async function loadTim() {
   if (!tmKey) tmKey = periodKeyOf(S ? S.today : nowJ().date);
   $('tmLabel').textContent = periodLabel(tmKey); $('tmList').innerHTML = '<div class="empty"><span class="spin dk"></span></div>';
@@ -1525,6 +1586,7 @@ function watchTmFotos() {
 const AVC = ['#0ea39d', '#3b7de0', '#6f4bd8', '#e8851a', '#d6489a', '#2a9d5c', '#c2540a', '#4f6bd8'];
 function avColor(n) { let h = 0; for (const c of String(n)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return AVC[h % AVC.length]; }
 function renderTim() {
+  if (tmMode === 'dasbor') { renderDash(); return; }
   const unit = $('tmUnit').value, q = $('tmSearch').value.trim().toLowerCase(), today = S ? S.today : nowJ().date, isCur = tmKey === periodKeyOf(today);
   const todayBy = {}; if (isCur) tmData.rows.forEach((r) => { if (r.tanggal === today && !isInvalid(r)) (todayBy[r.userId] = todayBy[r.userId] || []).push(r); });
   const tot = tmData.summary.filter((s) => !unit || (unit === '__none' ? !String(s.unit || '').trim() : s.unit === unit));
@@ -1547,6 +1609,85 @@ function renderTim() {
   }).join('') : '<div class="empty">Tidak ada data.</div>';
   $('tmList').querySelectorAll('.tm-row').forEach((tr) => tr.addEventListener('click', () => openEmployee(tr.dataset.u)));
   watchTmFotos();
+}
+
+/* ===== v23: Dasbor Manajemen (dihitung dari data rekap yang sama dengan Tim) ===== */
+function setTmMode(m) {
+  tmMode = m; $('tmSeg').querySelectorAll('button').forEach((b) => b.classList.toggle('on', b.dataset.m === m));
+  const d = m === 'dasbor'; ['tmSearch', 'tmSum', 'tmChips', 'tmList', 'btnExport'].forEach((i) => $(i).classList.toggle('hidden', d)); $('tmDash').classList.toggle('hidden', !d);
+  if (tmData) renderTim();
+}
+$('tmSeg').querySelectorAll('button').forEach((b) => b.addEventListener('click', () => setTmMode(b.dataset.m)));
+const dsN = (x, d) => (Math.round(x * Math.pow(10, d || 0)) / Math.pow(10, d || 0)).toString().replace('.', ',');
+const dsH = (min) => dsN((min || 0) / 60, 0) + ' j';
+function dashDays(p) { const out = []; let t = Date.parse(p.start + 'T00:00:00Z'); const e = Date.parse(p.end + 'T00:00:00Z'); while (t <= e) { out.push(new Date(t).toISOString().slice(0, 10)); t += 864e5; } return out; }
+function renderDash() {
+  const unit = $('tmUnit').value, today = S ? S.today : nowJ().date;
+  const inU = (x) => !unit || (unit === '__none' ? !String(x.unit || '').trim() : x.unit === unit);
+  const staff = tmData.summary.filter(inU), ids = new Set(staff.map((x) => x.userId));
+  const rows = tmData.rows.filter((r) => ids.has(r.userId) && !isInvalid(r) && r.shift !== 'L');
+  const days = dashDays(tmData.period), nDays = Math.max(1, days.filter((d) => d <= today).length);
+  const byDay = {}; days.forEach((d) => { byDay[d] = new Set(); }); rows.forEach((r) => { if (byDay[r.tanggal]) byDay[r.tanggal].add(r.userId); });
+  const cnt = days.map((d) => byDay[d].size), sumDay = cnt.reduce((a, b) => a + b, 0), avg = sumDay / nDays, pct = staff.length ? Math.round(avg / staff.length * 100) : 0;
+  let kerja = 0, lem = 0, nDur = 0; rows.forEach((r) => { if (r.durasi != null) { if (r.shift === 'R') lem += r.durasi; else { kerja += r.durasi; nDur++; } } });
+  const hadirUD = new Set(rows.map((r) => r.userId + '|' + r.tanggal)), lapUD = new Set();
+  Object.keys(tmData.laporan || {}).forEach((k) => { const m = /^(.*)_(\d{4}-\d{2}-\d{2})_(.*)$/.exec(k); if (m) lapUD.add(m[1] + '|' + m[2]); });
+  let lapOk = 0; hadirUD.forEach((k) => { if (lapUD.has(k)) lapOk++; }); const lapPct = hadirUD.size ? Math.round(lapOk / hadirUD.size * 100) : 0;
+  const _tiles = statTiles([['c1', '👥', staff.length, 'Karyawan aktif'], ['c2', '✅', dsN(avg, 0), 'Rata hadir/hari'], ['c3', '📈', pct + '%', 'Tingkat hadir'], ['c4', '🕒', dsH(kerja), 'Total jam kerja'], ['c5', '🌙', dsH(lem), 'Jam lembur'], ['c6', '📝', lapPct + '%', 'Laporan terisi']], 'flt tim6');
+  // grafik harian
+  const mx = Math.max(1, ...cnt); const DN = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+  const dow = (d) => new Date(d + 'T00:00:00Z').getUTCDay();
+  const bars = days.map((d, i) => `<div class="b ${d > today ? 'fu' : d === today ? 'td' : dow(d) === 0 ? 'wk' : ''}" data-d="${d}" data-v="${cnt[i]}" style="height:${d > today ? 4 : Math.max(3, cnt[i] / mx * 100)}%" title="${fmtDate(d)}: ${cnt[i]} orang"></div>`).join('');
+  const lbl = days.map((d, i) => `<span>${i % 2 === 0 || d === today ? +d.slice(8) : ''}</span>`).join('');
+  const past = days.map((d, i) => [d, cnt[i]]).filter((x) => x[0] <= today && dow(x[0]) !== 0);
+  const hi = past.length ? past.reduce((a, b) => (b[1] > a[1] ? b : a)) : null, lo = past.length ? past.reduce((a, b) => (b[1] < a[1] ? b : a)) : null;
+  const chartDaily = `<div class="dsh-card"><h4>Kehadiran per hari</h4><div class="sub">Jumlah karyawan yang absen tiap tanggal · ungu = Minggu · ketuk batang untuk detail</div><div class="dsh-bars" id="dshBars">${bars}</div><div class="dsh-lbl">${lbl}</div>${hi ? `<div class="dsh-note">Tertinggi <b>${hi[1]} orang</b> (${fmtDate(hi[0])}) · Terendah <b>${lo[1]} orang</b> (${fmtDate(lo[0])}), tidak termasuk hari Minggu.</div>` : ''}</div>`;
+  // beban kerja per unit
+  const lapCnt = {}; Object.keys(tmData.laporan || {}).forEach((k) => { const m = /^(.*)_(\d{4}-\d{2}-\d{2})_(.*)$/.exec(k); if (m && String(tmData.laporan[k] || '').trim()) lapCnt[m[1]] = (lapCnt[m[1]] || 0) + 1; });
+  const U = {}; const mkU = (k) => (U[k] = U[k] || { n: 0, hari: 0, shift: 0, tugas: 0, jam: 0, lem: 0, cek: 0, masuk: 0, pulang: 0 });
+  staff.forEach((x) => { const u = mkU(String(x.unit || '').trim() || 'Tanpa unit'); u.n++; u.hari += x.hari; u.shift += shTot(x); u.tugas += lapCnt[x.userId] || 0; u.cek += x.cek; u.lem += x.lembur || 0; });
+  rows.forEach((r) => { const k = String(r.unit || '').trim() || 'Tanpa unit'; if (!U[k]) return; U[k].masuk++; if (r.jamPulang) U[k].pulang++; if (r.durasi != null && r.shift !== 'R') U[k].jam += r.durasi; });
+  const MET = { shift: ['Shift', 'shift'], hari: ['Hari hadir', 'hari'], tugas: ['Tugas', 'tugas'], jam: ['Jam kerja', 'jam'] };
+  const mv = (u, k) => (k === 'jam' ? u.jam / 60 : u[k]), mf = (v, k) => (k === 'jam' ? dsN(v, 0) + ' j' : dsN(v, k === 'tugas' || k === 'shift' || k === 'hari' ? 1 : 0));
+  const ul = Object.keys(U).map((k) => Object.assign({ k }, U[k])).filter((x) => x.n).sort((a, b) => mv(b, dsMetric) / b.n - mv(a, dsMetric) / a.n), umx = Math.max(0.01, ...ul.map((x) => mv(x, dsMetric) / x.n));
+  const tot = ul.reduce((a, x) => { a.n += x.n; a.hari += x.hari; a.shift += x.shift; a.tugas += x.tugas; a.jam += x.jam; a.lem += x.lem; a.masuk += x.masuk; a.pulang += x.pulang; a.cek += x.cek; return a; }, { n: 0, hari: 0, shift: 0, tugas: 0, jam: 0, lem: 0, masuk: 0, pulang: 0, cek: 0 });
+  const cell = (u, k) => `<div><em>${MET[k][0]}</em><b>${mf(mv(u, k), k)}</b><span>rata ${mf(u.n ? mv(u, k) / u.n : 0, k)}</span></div>`;
+  const chipsM = '<div class="dsh-met">' + Object.keys(MET).map((k) => `<button data-k="${k}" class="${dsMetric === k ? 'on' : ''}">${MET[k][0]}</button>`).join('') + '</div>';
+  const tr = (c, o) => `<tr${o ? ' class="tot"' : ''}><th>${c[0]}</th>${c.slice(1).map((v) => `<td>${v}</td>`).join('')}</tr>`;
+  const tabel = `<div class="dsh-card"><h4>Rekap per unit</h4><div class="sub">Periode ${esc(tmData.period.start)} s/d ${esc(tmData.period.end)}${unit ? '' : ' · semua unit'}</div><div class="dsh-tw"><table class="dsh-t"><thead><tr><th>Unit</th><th>Peg.</th><th>Hadir</th><th>Shift</th><th>Lembur (j)</th><th>Masuk</th><th>Pulang</th><th>Cek</th></tr></thead><tbody>${ul.slice().sort((a, b) => a.k.localeCompare(b.k)).map((u) => tr([esc(u.k), u.n, u.hari, u.shift, dsN(u.lem / 60, 0), u.masuk, u.pulang, u.cek ? '<b class="wr">' + u.cek + '</b>' : 0])).join('') || '<tr><td colspan="8">Tidak ada data.</td></tr>'}</tbody><tfoot>${tr(['Total', tot.n, tot.hari, tot.shift, dsN(tot.lem / 60, 0), tot.masuk, tot.pulang, tot.cek], 1)}</tfoot></table></div><div class="dsh-note">Peg. = jumlah pegawai · Hadir = jumlah hari hadir · Shift = Pagi+Siang+Middle+Malam (lembur tidak dihitung) · Lembur = jam shift lembur · Masuk/Pulang = jumlah absen masuk dan absen pulang · Perlu cek = absen yang butuh pemeriksaan.</div></div>`;
+  // komposisi shift per unit (tumpuk)
+  const SHN = { P: 'Pagi', S: 'Siang', D: 'Middle', M: 'Malam', R: 'Lembur' }, SHCOL = { P: '#f2b705', S: '#f08a1c', D: '#2f86e6', M: '#7c5cd6', R: '#e0488a' };
+  const sU = {}; staff.forEach((x) => { const k = String(x.unit || '').trim() || 'Tanpa unit'; sU[k] = sU[k] || { P: 0, S: 0, D: 0, M: 0, R: 0 }; SH_ALL.forEach((c) => { sU[k][c] += (x[c] || 0); }); });
+  const sk = Object.keys(sU).sort((a, b) => SH_ALL.reduce((q, c) => q + sU[b][c], 0) - SH_ALL.reduce((q, c) => q + sU[a][c], 0)), smx = Math.max(1, ...sk.map((k) => SH_ALL.reduce((q, c) => q + sU[k][c], 0)));
+  const MX = {}; ['hari', 'shift', 'tugas', 'jam'].forEach((k) => { MX[k] = Math.max(0.01, ...ul.map((u) => mv(u, k) / u.n)); });
+  const MCOL = { hari: '#1458b0', shift: '#f08a1c', tugas: '#0b9d96', jam: '#7c5cd6' };
+  const VH = 150, nmc = (k) => `<div class="vn">${esc(k)}</div>`;
+  const diagUnit = `<div class="dsh-card"><h4>Beban kerja per unit</h4><div class="sub">Rata-rata <b>${MET[dsMetric][0].toLowerCase()} per pegawai</b>, urut dari yang paling berat. Ketuk pilihan untuk mengganti ukuran.</div>${chipsM}<div class="vch">${ul.map((u) => { const v = mv(u, dsMetric) / u.n; return `<div class="vc"><div class="vv">${mf(v, dsMetric)}</div><div class="vbar" style="height:${Math.max(4, v / umx * VH)}px;--c:${MCOL[dsMetric]}"></div>${nmc(u.k)}</div>`; }).join('') || '<div class="empty">Tidak ada data.</div>'}</div><div class="dsh-hint">Geser ke samping bila unit banyak</div></div>`;
+  const diagKomp = `<div class="dsh-card"><h4>Komposisi shift per unit</h4><div class="sub">Jumlah shift tiap jenis pada tiap unit (tinggi batang = beban total)</div><div class="vch">${sk.map((k) => { const t = SH_ALL.reduce((q, c) => q + sU[k][c], 0), hh = Math.max(6, t / smx * VH); return `<div class="vc"><div class="vv">${t}</div><div class="vbar stk" style="height:${hh}px">${SH_ALL.filter((c) => sU[k][c]).map((c) => `<i style="flex:${sU[k][c]};background:linear-gradient(90deg,${SHCOL[c]}dd,${SHCOL[c]},${SHCOL[c]}cc)" title="${SHN[c]} ${sU[k][c]}"></i>`).join('')}</div>${nmc(k)}</div>`; }).join('') || '<div class="empty">Tidak ada data.</div>'}</div><div class="dsh-leg">${SH_ALL.map((c) => `<span><i style="background:${SHCOL[c]}"></i>${SHN[c]}</span>`).join('')}</div></div>`;
+  const diagBanding = `<div class="dsh-card"><h4>Perbandingan beban antar unit</h4><div class="sub">Rata-rata per pegawai; batang tertinggi pada tiap ukuran = unit paling tinggi</div><div class="vch">${ul.map((u) => `<div class="vc g4"><div class="grp">${['hari', 'shift', 'tugas', 'jam'].map((k) => { const v = mv(u, k) / u.n; return `<div class="gb"><div class="vv s">${mf(v, k).replace(' j', '')}</div><div class="vbar" style="height:${Math.max(3, v / MX[k] * VH)}px;--c:${MCOL[k]}"></div></div>`; }).join('')}</div>${nmc(u.k)}</div>`).join('') || '<div class="empty">Tidak ada data.</div>'}</div><div class="dsh-leg">${['hari', 'shift', 'tugas', 'jam'].map((k) => `<span><i style="background:${MCOL[k]}"></i>${MET[k][0]}</span>`).join('')}</div></div>`;
+  const rrow = (c, o) => `<tr${o ? ' class="tot"' : ''}><th>${c[0]}</th>${c.slice(1).map((v) => `<td>${v}</td>`).join('')}</tr>`;
+  const av = (x, n) => dsN(n ? x / n : 0, 1);
+  const rinci = `<div class="dsh-card"><h4>Rincian per unit</h4><div class="sub">Total dan rata-rata per pegawai (Rata = per pegawai)</div><div class="dsh-tw"><table class="dsh-t dsh-t2"><thead><tr><th rowspan="2">Unit</th><th colspan="2">Hadir</th><th colspan="2">Shift</th><th colspan="2">Tugas</th><th colspan="2">Jam kerja</th></tr><tr class="sb"><th>Tot</th><th>Rata</th><th>Tot</th><th>Rata</th><th>Tot</th><th>Rata</th><th>Tot</th><th>Rata</th></tr></thead><tbody>${ul.slice().sort((a, b) => a.k.localeCompare(b.k)).map((u) => rrow([esc(u.k), u.hari, av(u.hari, u.n), u.shift, av(u.shift, u.n), u.tugas, av(u.tugas, u.n), dsN(u.jam / 60, 0), av(u.jam / 60, u.n)])).join('') || '<tr><td colspan="9">Tidak ada data.</td></tr>'}</tbody><tfoot>${rrow(['Total', tot.hari, av(tot.hari, tot.n), tot.shift, av(tot.shift, tot.n), tot.tugas, av(tot.tugas, tot.n), dsN(tot.jam / 60, 0), av(tot.jam / 60, tot.n)], 1)}</tfoot></table></div><div class="dsh-note">Tugas = jumlah laporan harian yang diisi · Jam kerja dalam jam (lembur tidak dihitung).</div></div>`;
+  // sebaran jam masuk
+  const H = {}; rows.forEach((r) => { const h = parseInt(String(r.jamMasuk || '').slice(0, 2), 10); if (!isNaN(h)) H[h] = (H[h] || 0) + 1; });
+  const hs = Object.keys(H).map(Number); let chartHour = '';
+  if (hs.length) { const a = Math.min(...hs), z = Math.max(...hs), hm = Math.max(...Object.values(H)); let hb = '', hl = ''; for (let h = a; h <= z; h++) { hb += `<div class="b" style="height:${Math.max(3, (H[h] || 0) / hm * 100)}%" title="${pad(h)}.00: ${H[h] || 0} absen"></div>`; hl += `<span>${pad(h)}</span>`; }
+    const pk = Object.keys(H).reduce((x, y) => (H[y] > H[x] ? y : x));
+    chartHour = `<div class="dsh-card"><h4>Sebaran jam masuk</h4><div class="sub">Pukul berapa karyawan paling banyak absen masuk</div><div class="dsh-bars">${hb}</div><div class="dsh-lbl">${hl}</div><div class="dsh-note">Paling ramai pukul <b>${pad(+pk)}.00–${pad(+pk)}.59</b> (${H[pk]} absen).</div></div>`; }
+  // rincian shift
+  const sh = { P: 0, S: 0, D: 0, M: 0, R: 0 }; staff.forEach((x) => { SH_ALL.forEach((k) => { sh[k] += (x[k] || 0); }); });
+  // perlu perhatian
+  const pl = (arr, f) => arr.length ? '<div class="pl">' + arr.map((x) => `<button data-u="${esc(x.userId)}">${esc(x.nama)}${f ? '<b>' + f(x) + '</b>' : ''}</button>`).join('') + '</div>' : '<div class="ok">✔ Tidak ada</div>';
+  const nol = staff.filter((x) => !x.hari && !x.belum), lupa = staff.filter((x) => x.belum > 0).sort((a, b) => b.belum - a.belum), cekL = staff.filter((x) => x.cek > 0).sort((a, b) => b.cek - a.cek), lemL = staff.filter((x) => (x.lembur || 0) > 0).sort((a, b) => b.lembur - a.lembur), shL = staff.filter((x) => shTot(x) > 0).sort((a, b) => shTot(b) - shTot(a));
+  const att = `<div class="dsh-card dsh-att"><h4>Perlu perhatian</h4><div class="sub">Ketuk nama untuk melihat detail dan foto absen</div>
+    <h5>Belum pernah absen periode ini (${nol.length})</h5>${pl(nol.slice(0, 12))}${nol.length > 12 ? `<div class="small dim" style="margin-top:6px">dan ${nol.length - 12} lainnya</div>` : ''}
+    <h5>Lupa absen pulang (${lupa.length})</h5>${pl(lupa.slice(0, 8), (x) => x.belum + '×')}
+    <h5>Absen perlu dicek (${cekL.length})</h5>${pl(cekL.slice(0, 8), (x) => x.cek + '×')}
+    <h5>Shift terbanyak</h5>${pl(shL.slice(0, 5), (x) => shTot(x) + ' shift')}
+    <h5>Jam lembur terbanyak</h5>${pl(lemL.slice(0, 5), (x) => fmtDur(x.lembur))}</div>`;
+  $('tmDash').innerHTML = tabel + '<div class="dsh-sec">📊 Diagram beban kerja</div>' + diagUnit + diagKomp + diagBanding + '<div class="dsh-sec">📋 Rincian</div>' + rinci + att;
+  $('tmDash').querySelectorAll('.dsh-met button').forEach((b) => b.addEventListener('click', () => { dsMetric = b.dataset.k; renderDash(); }));
+  $('tmDash').querySelectorAll('.dsh-att .pl button').forEach((b) => b.addEventListener('click', () => openEmployee(b.dataset.u)));
 }
 $('tmPrev').addEventListener('click', () => { tmKey = shiftKey(tmKey, -1); loadTim(); });
 $('tmNext').addEventListener('click', () => { tmKey = shiftKey(tmKey, 1); loadTim(); });
@@ -1732,6 +1873,15 @@ $('kyImport').addEventListener('click', () => {
   });
 });
 $('setSemangat').addEventListener('input', () => { $('semCnt').textContent = $('setSemangat').value.length; });
+
+$('btnEmailTest').addEventListener('click', async () => {
+  const b = $('btnEmailTest'), to = $('setEmail').value.trim(); if (!to) return toast('Isi alamat email dulu, lalu simpan pengaturan', true);
+  if (!confirm('Kirim rekap Excel periode berjalan ke:\n' + to + '\n\n(Pastikan alamat sudah disimpan lewat Simpan Pengaturan.)')) return;
+  b.disabled = true; const old = b.innerHTML; b.innerHTML = '<span class="spin dk"></span> Mengirim…';
+  try { const r = await apiPost('kirimRekap', {}); toast(r.readable ? '✅ Terkirim ke ' + r.data.ke + ' alamat. Cek kotak masuk/spam.' : 'Permintaan dikirim. Cek email beberapa saat lagi.'); }
+  catch (e) { toast(e.message, true); }
+  b.disabled = false; b.innerHTML = old;
+});
 $('semSave').addEventListener('click', async () => {
   const teks = $('setSemangat').value.replace(/\s+/g, ' ').trim().substring(0, 300), b = $('semSave'); b.disabled = true; b.innerHTML = '<span class="spin"></span> Menyimpan…';
   try {
@@ -1740,7 +1890,7 @@ $('semSave').addEventListener('click', async () => {
   } catch (e) { toast(e.message, true); }
   b.disabled = false; b.textContent = 'Simpan Papan Informasi';
 });
-async function loadConfig() { try { const c = await apiGet('config'); cfgLok = c.lokasi || []; cfgRet = c.retensiFotoHari || 90; renderLok(); $('setRet').value = cfgRet; $('setWa').value = c.waAdmin || ''; $('setSemangat').value = c.semangat || ''; $('semCnt').textContent = ($('setSemangat').value || '').length; $('waTokState').textContent = c.waGatewaySet ? '· aktif ✔' : '· belum diisi'; } catch (e) { $('lokList').innerHTML = `<div class="banner red">${esc(e.message)}</div>`; } }
+async function loadConfig() { try { const c = await apiGet('config'); cfgLok = c.lokasi || []; cfgRet = c.retensiFotoHari || 90; renderLok(); $('setRet').value = cfgRet; $('setWa').value = c.waAdmin || ''; $('setEmail').value = c.emailRekap || ''; $('emailState').textContent = c.emailRekap ? '· aktif ✔' + (c.emailRekapTerakhir ? ' · rekap akhir terakhir: periode ' + periodLabel(c.emailRekapTerakhir) : '') : '· belum diisi'; $('setSemangat').value = c.semangat || ''; $('semCnt').textContent = ($('setSemangat').value || '').length; $('waTokState').textContent = c.waGatewaySet ? '· aktif ✔' : '· belum diisi'; } catch (e) { $('lokList').innerHTML = `<div class="banner red">${esc(e.message)}</div>`; } }
 function renderLok() {
   $('lokList').innerHTML = cfgLok.length ? cfgLok.map((l, i) => `<div class="item" data-i="${i}"><div class="field"><label>Nama titik</label><input data-k="nama" value="${esc(l.nama)}"></div>
     <div class="row"><div class="field grow"><label>Latitude</label><input data-k="lat" inputmode="decimal" value="${esc(l.lat)}"></div><div class="field grow"><label>Longitude</label><input data-k="lng" inputmode="decimal" value="${esc(l.lng)}"></div><div class="field" style="width:90px"><label>Radius (m)</label><input data-k="radius" inputmode="numeric" value="${esc(l.radius)}"></div></div>
@@ -1758,7 +1908,7 @@ $('btnSaveSet').addEventListener('click', async () => {
   if (lok.some((l) => isNaN(l.lat) || isNaN(l.lng))) return toast('Latitude/longitude belum valid', true);
   const ret = parseInt($('setRet').value, 10) || 90; const b = $('btnSaveSet'); b.disabled = true; b.innerHTML = '<span class="spin"></span> Menyimpan…';
   try {
-    const r = await sendAndConfirm('saveConfig', { lokasi: lok, retensiFotoHari: ret, waAdmin: $('setWa').value.trim(), waGatewayToken: $('setWaTok').value.trim() }, () => apiGet('config'), (c) => c.lokasi.length === lok.length && c.retensiFotoHari === ret);
+    const r = await sendAndConfirm('saveConfig', { lokasi: lok, retensiFotoHari: ret, waAdmin: $('setWa').value.trim(), emailRekap: $('setEmail').value.trim(), waGatewayToken: $('setWaTok').value.trim() }, () => apiGet('config'), (c) => c.lokasi.length === lok.length && c.retensiFotoHari === ret);
     if (r) { cfgLok = r.lokasi; cfgRet = r.retensiFotoHari; renderLok(); $('setWaTok').value = ''; loadConfig(); toast('✅ Pengaturan tersimpan'); } else toast(NOT_CONFIRMED, true);
   } catch (e) { toast(e.message, true); }
   b.disabled = false; b.textContent = 'Simpan Pengaturan';

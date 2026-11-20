@@ -19,7 +19,7 @@ var FOTO_HDR = ['userId', 'foto', 'updatedAt'];
 var SH_RESET = 'ResetReq';
 var RESET_HDR = ['id', 'userId', 'username', 'nama', 'unit', 'createdAt', 'status'];
 var MAX_FOTO_PROFIL = 45000;     // karakter base64 (foto profil 160px ~ 8-12 KB)
-var API_VERSION = 16;             // dinaikkan tiap ada aksi baru; dipakai aplikasi untuk mendeteksi backend lama
+var API_VERSION = 17;             // dinaikkan tiap ada aksi baru; dipakai aplikasi untuk mendeteksi backend lama
 var TEMP_PW_MENIT_EMAIL = 60;
 var TEMP_PW_MENIT_ADMIN = 24 * 60;
 var ABSEN_HDR = ['id', 'tanggal', 'userId', 'nama', 'unit', 'shift', 'jamMasuk', 'jamPulang', 'tglPulang',
@@ -93,11 +93,25 @@ function resetPasswordAdmin() {
 }
 
 function setupTrigger() {
-  var ts = ScriptApp.getProjectTriggers();
+  var ts = ScriptApp.getProjectTriggers(), ada = false;
   for (var i = 0; i < ts.length; i++) {
-    if (ts[i].getHandlerFunction() === 'hapusFotoLama') return;
+    if (ts[i].getHandlerFunction() === 'hapusFotoLama') ada = true;
   }
-  ScriptApp.newTrigger('hapusFotoLama').timeBased().everyDays(1).atHour(2).create();
+  if (!ada) ScriptApp.newTrigger('hapusFotoLama').timeBased().everyDays(1).atHour(2).create();
+  ensureRekapTrigger_();
+}
+function ensureRekapTrigger_() {
+  // Pemicu harian pukul 08.00 (agar absen pulang shift malam terakhir periode sudah masuk). Pemicu lama (06.00) diganti.
+  var props = PropertiesService.getScriptProperties();
+  var ts = ScriptApp.getProjectTriggers(), ada = false;
+  for (var i = 0; i < ts.length; i++) {
+    if (ts[i].getHandlerFunction() !== 'rekapOtomatis') continue;
+    if (props.getProperty('rekapTrigJam') === '8' && !ada) { ada = true; continue; }
+    ScriptApp.deleteTrigger(ts[i]);
+  }
+  if (ada) return;
+  ScriptApp.newTrigger('rekapOtomatis').timeBased().everyDays(1).atHour(8).create();
+  props.setProperty('rekapTrigJam', '8');
 }
 
 /* ====================== UTIL ====================== */
@@ -762,13 +776,16 @@ function actProfilFoto_(u, p) {
 /* ====================== CONFIG ====================== */
 function getConfig_() {
   var rows = readAll_(SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SH_CONFIG));
-  var c = { lokasi: [], retensiFotoHari: 90, waAdmin: '', semangat: '', semangatTgl: '' };
+  var c = { lokasi: [], retensiFotoHari: 90, waAdmin: '', semangat: '', semangatTgl: '', emailRekap: '', emailRekapTerakhir: '', emailRekapTengah: '' };
   for (var i = 0; i < rows.length; i++) {
     if (rows[i].key === 'lokasi') { try { c.lokasi = JSON.parse(rows[i].value) || []; } catch (e) { c.lokasi = []; } }
     if (rows[i].key === 'retensiFotoHari') c.retensiFotoHari = parseInt(rows[i].value, 10) || 90;
     if (rows[i].key === 'waAdmin') c.waAdmin = rows[i].value;
     if (rows[i].key === 'semangat') c.semangat = String(rows[i].value || '');
     if (rows[i].key === 'semangatTgl') c.semangatTgl = String(rows[i].value || '');
+    if (rows[i].key === 'emailRekap') c.emailRekap = String(rows[i].value || '');
+    if (rows[i].key === 'emailRekapTerakhir') c.emailRekapTerakhir = String(rows[i].value || '');
+    if (rows[i].key === 'emailRekapTengah') c.emailRekapTengah = String(rows[i].value || '');
   }
   return c;
 }
@@ -802,11 +819,152 @@ function actSaveConfig_(u, p) {
   var r = parseInt(p.retensiFotoHari, 10);
   if (r >= 7 && r <= 3650) setConfigKey_('retensiFotoHari', r);
   if (p.waAdmin !== undefined) setConfigKey_('waAdmin', normWa_(p.waAdmin));
+  if (p.emailRekap !== undefined) {
+    var em = parseEmails_(p.emailRekap);
+    if (em.bad.length) throw fail_('Alamat email tidak valid: ' + em.bad.join(', '));
+    if (em.ok.length > 10) throw fail_('Maksimal 10 alamat email.');
+    setConfigKey_('emailRekap', em.ok.join(', '));
+    if (em.ok.length) ensureRekapTrigger_();
+  }
   if (typeof p.waGatewayToken === 'string' && p.waGatewayToken.trim()) {
     if (p.waGatewayToken.trim() === '-') PropertiesService.getScriptProperties().deleteProperty('WA_GATEWAY_TOKEN');
     else PropertiesService.getScriptProperties().setProperty('WA_GATEWAY_TOKEN', p.waGatewayToken.trim());
   }
   return { ok: true };
+}
+
+/* ====================== REKAP EXCEL OTOMATIS KE EMAIL ====================== */
+function parseEmails_(txt) {
+  var parts = String(txt || '').split(/[\s,;]+/), ok = [], bad = [], seen = {};
+  for (var i = 0; i < parts.length; i++) {
+    var e = parts[i].trim().toLowerCase();
+    if (!e) continue;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) { bad.push(parts[i]); continue; }
+    if (!seen[e]) { seen[e] = true; ok.push(e); }
+  }
+  return { ok: ok, bad: bad };
+}
+function jamDes_(menit) { return Math.round((menit || 0) / 6) / 10; }   // menit -> jam, 1 desimal
+/** Data satu periode untuk Excel/email: ringkasan per karyawan, per unit, dan detail absen. */
+function rekapData_(key) {
+  var users = readAll_(karSheet_()).filter(function (x) { return x.aktif === 'Y'; });
+  var sh = absenSheet_(key, false), rows = [];
+  if (sh) { var all = readAll_(sh); for (var i = 0; i < all.length; i++) rows.push(pubRecord_(all[i])); }
+  rows.sort(function (a, b) { return a.tanggal < b.tanggal ? -1 : a.tanggal > b.tanggal ? 1 : (a.jamMasuk < b.jamMasuk ? -1 : 1); });
+  var summary = summarize_(rows, users), lem = {};
+  for (var j = 0; j < rows.length; j++) {
+    var r = rows[j];
+    if (r.shift === 'R' && !hasFlag_(r.flag, 'TIDAK_SAH') && r.durasi) lem[r.userId] = (lem[r.userId] || 0) + r.durasi;
+  }
+  var kerja = {};
+  for (var k = 0; k < rows.length; k++) {
+    var q = rows[k];
+    if (q.shift !== 'R' && q.shift !== 'L' && !hasFlag_(q.flag, 'TIDAK_SAH') && q.durasi) kerja[q.userId] = (kerja[q.userId] || 0) + q.durasi;
+  }
+  var lapAll = laporanMap_(key, null), tugas = {};
+  for (var lk in lapAll) { if (!String(lapAll[lk] || '').trim()) continue; var mm = /^(.*)_(\d{4}-\d{2}-\d{2})_(.*)$/.exec(lk); if (mm) tugas[mm[1]] = (tugas[mm[1]] || 0) + 1; }
+  var units = {};
+  for (var m = 0; m < summary.length; m++) {
+    var s = summary[m]; s.lembur = lem[s.userId] || 0; s.kerja = kerja[s.userId] || 0; s.shiftTot = s.P + s.S + s.D + s.M; s.tugas = tugas[s.userId] || 0;
+    var un = String(s.unit || '').trim() || 'Tanpa unit';
+    var U = units[un] || (units[un] = { unit: un, n: 0, hari: 0, shift: 0, tugas: 0, kerja: 0, lembur: 0, cek: 0 });
+    U.n++; U.hari += s.hari; U.shift += s.shiftTot; U.tugas += s.tugas; U.kerja += s.kerja; U.lembur += s.lembur; U.cek += s.cek;
+  }
+  var ul = Object.keys(units).sort().map(function (x) { return units[x]; });
+  return { key: key, range: periodRange_(key), rows: rows, summary: summary, units: ul, laporan: lapAll };
+}
+function flagText_(f) {
+  var o = [], t = String(f || '');
+  var map = { LOKASI_JAUH: 'Lokasi jauh', GPS_GAGAL: 'GPS gagal', JAM_BEDA: 'Jam beda', JADWAL_L: 'Jadwal libur', GPS_CURIGA: 'GPS mencurigakan', LUPA_PULANG: 'Lupa pulang', TIDAK_SAH: 'Tidak sah', DICEK: 'Sudah dicek' };
+  for (var k in map) if (hasFlag_(t, k)) o.push(map[k]);
+  return o.join(', ');
+}
+/** Buat berkas Excel (.xlsx) lewat spreadsheet sementara lalu diekspor. */
+function rekapXlsx_(d) {
+  var ss = SpreadsheetApp.create('Rekap Absensi ' + d.range.start + ' sd ' + d.range.end + ' (sementara)');
+  var id = ss.getId();
+  try {
+    function mk(i, nama, hdr, data, textCols) {
+      var sh = (i === 0 && ss.getSheets().length) ? ss.getSheets()[0] : ss.insertSheet(nama);
+      if (sh.getName() !== nama) sh.setName(nama);
+      var all = [hdr].concat(data.length ? data : [['(tidak ada data)']]);
+      for (var r = 0; r < all.length; r++) while (all[r].length < hdr.length) all[r].push('');
+      for (var tc = 0; tc < (textCols || []).length; tc++) sh.getRange(1, textCols[tc], all.length, 1).setNumberFormat('@');
+      sh.getRange(1, 1, all.length, hdr.length).setValues(all);
+      sh.getRange(1, 1, 1, hdr.length).setFontWeight('bold').setBackground('#DCE8FA');
+      sh.setFrozenRows(1);
+      return sh;
+    }
+    var rk = d.summary.map(function (s, i) {
+      return [i + 1, s.nama, s.unit || '', s.hari, s.shiftTot, s.tugas, jamDes_(s.kerja), s.P, s.S, s.D, s.M, s.R, jamDes_(s.lembur), s.belum, s.cek, s.tidak];
+    });
+    mk(0, 'Rekap Karyawan', ['No', 'Nama', 'Unit', 'Hari Hadir', 'Total Shift', 'Tugas (laporan)', 'Jam Kerja', 'Pagi', 'Siang', 'Middle', 'Malam', 'Lembur (kali)', 'Jam Lembur', 'Belum Pulang', 'Perlu Dicek', 'Tidak Sah'], rk);
+    var av = function (x, n) { return n ? Math.round(x / n * 10) / 10 : 0; };
+    var ru = d.units.map(function (u) { return [u.unit, u.n, u.hari, av(u.hari, u.n), u.shift, av(u.shift, u.n), u.tugas, av(u.tugas, u.n), jamDes_(u.kerja), jamDes_(u.lembur), u.cek]; });
+    mk(1, 'Ringkasan Unit', ['Unit', 'Jumlah Pegawai', 'Total Hari Hadir', 'Rata Hari/Pegawai', 'Total Shift', 'Rata Shift/Pegawai', 'Total Tugas (laporan)', 'Rata Tugas/Pegawai', 'Jam Kerja', 'Jam Lembur', 'Perlu Dicek'], ru);
+    var rd = d.rows.map(function (r) {
+      var lap = d.laporan[r.userId + '_' + r.tanggal + '_' + (r.shift || '')] || d.laporan[r.userId + '_' + r.tanggal + '_'] || '';
+      return [r.tanggal, r.nama, r.unit || '', r.shift, r.jamMasuk || '', r.jamPulang || '', r.durasi ? jamDes_(r.durasi) : '', flagText_(r.flag), r.noteMasuk || '', r.notePulang || '', lap];
+    });
+    mk(2, 'Detail Absen', ['Tanggal', 'Nama', 'Unit', 'Shift', 'Jam Masuk', 'Jam Pulang', 'Durasi (jam)', 'Status', 'Catatan Masuk', 'Catatan Pulang', 'Laporan Harian'], rd, [1, 5, 6]);
+    SpreadsheetApp.flush && SpreadsheetApp.flush();
+    var resp = UrlFetchApp.fetch('https://docs.google.com/spreadsheets/d/' + id + '/export?format=xlsx', { headers: { Authorization: 'Bearer ' + ScriptApp.getOAuthToken() }, muteHttpExceptions: true });
+    if (resp.getResponseCode() !== 200) throw fail_('Gagal membuat berkas Excel (kode ' + resp.getResponseCode() + ').');
+    return resp.getBlob().setName('Rekap-Absensi-' + d.range.start + '_sd_' + d.range.end + '.xlsx');
+  } finally {
+    try { DriveApp.getFileById(id).setTrashed(true); } catch (e) { /* abaikan */ }
+  }
+}
+function kirimRekap_(key, to, penanda) {
+  var d = rekapData_(key), blob = rekapXlsx_(d);
+  var hari = 0, kerja = 0, lem = 0, cek = 0, belum = 0;
+  for (var i = 0; i < d.summary.length; i++) { var s = d.summary[i]; hari += s.hari; kerja += s.kerja; lem += s.lembur; cek += s.cek; belum += s.belum; }
+  var lines = ['Assalamualaikum Wr. Wb.', '',
+    'Berikut rekap absensi karyawan RSI At-Tin Husada Ngawi untuk periode ' + d.range.start + ' s/d ' + d.range.end + (penanda ? ' (' + penanda + ')' : '') + '.', '',
+    'RINGKASAN',
+    '- Karyawan aktif   : ' + d.summary.length,
+    '- Total hari hadir : ' + hari,
+    '- Total jam kerja  : ' + Math.round(kerja / 60) + ' jam',
+    '- Total jam lembur : ' + Math.round(lem / 60) + ' jam',
+    '- Absen perlu dicek: ' + cek,
+    '- Belum/lupa pulang: ' + belum, '',
+    'BEBAN KERJA PER UNIT (rata-rata per pegawai)'];
+  for (var u = 0; u < d.units.length; u++) { var X = d.units[u], nn = X.n || 1; lines.push('- ' + X.unit + ' (' + X.n + ' pegawai): hadir ' + Math.round(X.hari / nn * 10) / 10 + ' hari, ' + Math.round(X.shift / nn * 10) / 10 + ' shift, ' + Math.round(X.tugas / nn * 10) / 10 + ' tugas per pegawai'); }
+  lines.push('', 'Rincian lengkap (rekap karyawan, ringkasan unit, dan detail absen beserta laporan harian) ada pada lampiran Excel.', '', 'Email ini dikirim otomatis oleh aplikasi Absensi RSI At-Tin Husada.');
+  MailApp.sendEmail({ to: to.join(','), subject: 'Rekap Absensi RSI At-Tin Husada ' + d.range.start + ' s/d ' + d.range.end, body: lines.join('\n'), attachments: [blob], name: 'Absensi RSI At-Tin Husada' });
+  return { periode: d.range, karyawan: d.summary.length, hari: hari };
+}
+/** Dipanggil trigger harian sekitar pukul 08.00. Dua kiriman per periode:
+ *  - tanggal 15 : rekap tengah periode (data periode berjalan sampai saat itu);
+ *  - tanggal 27 : rekap akhir periode yang baru selesai (27 - 26).
+ *  Jika gagal, dicoba lagi hari berikutnya (15-26 untuk tengah periode, 27-31 untuk akhir periode). Tidak pernah dobel. */
+function rekapOtomatis() {
+  var now = nowJ_(), today = now.substring(0, 10), tgl = parseInt(today.substring(8, 10), 10);
+  var cfg = getConfig_(), em = parseEmails_(cfg.emailRekap).ok;
+  if (tgl < 15) return { dilewati: 'belum tanggal 15' };
+  if (!em.length) return { dilewati: 'tidak ada penerima' };
+  if (tgl >= 27) {
+    var kA = prevKey_(periodKey_(today));
+    if (cfg.emailRekapTerakhir === kA) return { dilewati: 'sudah terkirim' };
+    var rA = kirimRekap_(kA, em, 'rekap akhir periode');
+    setConfigKey_('emailRekapTerakhir', kA);
+    return rA;
+  }
+  var kT = periodKey_(today);   // tanggal 15-26: periode berjalan
+  if (cfg.emailRekapTengah === kT) return { dilewati: 'sudah terkirim' };
+  var rT = kirimRekap_(kT, em, 'rekap tengah periode, data sampai ' + now.substring(0, 16).replace('T', ' '));
+  setConfigKey_('emailRekapTengah', kT);
+  return rT;
+}
+/** Admin: kirim contoh/rekap sekarang (default periode berjalan sampai hari ini). */
+function actKirimRekap_(u, p) {
+  if (u.role !== 'admin') throw fail_('Hanya admin.');
+  var em = parseEmails_(p.to !== undefined ? p.to : getConfig_().emailRekap).ok;
+  if (!em.length) throw fail_('Isi dulu alamat email penerima lalu simpan.');
+  var key = validKey_(p.period) ? p.period : periodKey_(nowJ_().substring(0, 10));
+  var r = kirimRekap_(key, em, 'kiriman manual ' + nowJ_().substring(0, 16));
+  r.ke = em.length;
+  return r;
 }
 
 /* ====================== ABSENSI ====================== */
@@ -1460,7 +1618,7 @@ function doGet(e) {
       case 'resetBuat':
         var lk = LockService.getScriptLock(); lk.waitLock(20000);
         try { return out_(actResetBuat_(u, p)); } finally { try { lk.releaseLock(); } catch (e3) { /* tidak terkunci */ } }
-      case 'config': { var cfgOut = getConfig_(); cfgOut.waGatewaySet = !!waToken_(); return out_(cfgOut); }
+      case 'config': { var cfgOut = getConfig_(); cfgOut.waGatewaySet = !!waToken_(); if (u.role !== 'admin') { delete cfgOut.emailRekap; delete cfgOut.emailRekapTerakhir; delete cfgOut.emailRekapTengah; } return out_(cfgOut); }
       case 'jaga': return out_(actJaga_(u));
       case 'jadwal': return out_(actJadwal_(u, p));
       case 'semangat': return out_(actSemangat_());
@@ -1492,6 +1650,7 @@ function doPost(e) {
       case 'koreksi': r = actKoreksi_(u, p); CacheService.getScriptCache().remove('JAGA'); break;
       case 'tidakSah': r = actTidakSah_(u, p); CacheService.getScriptCache().remove('JAGA'); break;
       case 'saveConfig': r = actSaveConfig_(u, p); break;
+      case 'kirimRekap': r = actKirimRekap_(u, p); break;
       case 'saveSemangat': r = actSaveSemangat_(u, p); break;
       case 'karyawanSave': r = actKaryawanSave_(u, p); break;
       case 'karyawanImport': r = actKaryawanImport_(u, p); break;

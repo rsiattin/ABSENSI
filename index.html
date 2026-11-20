@@ -479,7 +479,8 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 .cam-shot{width:74px;height:74px;border-radius:50%;border:5px solid #fff;background:radial-gradient(circle,#fff 62%,rgba(255,255,255,.35) 64%);cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.5);}
 .cam-shot:active{transform:scale(.92);}
 /* hapus laporan */
-.lp-x{color:#d62839 !important;font-weight:800;font-size:15px;padding:4px 11px;background:linear-gradient(160deg,#fff,#ffeef0) !important;border:1.5px solid #f3b3ba !important;box-shadow:0 8px 12px -9px rgba(214,40,57,.7) !important;}
+.lp-e,.lp-x{width:40px;height:40px;padding:0 !important;display:inline-flex;align-items:center;justify-content:center;border-radius:13px !important;font-size:17px !important;line-height:1}.lp-e{color:#1458b0 !important;font-weight:800}
+.lp-x{color:#d62839 !important;font-weight:800;background:linear-gradient(160deg,#fff,#ffeef0) !important;border:1.5px solid #f3b3ba !important;box-shadow:0 8px 12px -9px rgba(214,40,57,.7) !important;}
 /* v15b: kotak timbul + garis tepi, GPS berwarna */
 .ab-sheet .shift-pick button{border:2px solid #9fb6d9;box-shadow:0 12px 16px -10px rgba(19,40,90,.75),0 4px 6px -3px rgba(19,40,90,.25),0 2px 0 #fff inset,0 -3px 0 rgba(19,40,90,.09) inset;}
 .ab-sheet .shift-pick button.sel{border-color:rgba(0,0,0,.18);}
@@ -532,7 +533,7 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 .item.rc{padding:0;overflow:hidden;border-radius:18px;margin-bottom:9px;background:#fff;box-shadow:0 5px 14px rgba(30,60,120,.09);border:1px solid #e3eaf7}
 .rc-head{display:flex;gap:10px;align-items:center;padding:11px 12px 11px 0;cursor:pointer}
 .rc-bar{align-self:stretch;width:6px;border-radius:0 6px 6px 0;flex:none}
-.rc-dt{width:44px;text-align:center;line-height:1.1;flex:none}.rc-dt b{font-size:20px;display:block}.rc-dt span{font-size:10.5px;color:#6b7a99;font-weight:700}
+.rc-dt{width:48px;text-align:center;line-height:1.1;flex:none;padding:6px 0 5px;border-radius:13px;border:1.5px solid #ffc48c;background:linear-gradient(160deg,#fff,#fff6ec);box-shadow:0 5px 9px -7px rgba(232,101,10,.55)}.rc-dt b{font-size:20px;display:block}.rc-dt span{font-size:10.5px;color:#6b7a99;font-weight:700}
 .rc-mid{flex:1;min-width:0}.rc-nm{font-weight:800;font-size:13.5px}.rc-tm{font-size:15px;font-weight:800}.rc-tm em{font-style:normal;color:#8a97b3;font-weight:600;font-size:12px;margin-left:6px}
 .rc-sub{font-size:11.5px;color:#6b7a99;margin-top:2px}
 .rc-bd{font-size:10.5px;font-weight:800;padding:4px 9px;border-radius:999px;white-space:nowrap;flex:none}
@@ -754,7 +755,7 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
         <h3>📝 Isi Laporan Harian</h3>
         <div class="row"><div class="field grow"><label>Tanggal</label><select id="lpDate"></select></div><div class="field grow"><label>Shift</label><select id="lpShift"></select></div></div>
         <div class="small dim" id="lpInfo" style="margin:-4px 0 8px"></div>
-        <div class="field"><label>Uraian pekerjaan</label><textarea id="lpText" placeholder="Tulis satu pekerjaan per baris, misalnya:&#10;- Pemeriksaan jaringan lantai 2&#10;- Pelayanan pasien poli umum"></textarea><div class="small dim" style="margin-top:4px" id="lpCount">0 / 4000</div></div>
+        <div class="field"><label>Uraian pekerjaan</label><textarea id="lpText" placeholder="Awali tiap pekerjaan dengan tanda -, misalnya:&#10;- Pemeriksaan jaringan lantai 2&#10;- Pelayanan pasien poli umum, dilanjutkan ke baris berikutnya bila panjang"></textarea><div class="small dim" style="margin-top:4px" id="lpCount">0 / 4000</div><div class="small dim" style="margin-top:2px">Tiap pekerjaan diawali tanda <b>-</b> (1 tanda = 1 tugas). Bila satu pekerjaan panjang, lanjutkan di baris berikutnya <b>tanpa</b> tanda -.</div></div>
         <button class="btn btn-teal btn-block" id="btnSaveLaporan" style="padding:14px">Simpan Laporan</button>
       </div>
       <div class="glass card"><h3>🗂️ Laporan Terakhir</h3><div id="lpHistory"></div></div>
@@ -909,7 +910,7 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 /* ============================================================
    KONFIGURASI — isi dengan URL Web App Apps Script Anda
    ============================================================ */
-const API_URL = "https://script.google.com/macros/s/AKfycby2ZN56o-vifxuByAjH-jo7p_JdB5SsgQ2ZBPjkUd4PiZ67Uyh0ruB0jJceehn0-6_K/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbx3yh3md151VtcC2g-kQZ4gqo7BgbIiwY7UMiexOWYHvQ-RytiyU6TwKWJru2lnTSo6/exec";
 
 /* ---------------- util ---------------- */
 const $ = (id) => document.getElementById(id);
@@ -1406,7 +1407,7 @@ async function loadLapHistory() {
     lapRows.sort((a, b) => (a.tanggal < b.tanggal ? 1 : a.tanggal > b.tanggal ? -1 : (a.jamMasuk < b.jamMasuk ? 1 : -1)));
     const keys = Object.keys(lapMap).sort().reverse().slice(0, 14), minD = addDays(t, -LAP_DAYS);
     $('lpHistory').innerHTML = keys.length ? keys.map((x) => { const d = x.slice(0, 10), sh = x.slice(11); const can = d >= minD;
-      return `<div class="item lp-item"><div class="row between"><div class="t">${sh ? `<span class="tag tag-${esc(sh)}">${esc(SHIFT_NAME[sh] || sh)}</span>` : '<span class="tag tag-L">Lama</span>'} ${fmtDate(d)}</div>${can ? `<div class="row" style="gap:6px"><button class="btn btn-sm" data-ed="${esc(d)}|${esc(sh)}">✎ Ubah</button><button class="btn btn-sm lp-x" data-xd="${esc(d)}|${esc(sh)}" title="Hapus laporan" aria-label="Hapus laporan">✕</button></div>` : ''}</div><div class="lap-text">${esc(lapMap[x])}</div></div>`; }).join('') : '<div class="empty">Belum ada laporan pada periode ini.</div>';
+      return `<div class="item lp-item"><div class="row between"><div class="t">${sh ? `<span class="tag tag-${esc(sh)}">${esc(SHIFT_NAME[sh] || sh)}</span>` : '<span class="tag tag-L">Lama</span>'} ${fmtDate(d)}</div>${can ? `<div class="row" style="gap:6px"><button class="btn btn-sm lp-e" data-ed="${esc(d)}|${esc(sh)}" title="Ubah laporan" aria-label="Ubah laporan">✎</button><button class="btn btn-sm lp-x" data-xd="${esc(d)}|${esc(sh)}" title="Hapus laporan" aria-label="Hapus laporan">✕</button></div>` : ''}</div><div class="lap-text">${esc(lapMap[x])}</div></div>`; }).join('') : '<div class="empty">Belum ada laporan pada periode ini.</div>';
     $('lpHistory').querySelectorAll('[data-ed]').forEach((b) => b.addEventListener('click', () => { const p = b.dataset.ed.split('|'); $('lpDate').value = p[0]; fillShiftSel(p[1] || ''); fillLap(); $('lpText').focus(); window.scrollTo({ top: 0, behavior: 'smooth' }); }));
     $('lpHistory').querySelectorAll('[data-xd]').forEach((b) => b.addEventListener('click', () => hapusLaporan(b)));
   } catch (e) { $('lpHistory').innerHTML = `<div class="banner red">${esc(e.message)}</div>`; }
@@ -1424,12 +1425,13 @@ async function hapusLaporan(btn) {
 }
 function fillLap() {
   const d = $('lpDate').value, sh = $('lpShift').value, own = lapMap[d + '_' + sh], legacy = lapMap[d + '_'];
-  $('lpText').value = own || legacy || ''; $('lpCount').textContent = $('lpText').value.length + ' / 4000';
+  $('lpText').value = own || legacy || ''; lpCountUpd();
   $('lpInfo').textContent = own ? '✎ Sedang mengubah laporan yang sudah tersimpan.' : (legacy ? 'Laporan lama (sebelum ada pembagian shift). Simpan untuk memindahkannya ke shift ini.' : 'Laporan baru. Satu laporan untuk tiap tanggal dan shift.');
   $('btnSaveLaporan').textContent = own ? 'Perbarui Laporan' : 'Simpan Laporan';
 }
 $('lpDate').addEventListener('change', () => { fillShiftSel(''); fillLap(); }); $('lpShift').addEventListener('change', fillLap);
-$('lpText').addEventListener('input', () => { $('lpCount').textContent = $('lpText').value.length + ' / 4000'; });
+function lpCountUpd() { const v = $('lpText').value; $('lpCount').textContent = v.length + ' / 4000 · ' + taskCount(v) + ' tugas'; }
+$('lpText').addEventListener('input', lpCountUpd);
 $('btnSaveLaporan').addEventListener('click', async () => {
   const tgl = $('lpDate').value, shift = $('lpShift').value, isi = $('lpText').value.trim();
   if (!isi) return toast('Isi laporan masih kosong', true);
@@ -1621,6 +1623,8 @@ $('tmSeg').querySelectorAll('button').forEach((b) => b.addEventListener('click',
 const dsN = (x, d) => (Math.round(x * Math.pow(10, d || 0)) / Math.pow(10, d || 0)).toString().replace('.', ',');
 const dsH = (min) => dsN((min || 0) / 60, 0) + ' j';
 function dashDays(p) { const out = []; let t = Date.parse(p.start + 'T00:00:00Z'); const e = Date.parse(p.end + 'T00:00:00Z'); while (t <= e) { out.push(new Date(t).toISOString().slice(0, 10)); t += 864e5; } return out; }
+/** Jumlah tugas pada satu laporan: jika ada baris bertanda (-, •, *, 1.) maka tiap tanda = 1 tugas (baris lanjutan tanpa tanda ikut tugas sebelumnya); jika tidak ada tanda, tiap baris = 1 tugas. */
+function taskCount(t) { const ls = String(t || '').split(/\r?\n/).filter((l) => /[0-9A-Za-z\u00C0-\u024F]/.test(l)), b = ls.filter((l) => /^\s*([-•*–]|\d+[.)])\s*\S/.test(l)); return b.length ? b.length : ls.length; }
 function renderDash() {
   const unit = $('tmUnit').value, today = S ? S.today : nowJ().date;
   const inU = (x) => !unit || (unit === '__none' ? !String(x.unit || '').trim() : x.unit === unit);
@@ -1643,7 +1647,7 @@ function renderDash() {
   const hi = past.length ? past.reduce((a, b) => (b[1] > a[1] ? b : a)) : null, lo = past.length ? past.reduce((a, b) => (b[1] < a[1] ? b : a)) : null;
   const chartDaily = `<div class="dsh-card"><h4>Kehadiran per hari</h4><div class="sub">Jumlah karyawan yang absen tiap tanggal · ungu = Minggu · ketuk batang untuk detail</div><div class="dsh-bars" id="dshBars">${bars}</div><div class="dsh-lbl">${lbl}</div>${hi ? `<div class="dsh-note">Tertinggi <b>${hi[1]} orang</b> (${fmtDate(hi[0])}) · Terendah <b>${lo[1]} orang</b> (${fmtDate(lo[0])}), tidak termasuk hari Minggu.</div>` : ''}</div>`;
   // beban kerja per unit
-  const lapCnt = {}; Object.keys(tmData.laporan || {}).forEach((k) => { const m = /^(.*)_(\d{4}-\d{2}-\d{2})_(.*)$/.exec(k); if (m && String(tmData.laporan[k] || '').trim()) lapCnt[m[1]] = (lapCnt[m[1]] || 0) + 1; });
+  const lapCnt = {}; Object.keys(tmData.laporan || {}).forEach((k) => { const m = /^(.*)_(\d{4}-\d{2}-\d{2})_(.*)$/.exec(k); if (m) lapCnt[m[1]] = (lapCnt[m[1]] || 0) + taskCount(tmData.laporan[k]); });
   const U = {}; const mkU = (k) => (U[k] = U[k] || { n: 0, hari: 0, shift: 0, tugas: 0, jam: 0, lem: 0, cek: 0, masuk: 0, pulang: 0 });
   staff.forEach((x) => { const u = mkU(String(x.unit || '').trim() || 'Tanpa unit'); u.n++; u.hari += x.hari; u.shift += shTot(x); u.tugas += lapCnt[x.userId] || 0; u.cek += x.cek; u.lem += x.lembur || 0; });
   rows.forEach((r) => { const k = String(r.unit || '').trim() || 'Tanpa unit'; if (!U[k]) return; U[k].masuk++; if (r.jamPulang) U[k].pulang++; if (r.durasi != null && r.shift !== 'R') U[k].jam += r.durasi; });
@@ -1667,7 +1671,7 @@ function renderDash() {
   const diagBanding = `<div class="dsh-card"><h4>Perbandingan beban antar unit</h4><div class="sub">Rata-rata per pegawai; batang tertinggi pada tiap ukuran = unit paling tinggi</div><div class="vch">${ul.map((u) => `<div class="vc g4"><div class="grp">${['hari', 'shift', 'tugas', 'jam'].map((k) => { const v = mv(u, k) / u.n; return `<div class="gb"><div class="vv s">${mf(v, k).replace(' j', '')}</div><div class="vbar" style="height:${Math.max(3, v / MX[k] * VH)}px;--c:${MCOL[k]}"></div></div>`; }).join('')}</div>${nmc(u.k)}</div>`).join('') || '<div class="empty">Tidak ada data.</div>'}</div><div class="dsh-leg">${['hari', 'shift', 'tugas', 'jam'].map((k) => `<span><i style="background:${MCOL[k]}"></i>${MET[k][0]}</span>`).join('')}</div></div>`;
   const rrow = (c, o) => `<tr${o ? ' class="tot"' : ''}><th>${c[0]}</th>${c.slice(1).map((v) => `<td>${v}</td>`).join('')}</tr>`;
   const av = (x, n) => dsN(n ? x / n : 0, 1);
-  const rinci = `<div class="dsh-card"><h4>Rincian per unit</h4><div class="sub">Total dan rata-rata per pegawai (Rata = per pegawai)</div><div class="dsh-tw"><table class="dsh-t dsh-t2"><thead><tr><th rowspan="2">Unit</th><th colspan="2">Hadir</th><th colspan="2">Shift</th><th colspan="2">Tugas</th><th colspan="2">Jam kerja</th></tr><tr class="sb"><th>Tot</th><th>Rata</th><th>Tot</th><th>Rata</th><th>Tot</th><th>Rata</th><th>Tot</th><th>Rata</th></tr></thead><tbody>${ul.slice().sort((a, b) => a.k.localeCompare(b.k)).map((u) => rrow([esc(u.k), u.hari, av(u.hari, u.n), u.shift, av(u.shift, u.n), u.tugas, av(u.tugas, u.n), dsN(u.jam / 60, 0), av(u.jam / 60, u.n)])).join('') || '<tr><td colspan="9">Tidak ada data.</td></tr>'}</tbody><tfoot>${rrow(['Total', tot.hari, av(tot.hari, tot.n), tot.shift, av(tot.shift, tot.n), tot.tugas, av(tot.tugas, tot.n), dsN(tot.jam / 60, 0), av(tot.jam / 60, tot.n)], 1)}</tfoot></table></div><div class="dsh-note">Tugas = jumlah laporan harian yang diisi · Jam kerja dalam jam (lembur tidak dihitung).</div></div>`;
+  const rinci = `<div class="dsh-card"><h4>Rincian per unit</h4><div class="sub">Total dan rata-rata per pegawai (Rata = per pegawai)</div><div class="dsh-tw"><table class="dsh-t dsh-t2"><thead><tr><th rowspan="2">Unit</th><th colspan="2">Hadir</th><th colspan="2">Shift</th><th colspan="2">Tugas</th><th colspan="2">Jam kerja</th></tr><tr class="sb"><th>Tot</th><th>Rata</th><th>Tot</th><th>Rata</th><th>Tot</th><th>Rata</th><th>Tot</th><th>Rata</th></tr></thead><tbody>${ul.slice().sort((a, b) => a.k.localeCompare(b.k)).map((u) => rrow([esc(u.k), u.hari, av(u.hari, u.n), u.shift, av(u.shift, u.n), u.tugas, av(u.tugas, u.n), dsN(u.jam / 60, 0), av(u.jam / 60, u.n)])).join('') || '<tr><td colspan="9">Tidak ada data.</td></tr>'}</tbody><tfoot>${rrow(['Total', tot.hari, av(tot.hari, tot.n), tot.shift, av(tot.shift, tot.n), tot.tugas, av(tot.tugas, tot.n), dsN(tot.jam / 60, 0), av(tot.jam / 60, tot.n)], 1)}</tfoot></table></div><div class="dsh-note">Tugas = jumlah pekerjaan pada laporan (satu baris uraian = 1 tugas) · Jam kerja dalam jam (lembur tidak dihitung).</div></div>`;
   // sebaran jam masuk
   const H = {}; rows.forEach((r) => { const h = parseInt(String(r.jamMasuk || '').slice(0, 2), 10); if (!isNaN(h)) H[h] = (H[h] || 0) + 1; });
   const hs = Object.keys(H).map(Number); let chartHour = '';

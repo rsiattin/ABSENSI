@@ -844,6 +844,16 @@ function parseEmails_(txt) {
   }
   return { ok: ok, bad: bad };
 }
+/** Jumlah tugas pada satu laporan: bila ada baris bertanda (-, *, titik, 1.) tiap tanda = 1 tugas (baris lanjutan ikut tugas sebelumnya); bila tidak ada tanda, tiap baris = 1 tugas. */
+function taskCount_(t) {
+  var ls = String(t || '').split(/\r?\n/), n = 0, b = 0;
+  for (var i = 0; i < ls.length; i++) {
+    if (!/[0-9A-Za-z\u00C0-\u024F]/.test(ls[i])) continue;
+    n++;
+    if (/^\s*([-\u2022*\u2013]|\d+[.)])\s*\S/.test(ls[i])) b++;
+  }
+  return b ? b : n;
+}
 function jamDes_(menit) { return Math.round((menit || 0) / 6) / 10; }   // menit -> jam, 1 desimal
 /** Data satu periode untuk Excel/email: ringkasan per karyawan, per unit, dan detail absen. */
 function rekapData_(key) {
@@ -862,7 +872,7 @@ function rekapData_(key) {
     if (q.shift !== 'R' && q.shift !== 'L' && !hasFlag_(q.flag, 'TIDAK_SAH') && q.durasi) kerja[q.userId] = (kerja[q.userId] || 0) + q.durasi;
   }
   var lapAll = laporanMap_(key, null), tugas = {};
-  for (var lk in lapAll) { if (!String(lapAll[lk] || '').trim()) continue; var mm = /^(.*)_(\d{4}-\d{2}-\d{2})_(.*)$/.exec(lk); if (mm) tugas[mm[1]] = (tugas[mm[1]] || 0) + 1; }
+  for (var lk in lapAll) { var mm = /^(.*)_(\d{4}-\d{2}-\d{2})_(.*)$/.exec(lk); if (mm) tugas[mm[1]] = (tugas[mm[1]] || 0) + taskCount_(lapAll[lk]); }
   var units = {};
   for (var m = 0; m < summary.length; m++) {
     var s = summary[m]; s.lembur = lem[s.userId] || 0; s.kerja = kerja[s.userId] || 0; s.shiftTot = s.P + s.S + s.D + s.M; s.tugas = tugas[s.userId] || 0;
@@ -898,10 +908,10 @@ function rekapXlsx_(d) {
     var rk = d.summary.map(function (s, i) {
       return [i + 1, s.nama, s.unit || '', s.hari, s.shiftTot, s.tugas, jamDes_(s.kerja), s.P, s.S, s.D, s.M, s.R, jamDes_(s.lembur), s.belum, s.cek, s.tidak];
     });
-    mk(0, 'Rekap Karyawan', ['No', 'Nama', 'Unit', 'Hari Hadir', 'Total Shift', 'Tugas (laporan)', 'Jam Kerja', 'Pagi', 'Siang', 'Middle', 'Malam', 'Lembur (kali)', 'Jam Lembur', 'Belum Pulang', 'Perlu Dicek', 'Tidak Sah'], rk);
+    mk(0, 'Rekap Karyawan', ['No', 'Nama', 'Unit', 'Hari Hadir', 'Total Shift', 'Jumlah Tugas', 'Jam Kerja', 'Pagi', 'Siang', 'Middle', 'Malam', 'Lembur (kali)', 'Jam Lembur', 'Belum Pulang', 'Perlu Dicek', 'Tidak Sah'], rk);
     var av = function (x, n) { return n ? Math.round(x / n * 10) / 10 : 0; };
     var ru = d.units.map(function (u) { return [u.unit, u.n, u.hari, av(u.hari, u.n), u.shift, av(u.shift, u.n), u.tugas, av(u.tugas, u.n), jamDes_(u.kerja), jamDes_(u.lembur), u.cek]; });
-    mk(1, 'Ringkasan Unit', ['Unit', 'Jumlah Pegawai', 'Total Hari Hadir', 'Rata Hari/Pegawai', 'Total Shift', 'Rata Shift/Pegawai', 'Total Tugas (laporan)', 'Rata Tugas/Pegawai', 'Jam Kerja', 'Jam Lembur', 'Perlu Dicek'], ru);
+    mk(1, 'Ringkasan Unit', ['Unit', 'Jumlah Pegawai', 'Total Hari Hadir', 'Rata Hari/Pegawai', 'Total Shift', 'Rata Shift/Pegawai', 'Total Tugas', 'Rata Tugas/Pegawai', 'Jam Kerja', 'Jam Lembur', 'Perlu Dicek'], ru);
     var rd = d.rows.map(function (r) {
       var lap = d.laporan[r.userId + '_' + r.tanggal + '_' + (r.shift || '')] || d.laporan[r.userId + '_' + r.tanggal + '_'] || '';
       return [r.tanggal, r.nama, r.unit || '', r.shift, r.jamMasuk || '', r.jamPulang || '', r.durasi ? jamDes_(r.durasi) : '', flagText_(r.flag), r.noteMasuk || '', r.notePulang || '', lap];

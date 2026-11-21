@@ -655,6 +655,24 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 /* kalender: tiap tanggal berbingkai */
 .cal .d:not(:empty):not(.t){border:1.5px solid #ffc48c;background:linear-gradient(160deg,#fff,#fff7ee)}.cal .d.t{border:1.5px solid #e8650a}.cal .d.out{border-color:#ffe3c9!important}
 .jc{border-color:#ffc48c;background:linear-gradient(160deg,#fff,#fff7ee)}.jc.off{background:#eceff5}.jc.today{border-color:#0ea39d}.jc.edited{border-color:#e8851a}.jc.empty:not(.past){border:1.5px dashed #f0a860}
+/* v31 tombol aksi menonjol */
+.act-strip{position:absolute !important;left:0;right:0;bottom:0;height:9px;z-index:1;pointer-events:none;border-radius:0 0 26px 26px;background:repeating-linear-gradient(-45deg,var(--sp1) 0 9px,var(--sp2) 9px 18px);background-size:25.46px 25.46px;animation:stripMove 1.4s linear infinite;}
+.act-in{--sp1:#0a9a6a;--sp2:#9ff0cf;} .act-out{--sp1:#e8650a;--sp2:#ffd2a8;}
+@keyframes stripMove{to{background-position:25.46px 0;}}
+.act-grid .act-in:not(:disabled) .act-ic{--pc:20,170,115;} .act-grid .act-out:not(:disabled) .act-ic{--pc:232,101,10;}
+.act-grid .act-tile:not(:disabled) .act-ic{animation:ringp 2s ease-out infinite !important;}
+@keyframes ringp{0%{box-shadow:0 0 0 0 rgba(var(--pc),.5)}100%{box-shadow:0 0 0 14px rgba(var(--pc),0)}}
+.act-grid .act-tile:not(:disabled) b{font-size:20px;}
+.act-grid .act-tile:disabled{opacity:.82 !important;filter:saturate(.7) !important;animation:none !important;}
+.act-grid .act-tile:disabled .act-strip{animation:none;opacity:.7;} .act-grid .act-tile:disabled .act-ic{animation:none !important;}
+/* centang sukses */
+.okov{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(11,42,91,.35);backdrop-filter:blur(3px);animation:okIn .2s ease-out;}
+.okov .okc{width:150px;height:150px;border-radius:50%;background:linear-gradient(145deg,#34e0a6,#0a8f63);display:flex;align-items:center;justify-content:center;box-shadow:0 20px 50px rgba(8,140,95,.55);animation:okPop .5s cubic-bezier(.2,1.4,.4,1);}
+.okov.out .okc{background:linear-gradient(145deg,#ffa447,#e8650a);box-shadow:0 20px 50px rgba(224,110,10,.55);}
+.okov svg{width:84px;height:84px;} .okov path{fill:none;stroke:#fff;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:60;stroke-dashoffset:60;animation:okDraw .45s .25s ease-out forwards;}
+@keyframes okPop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}} @keyframes okDraw{to{stroke-dashoffset:0}} @keyframes okIn{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.act-strip,.act-grid .act-tile:not(:disabled) .act-ic{animation:none !important;}}
+#lpText::placeholder{color:#b3bbc9;opacity:.8;font-weight:400;}
 </style>
 </head>
 <body>
@@ -712,8 +730,8 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
       <div id="jadwalBanner"></div>
       <div id="olderBanner"></div>
       <div class="act-grid" id="absenAction">
-        <button class="act-tile act-in" id="btnMasuk"><span class="act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg></span><b>Absen Masuk</b><small id="tlMasuk">Klik untuk absen saat datang kerja</small></button>
-        <button class="act-tile act-out" id="btnPulang"><span class="act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></span><b>Absen Pulang</b><small id="tlPulang">Klik untuk absen saat selesai kerja</small></button>
+        <button class="act-tile act-in" id="btnMasuk"><span class="act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg></span><b>Absen Masuk</b><small id="tlMasuk">Klik untuk absen saat datang kerja</small><i class="act-strip"></i></button>
+        <button class="act-tile act-out" id="btnPulang"><span class="act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></span><b>Absen Pulang</b><small id="tlPulang">Klik untuk absen saat selesai kerja</small><i class="act-strip"></i></button>
         <div class="act-hint" id="actHint"></div>
       </div>
       <div class="glass card"><h3>🕘 Absensi Hari Ini <span class="small dim" id="tdDate" style="font-weight:500"></span></h3><div id="todayList"></div></div>
@@ -1323,6 +1341,12 @@ $('abFile').addEventListener('change', async (e) => {
   const f = e.target.files[0]; if (!f) return;
   await setAbPhoto(f); e.target.value = '';
 });
+function okFx(mode){
+  try{ if(navigator.vibrate) navigator.vibrate([60,40,90]); }catch(e){}
+  const d=document.createElement('div'); d.className='okov'+(mode==='pulang'?' out':'');
+  d.innerHTML='<div class="okc"><svg viewBox="0 0 52 52"><path d="M14 27l9 9 16-19"/></svg></div>';
+  document.body.appendChild(d); setTimeout(()=>{d.style.transition='opacity .25s';d.style.opacity=0;setTimeout(()=>d.remove(),260);},1100);
+}
 $('abSend').addEventListener('click', async () => {
   if (abBusy || !abPhoto) return;
   const jam = $('abJam').value; if (!jam) return toast('Isi jam terlebih dahulu', true);
@@ -1333,7 +1357,7 @@ $('abSend').addEventListener('click', async () => {
   savePending({ action, payload, at: Date.now() });
   try {
     const ok = await confirmAbsen(action, payload);
-    if (ok) { clearPending(); $('ovAbsen').classList.remove('show'); toast(action === 'masuk' ? '✅ Absen Masuk tercatat' : '✅ Absen Pulang tercatat'); renderHome(); }
+    if (ok) { clearPending(); $('ovAbsen').classList.remove('show'); okFx(action); toast(action === 'masuk' ? '✅ Absen Masuk tercatat' : '✅ Absen Pulang tercatat'); renderHome(); }
     else { toast(NOT_CONFIRMED, true); $('abSend').textContent = 'Kirim ulang'; renderPending(); }
   } catch (e) { toast(e.message, true); $('abSend').textContent = 'Kirim ulang'; renderPending(); }
   abBusy = false; updateSend();

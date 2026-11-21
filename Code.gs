@@ -19,7 +19,7 @@ var FOTO_HDR = ['userId', 'foto', 'updatedAt'];
 var SH_RESET = 'ResetReq';
 var RESET_HDR = ['id', 'userId', 'username', 'nama', 'unit', 'createdAt', 'status'];
 var MAX_FOTO_PROFIL = 45000;     // karakter base64 (foto profil 160px ~ 8-12 KB)
-var API_VERSION = 17;             // dinaikkan tiap ada aksi baru; dipakai aplikasi untuk mendeteksi backend lama
+var API_VERSION = 19;             // dinaikkan tiap ada aksi baru; dipakai aplikasi untuk mendeteksi backend lama
 var TEMP_PW_MENIT_EMAIL = 60;
 var TEMP_PW_MENIT_ADMIN = 24 * 60;
 var ABSEN_HDR = ['id', 'tanggal', 'userId', 'nama', 'unit', 'shift', 'jamMasuk', 'jamPulang', 'tglPulang',
@@ -548,14 +548,21 @@ function actJaga_(u) {
   var c = cache.get('JAGA');
   if (c) return JSON.parse(c);
   var now = nowJ_(), k = periodKey_(now.substring(0, 10)), keys = [k, prevKey_(k)];
-  var latest = {};
+  var latest = {}, done = {};
   for (var ki = 0; ki < keys.length; ki++) {
     var sh = absenSheet_(keys[ki], false);
     if (!sh) continue;
     var tail = readTail_(sh, ABSEN_HDR, TAIL_ROWS);
     for (var i = 0; i < tail.length; i++) {
       var o = tail[i].o;
-      if (!isOpen_(o) || o.shift === 'L') continue;
+      if (o.shift === 'L') continue;
+      if (!isOpen_(o)) {
+        // sudah absen pulang: tetap ditampilkan (kategori sendiri) selama 12 jam sejak pulang
+        if (!o.serverPulang || hasFlag_(o.flag, 'TIDAK_SAH') || hasFlag_(o.flag, 'LUPA_PULANG')) continue;
+        if ((tsMs_(now) - tsMs_(o.serverPulang)) / 3600000 > 12) continue;
+        if (!done[o.userId] || done[o.userId].serverPulang < o.serverPulang) done[o.userId] = o;
+        continue;
+      }
       if ((tsMs_(now) - tsMs_(o.serverMasuk)) / 3600000 > 20) continue;
       if (!latest[o.userId] || latest[o.userId].serverMasuk < o.serverMasuk) latest[o.userId] = o;
     }
@@ -565,12 +572,13 @@ function actJaga_(u) {
   var byUnit = {};
   var units = getUnits_();
   for (var q = 0; q < units.length; q++) byUnit[units[q]] = [];
+  for (var id2 in done) if (!latest[id2]) { latest[id2] = done[id2]; latest[id2]._selesai = true; }
   for (var id in latest) {
     var r = latest[id], inf = hpMap[id] || {};
     if (inf.aktif && inf.aktif !== 'Y') continue;
     var un = r.unit || inf.unit || '-';
     if (!byUnit[un]) byUnit[un] = [];
-    byUnit[un].push({ userId: id, nama: r.nama, shift: r.shift, jamMasuk: r.jamMasuk, tanggal: r.tanggal, hp: inf.hp || '' });
+    byUnit[un].push({ userId: id, nama: r.nama, shift: r.shift, jamMasuk: r.jamMasuk, tanggal: r.tanggal, hp: inf.hp || '', selesai: r._selesai ? true : false, jamPulang: r._selesai ? (r.jamPulang || '') : '' });
   }
   var out = [];
   for (var name in byUnit) {
@@ -1575,6 +1583,21 @@ function actJadwal_(u, p) {
   var key = validKey_(p.key) ? p.key : periodKey_(today);
   return { period: periodRange_(key), today: today, jadwal: jadwalMap_(u.id, key) };
 }
+/** Jadwal rencana shift semua karyawan aktif (untuk Koord./Admin): {period, today, users:[{id,nama,unit}], jadwal:{userId:{tanggal:shift}}} */
+function actJadwalTim_(u, p) {
+  if (!isManager_(u)) throw fail_('Tidak punya akses.');
+  var today = nowJ_().substring(0, 10);
+  var key = validKey_(p.key) ? p.key : periodKey_(today);
+  var users = readAll_(karSheet_()).filter(function (x) { return x.aktif === 'Y'; });
+  var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(PFX_JADWAL + key);
+  var map = {}, rows = sh ? readAll_(sh) : [];
+  for (var i = 0; i < rows.length; i++) {
+    if (!rows[i].shift) continue;
+    (map[rows[i].userId] = map[rows[i].userId] || {})[rows[i].tanggal] = rows[i].shift;
+  }
+  var outU = users.map(function (x) { return { id: x.id, nama: x.nama, unit: x.unit || '' }; });
+  return { period: periodRange_(key), today: today, users: outU, jadwal: map };
+}
 function actSaveJadwal_(u, p) {
   var today = nowJ_().substring(0, 10), cur = periodKey_(today);
   var key = String(p.key || '');
@@ -1631,6 +1654,7 @@ function doGet(e) {
       case 'config': { var cfgOut = getConfig_(); cfgOut.waGatewaySet = !!waToken_(); if (u.role !== 'admin') { delete cfgOut.emailRekap; delete cfgOut.emailRekapTerakhir; delete cfgOut.emailRekapTengah; } return out_(cfgOut); }
       case 'jaga': return out_(actJaga_(u));
       case 'jadwal': return out_(actJadwal_(u, p));
+      case 'jadwalTim': return out_(actJadwalTim_(u, p));
       case 'semangat': return out_(actSemangat_());
       default: return out_({ error: 'Aksi tidak dikenal: ' + a });
     }

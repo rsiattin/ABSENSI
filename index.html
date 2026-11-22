@@ -750,13 +750,15 @@ button.tag.sc{border:0;font-family:inherit;cursor:pointer;} button.tag.sc.zero{c
   .nav .abs-mid{display:block;flex:0 0 84px;visibility:hidden;pointer-events:none;}
   .fabw{display:block;position:fixed;left:50%;bottom:calc(74px + var(--safe-b));width:0;height:0;z-index:45;}
   .fab-ring{position:absolute;left:-49px;top:-49px;width:98px;height:98px;box-sizing:border-box;border-radius:50%;border:3px solid #f0a35a;clip-path:inset(50% 0 0 0);pointer-events:none;}
-  .fab{position:absolute;left:-36px;top:-34px;width:72px;height:72px;border:0;border-radius:50%;background:linear-gradient(135deg,#34c77b,#0f8a4c);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font:700 11px 'Plus Jakarta Sans',system-ui,sans-serif;cursor:pointer;box-shadow:0 12px 22px -8px rgba(15,138,76,.85),0 0 0 3px rgba(255,255,255,.9);}
-  .fab svg{width:28px;height:28px;margin-bottom:1px;}
-  .fab.on{box-shadow:0 12px 22px -8px rgba(15,138,76,.85),0 0 0 3px #fff,0 0 0 7px rgba(52,199,123,.45);}
+  .fab{position:absolute;left:-36px;top:-34px;width:72px;height:72px;border:0;border-radius:50%;background:radial-gradient(circle at 34% 24%,#8cf0b8 0,#34c77b 34%,#0f8a4c 72%,#0a6a3a 100%);color:#fff;text-shadow:0 1px 2px rgba(0,50,25,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;font:800 11px 'Plus Jakarta Sans',system-ui,sans-serif;cursor:pointer;
+    box-shadow:0 18px 24px -10px rgba(8,90,50,.9),0 6px 0 -1px #0a6a3a,0 0 0 4px #fff,0 0 0 5px rgba(240,163,90,.55),inset 0 3px 3px rgba(255,255,255,.75),inset 0 -6px 8px rgba(0,60,30,.45);transition:transform .12s,box-shadow .12s;}
+  .fab:active{transform:translateY(4px);box-shadow:0 10px 14px -8px rgba(8,90,50,.9),0 2px 0 -1px #0a6a3a,0 0 0 4px #fff,0 0 0 5px rgba(240,163,90,.55),inset 0 3px 3px rgba(255,255,255,.6),inset 0 -4px 6px rgba(0,60,30,.5);}
+  .fab svg{width:28px;height:28px;margin-bottom:1px;filter:drop-shadow(0 2px 1px rgba(0,50,25,.55));}
+  .fab.on{box-shadow:0 18px 24px -10px rgba(8,90,50,.9),0 6px 0 -1px #0a6a3a,0 0 0 4px #fff,0 0 0 8px rgba(52,199,123,.5),inset 0 3px 3px rgba(255,255,255,.75),inset 0 -6px 8px rgba(0,60,30,.45);}
   main{padding-bottom:calc(120px + var(--safe-b));}
 }
 @media (min-width:900px){ .nav{height:auto;} .nav .abs-mid{display:flex;} }
-.pintas{padding:12px !important;margin-bottom:14px;} .pintas h3{margin:0 0 8px 4px;font-size:14px;color:#8a4b12;}
+.pintas{padding:12px !important;margin-bottom:14px;} .page .glass.card.pintas h3{margin:-2px -2px 10px;font-size:16px;color:#fff;background:linear-gradient(120deg,#ffae5c,#e8650a 78%);box-shadow:0 14px 20px -11px rgba(232,101,10,.85),0 1px 0 rgba(255,255,255,.5) inset,0 -2px 0 rgba(110,40,0,.16) inset;}
 .pt-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;}
 .pt-grid button{position:relative;flex:0 0 calc(25% - 6px);box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0;border:0;border-radius:16px;background:linear-gradient(180deg,#fff,#eaf1fb);box-shadow:0 6px 12px -6px rgba(19,40,90,.4),0 1px 0 #fff inset;font:700 11.5px 'Plus Jakarta Sans',system-ui,sans-serif;color:#274472;cursor:pointer;}
 .pt-grid button .ic{font-size:23px;line-height:1.1;} .pt-grid button:active{transform:scale(.96);}
@@ -1014,7 +1016,7 @@ button.tag.sc{border:0;font-family:inherit;cursor:pointer;} button.tag.sc.zero{c
 /* ============================================================
    KONFIGURASI — isi dengan URL Web App Apps Script Anda
    ============================================================ */
-const API_URL = "https://script.google.com/macros/s/AKfycbyy_udMlesbD32gywSY205MBJQsSfc86BzvPCUzyNhY-_aZvEtSVY2YS8bniZj-7Qr6/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbz2yyAm8UzuLobuHKwPUBxBD64MGzlxIdJoOAYS_a8sJ_PD6Fcvw_TS5q_uYtvY1TCd/exec";
 
 /* ---------------- util ---------------- */
 const $ = (id) => document.getElementById(id);

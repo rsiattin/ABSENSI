@@ -739,6 +739,31 @@ button.tag.sc{border:0;font-family:inherit;cursor:pointer;} button.tag.sc.zero{c
 .jd-tools>*{min-width:0 !important;width:auto !important;margin:0 !important;height:44px;border-radius:16px !important;font:800 12.5px 'Plus Jakarta Sans',sans-serif !important;padding:0 6px !important;white-space:nowrap;text-align:center;text-align-last:center;color:#0b3a7a !important;}
 .jd-tools select{padding:0 4px !important;-webkit-appearance:none;appearance:none;} .jd-tools button{display:flex;align-items:center;justify-content:center;}
 #jdFill{color:#fff !important;background:linear-gradient(145deg,#38c9bf,#0b8f88) !important;border-color:rgba(255,255,255,.7) !important;text-shadow:0 1px 2px rgba(0,60,55,.4);box-shadow:0 12px 18px -10px rgba(11,143,136,.85),inset 0 1px 0 rgba(255,255,255,.55),inset 0 -4px 7px rgba(0,80,75,.25) !important;}
+
+/* ---------- v46: menu bawah berlekuk + Absen tengah + menu pintas ---------- */
+.nav{height:64px;box-sizing:border-box;}
+.nav .abs-mid{display:none;}
+.fabw{display:none;}
+.pg-head[data-c="green"] .pg-ic{background:linear-gradient(145deg,#34e0a6,#0a8f63);box-shadow:0 14px 20px -10px rgba(8,140,95,.8),0 1px 0 rgba(255,255,255,.4) inset;}
+@media (max-width:899px){
+  .nav{-webkit-mask:radial-gradient(circle 49px at 50% 0,transparent 48px,#000 49px);mask:radial-gradient(circle 49px at 50% 0,transparent 48px,#000 49px);}
+  .nav .abs-mid{display:block;flex:0 0 84px;visibility:hidden;pointer-events:none;}
+  .fabw{display:block;position:fixed;left:50%;bottom:calc(74px + var(--safe-b));width:0;height:0;z-index:45;}
+  .fab-ring{position:absolute;left:-49px;top:-49px;width:98px;height:98px;box-sizing:border-box;border-radius:50%;border:3px solid #f0a35a;clip-path:inset(50% 0 0 0);pointer-events:none;}
+  .fab{position:absolute;left:-36px;top:-34px;width:72px;height:72px;border:0;border-radius:50%;background:linear-gradient(135deg,#34c77b,#0f8a4c);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font:700 11px 'Plus Jakarta Sans',system-ui,sans-serif;cursor:pointer;box-shadow:0 12px 22px -8px rgba(15,138,76,.85),0 0 0 3px rgba(255,255,255,.9);}
+  .fab svg{width:28px;height:28px;margin-bottom:1px;}
+  .fab.on{box-shadow:0 12px 22px -8px rgba(15,138,76,.85),0 0 0 3px #fff,0 0 0 7px rgba(52,199,123,.45);}
+  main{padding-bottom:calc(120px + var(--safe-b));}
+}
+@media (min-width:900px){ .nav{height:auto;} .nav .abs-mid{display:flex;} }
+.pintas{padding:12px !important;margin-bottom:14px;} .pintas h3{margin:0 0 8px 4px;font-size:14px;color:#8a4b12;}
+.pt-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;}
+.pt-grid button{position:relative;flex:0 0 calc(25% - 6px);box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0;border:0;border-radius:16px;background:linear-gradient(180deg,#fff,#eaf1fb);box-shadow:0 6px 12px -6px rgba(19,40,90,.4),0 1px 0 #fff inset;font:700 11.5px 'Plus Jakarta Sans',system-ui,sans-serif;color:#274472;cursor:pointer;}
+.pt-grid button .ic{font-size:23px;line-height:1.1;} .pt-grid button:active{transform:scale(.96);}
+.pt-grid .badge{top:2px;right:6px;}
+.hero{padding-top:14px !important;padding-bottom:10px !important;} .hero .clock{font-size:40px;} .hero .tagline{margin-top:4px;}
+.hero .avatar.xl{width:56px;height:56px;font-size:24px;}
+.q-tx{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;} .q-tx.open{-webkit-line-clamp:unset;display:block;}
 </style>
 </head>
 <body>
@@ -793,18 +818,22 @@ button.tag.sc{border:0;font-family:inherit;cursor:pointer;} button.tag.sc.zero{c
         </div>
       </div>
       <div class="glass card quote hidden" id="hQuote"><div class="q-ic"><img id="qLogo" alt="RSI At-Tin Husada"></div><div class="grow"><div class="q-ttl">Papan Informasi</div><div class="q-tx" id="hQuoteTx"></div><div class="q-dt" id="hQuoteDt"></div></div></div>
+      <div class="glass card pintas" id="pintas"><h3>Menu pintas</h3><div class="pt-grid" id="ptGrid"></div></div>
       <div id="jadwalBanner"></div>
       <div id="olderBanner"></div>
-      <div class="act-grid" id="absenAction">
-        <button class="act-tile act-in" id="btnMasuk"><span class="act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg></span><b>Absen Masuk</b><small id="tlMasuk">Klik untuk absen saat datang kerja</small><i class="act-strip"></i></button>
-        <button class="act-tile act-out" id="btnPulang"><span class="act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></span><b>Absen Pulang</b><small id="tlPulang">Klik untuk absen saat selesai kerja</small><i class="act-strip"></i></button>
-        <div class="act-hint" id="actHint"></div>
-      </div>
       <div class="glass card"><h3>🕘 Absensi Hari Ini <span class="small dim" id="tdDate" style="font-weight:500"></span></h3><div id="todayList"></div></div>
       <div class="glass card"><h3>📝 Laporan Harian</h3><div id="homeLaporan"></div></div>
     </section>
 
     <!-- JAGA SEKARANG -->
+    <section class="page hidden" id="pg-absen">
+      <div class="pg-head" data-c="green"><div class="pg-ic">✔️</div><div class="pg-tx"><h2>Absen</h2><p>Pilih Absen Masuk atau Absen Pulang</p></div></div>
+      <div class="act-grid" id="absenAction">
+        <button class="act-tile act-in" id="btnMasuk"><span class="act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg></span><b>Absen Masuk</b><small id="tlMasuk">Klik untuk absen saat datang kerja</small><i class="act-strip"></i></button>
+        <button class="act-tile act-out" id="btnPulang"><span class="act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></span><b>Absen Pulang</b><small id="tlPulang">Klik untuk absen saat selesai kerja</small><i class="act-strip"></i></button>
+        <div class="act-hint" id="actHint"></div>
+      </div>
+    </section>
     <section class="page hidden" id="pg-jaga">
       <div class="pg-head" data-c="glass"><div class="pg-ic">🩺</div><div class="pg-tx"><h2>Jaga Sekarang</h2><p>Siapa yang sedang bertugas, per unit dan shift</p></div><button class="btn btn-sm" id="jgRefresh">↻ Segarkan</button></div>
       <div class="small dim" style="margin-bottom:10px">Daftar petugas yang sudah absen masuk dan belum pulang, per unit. Diperbarui otomatis tiap 30 detik. <span id="jgAt"></span></div>
@@ -945,6 +974,7 @@ button.tag.sc{border:0;font-family:inherit;cursor:pointer;} button.tag.sc.zero{c
   </main>
 
   <nav class="nav glass" id="nav"></nav>
+  <div class="fabw" id="fabw"><i class="fab-ring"></i><button class="fab" id="fabAbsen" data-p="absen" aria-label="Absen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Absen</button></div>
 </div>
 
 <!-- ============ SHEET ABSEN ============ -->
@@ -984,7 +1014,7 @@ button.tag.sc{border:0;font-family:inherit;cursor:pointer;} button.tag.sc.zero{c
 /* ============================================================
    KONFIGURASI — isi dengan URL Web App Apps Script Anda
    ============================================================ */
-const API_URL = "https://script.google.com/macros/s/AKfycbz2yyAm8UzuLobuHKwPUBxBD64MGzlxIdJoOAYS_a8sJ_PD6Fcvw_TS5q_uYtvY1TCd/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyy_udMlesbD32gywSY205MBJQsSfc86BzvPCUzyNhY-_aZvEtSVY2YS8bniZj-7Qr6/exec";
 
 /* ---------------- util ---------------- */
 const $ = (id) => document.getElementById(id);
@@ -1148,15 +1178,28 @@ async function startApp() {
 }
 function tick() { const n = nowJ(); $('hClock').textContent = n.hhmm + ':' + n.sec; $('hDate').textContent = fmtDate(n.date); if (S && S.open) updateDur(); }
 function buildNav() {
-  const items = [['home', '🏠', 'Beranda'], ['jaga', '🩺', 'Jaga'], ['jadwal', '🗓️', 'Jadwal'], ['laporan', '📝', 'Laporan'], ['riwayat', '🕘', 'Riwayat']];
-  if (me.role === 'atasan' || me.role === 'admin') items.push(['tim', '👥', 'Tim']);
-  if (me.role === 'admin') items.push(['admin', '⚙️', 'Admin']);
-  items.push(['akun', '👤', 'Akun']);
-  $('nav').classList.toggle('many', items.length > 5);
-  $('nav').innerHTML = items.map((i) => `<button data-p="${i[0]}"><span class="ic">${i[1]}</span>${i[2]}</button>`).join('');
+  const items = [['home', '🏠', 'Beranda'], ['jaga', '🩺', 'Jaga'], ['absen', '✔️', 'Absen'], ['laporan', '📝', 'Laporan'], ['riwayat', '🕘', 'Riwayat']];
+  $('nav').classList.remove('many');
+  $('nav').innerHTML = items.map((i) => `<button data-p="${i[0]}"${i[0] === 'absen' ? ' class="abs-mid"' : ''}><span class="ic">${i[1]}</span>${i[2]}</button>`).join('');
   $('nav').querySelectorAll('button').forEach((b) => b.addEventListener('click', () => go(b.dataset.p)));
+  $('fabAbsen').onclick = () => go('absen');
+  buildPintas();
+}
+function buildPintas() {
+  const P = { jadwal: ['🗓️', 'Jadwal'], jaga: ['🩺', 'Jaga'], laporan: ['📝', 'Laporan'], riwayat: ['🕘', 'Riwayat'], tim: ['👥', 'Tim'], admin: ['⚙️', 'Admin'], akun: ['👤', 'Akun'], bantuan: ['💬', 'Bantuan'] };
+  const k = ['jadwal', 'jaga', 'laporan', 'riwayat'];
+  if (me.role === 'atasan' || me.role === 'admin') k.push('tim');
+  if (me.role === 'admin') k.push('admin');
+  k.push('akun', 'bantuan');
+  $('ptGrid').innerHTML = k.map((x) => `<button data-p="${x}"><span class="ic">${P[x][0]}</span>${P[x][1]}</button>`).join('');
+  $('ptGrid').querySelectorAll('button').forEach((b) => b.addEventListener('click', () => {
+    if (b.dataset.p === 'bantuan') { if (!pubInfo.waAdmin) { toast('Nomor WhatsApp admin belum diisi', true); return; } window.open(waLink(pubInfo.waAdmin, 'Assalamualaikum, saya ' + (me.nama || '') + ' (' + (me.unit || '') + ') butuh bantuan aplikasi absensi.'), '_blank', 'noopener'); return; }
+    go(b.dataset.p);
+  }));
+  updateBadges();
 }
 let semAt = 0;
+$('hQuote').addEventListener('click', () => $('hQuoteTx').classList.toggle('open'));
 function showSemangat(r) {
   const t = (r && r.teks) || ''; if (t && !$('qLogo').src.startsWith('data:')) $('qLogo').src = $('lgLogo').src; $('hQuote').classList.toggle('hidden', !t); $('hQuoteTx').textContent = t;
   $('hQuoteDt').textContent = t && r.tgl ? 'Dari admin · ' + fmtDate(r.tgl) : '';
@@ -1165,9 +1208,9 @@ async function loadSemangat() { if (Date.now() - semAt < 120000) return; try { c
 function go(p) {
   currentPage = p;
   document.querySelectorAll('.page').forEach((x) => x.classList.toggle('hidden', x.id !== 'pg-' + p));
-  $('nav').querySelectorAll('button').forEach((b) => b.classList.toggle('active', b.dataset.p === p));
+  $('nav').querySelectorAll('button').forEach((b) => b.classList.toggle('active', b.dataset.p === p)); $('fabAbsen').classList.toggle('on', p === 'absen');
   $('menu').classList.add('hidden'); window.scrollTo(0, 0);
-  if (p === 'home') { refreshHome(); loadSemangat(); } else if (p === 'laporan') { initLaporan(); fillLpPeriods(); } else if (p === 'riwayat') loadRiwayat(); else if (p === 'tim') loadTim(); else if (p === 'admin') initAdmin(); else if (p === 'akun') renderAkun(); else if (p === 'jaga') loadJaga(); else if (p === 'jadwal') initJadwal();
+  if (p === 'absen') refreshHome(); else if (p === 'home') { refreshHome(); loadSemangat(); } else if (p === 'laporan') { initLaporan(); fillLpPeriods(); } else if (p === 'riwayat') loadRiwayat(); else if (p === 'tim') loadTim(); else if (p === 'admin') initAdmin(); else if (p === 'akun') renderAkun(); else if (p === 'jaga') loadJaga(); else if (p === 'jadwal') initJadwal();
   clearInterval(jagaT); jagaT = null; if (p === 'jaga') jagaT = setInterval(() => { if (!document.hidden) loadJaga(true); }, 30000);
 }
 
@@ -1190,7 +1233,7 @@ async function compressSquare(file, size) {
 }
 function updateBadges() {
   const c = S && S.counts; const n = c ? (c.pending + c.reset) : 0;
-  const ab = document.querySelector('#nav button[data-p="admin"]');
+  const ab = document.querySelector('#ptGrid button[data-p="admin"]');
   if (ab) { let b = ab.querySelector('.badge'); if (n) { if (!b) { b = document.createElement('span'); b.className = 'badge'; ab.appendChild(b); } b.textContent = n; } else if (b) b.remove(); }
   const set = (id, v) => { const e = $(id); if (!e) return; e.textContent = v; e.classList.toggle('hidden', !v); };
   set('cntApp', c ? c.pending : 0); set('cntRes', c ? c.reset : 0);
@@ -1208,7 +1251,7 @@ function renderHome() {
   $('hPulang').textContent = last && last.jamPulang ? last.jamPulang : '—';
   $('hDur').textContent = last ? (last.durasi != null ? fmtDur(last.durasi) : '…') : '—';
   $('olderBanner').innerHTML = open && open.tanggal !== S.today
-    ? `<div class="banner red">⚠ Absen Masuk tanggal <b>${fmtDate(open.tanggal)}</b> belum Pulang. Silakan absen Pulang di bawah.</div>` : '';
+    ? `<div class="banner red">⚠ Absen Masuk tanggal <b>${fmtDate(open.tanggal)}</b> belum Pulang. Silakan absen Pulang lewat tombol Absen.</div>` : '';
   renderJadwalBanner();
   $('btnMasuk').disabled = !!open; $('btnPulang').disabled = !open;
   $('tlMasuk').textContent = open ? 'Sudah masuk pukul ' + open.jamMasuk : 'Klik untuk absen saat datang kerja';
@@ -1414,7 +1457,7 @@ $('abSend').addEventListener('click', async () => {
   savePending({ action, payload, at: Date.now() });
   try {
     const ok = await confirmAbsen(action, payload);
-    if (ok) { clearPending(); $('ovAbsen').classList.remove('show'); okFx(action); toast(action === 'masuk' ? '✅ Absen Masuk tercatat' : '✅ Absen Pulang tercatat'); renderHome(); }
+    if (ok) { clearPending(); $('ovAbsen').classList.remove('show'); okFx(action); toast(action === 'masuk' ? '✅ Absen Masuk tercatat' : '✅ Absen Pulang tercatat'); renderHome(); if (currentPage === 'absen') go('home'); }
     else { toast(NOT_CONFIRMED, true); $('abSend').textContent = 'Kirim ulang'; renderPending(); }
   } catch (e) { toast(e.message, true); $('abSend').textContent = 'Kirim ulang'; renderPending(); }
   abBusy = false; updateSend();

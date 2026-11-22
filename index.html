@@ -695,7 +695,7 @@ button.tag.sc{border:0;font-family:inherit;cursor:pointer;} button.tag.sc.zero{c
 .jg-p.done{opacity:.72;filter:saturate(.6);}
 .lp-lab{font-size:12px;font-weight:700;color:#44557a;margin:2px 2px 6px;} .lp-dt{display:flex;gap:8px;margin-bottom:12px;} .lp-shifts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
 .lpb{font:800 14px 'Plus Jakarta Sans',sans-serif;color:#0b3a7a;border-radius:15px;padding:10px 14px;cursor:pointer;background:linear-gradient(180deg,rgba(255,255,255,.97),rgba(206,222,250,.68));border:1.5px solid rgba(255,255,255,.95);outline:1px solid rgba(70,110,190,.38);outline-offset:-1px;box-shadow:0 12px 18px -9px rgba(19,40,90,.55),0 3px 5px rgba(19,40,90,.12),inset 0 2px 0 rgba(255,255,255,.98),inset 0 -4px 7px rgba(110,145,215,.30);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}
-.lpb.ic{width:46px;font-size:22px;line-height:1;padding:8px 0;} .lpb.lab{flex:1;text-align:center;cursor:default;display:flex;align-items:center;justify-content:center;font-size:13.5px;} .lpb:disabled{opacity:.45;cursor:default;}
+.lpb.ic{width:46px;font-size:22px;line-height:1;padding:8px 0;} .lpb.lab{flex:1;text-align:center;cursor:default;display:flex;align-items:center;justify-content:center;font-size:12.5px;padding:10px 4px;white-space:nowrap;} .lpb:disabled{opacity:.45;cursor:default;}
 .lpb:active:not(:disabled){transform:translateY(2px);} .lpb.sh.on{color:#fff;background:linear-gradient(145deg,#ffae5c,#e8650a);text-shadow:0 1px 2px rgba(120,50,0,.35);box-shadow:0 10px 14px -8px rgba(232,101,10,.8),inset 0 1px 0 rgba(255,255,255,.55);}
 /* v34 */
 .tm-panel{padding:12px !important;margin-bottom:10px;} .tm-panel .shift-box{margin-bottom:6px;} .tm-panel .sb-hint{margin:0 4px 0;}
@@ -716,6 +716,29 @@ button.tag.sc{border:0;font-family:inherit;cursor:pointer;} button.tag.sc.zero{c
 .tm-quick{display:flex;gap:6px;margin:-2px 0 10px;} .tm-quick .chip{padding:7px 11px;font-size:12px;}
 .tm-filt{margin-bottom:10px;} .tm-filt .inp{font-size:14px;}
 .tm-panel{padding:9px !important;} #tmSum .tm5{margin:0 !important;gap:4px !important;} #tmSum .tm5 .st{padding:7px 1px 6px !important;} #tmSum .tm5 .st b{font-size:18px !important;} #tmSum .tm5 .st span{font-size:8.5px !important;} #tmSum .tm5 .st i{font-size:14px !important;}
+/* v40 */
+.periodbar .lbl{font-size:14px !important;white-space:nowrap;}
+.lp-shifts{flex-wrap:nowrap !important;gap:5px !important;} .lpb.sh{flex:1 1 0;min-width:0;padding:10px 0 !important;font-size:12.5px !important;text-align:center;border-radius:13px !important;}
+/* v41 ringkasan Jaga */
+.jgs{padding:12px !important;margin-bottom:10px;} .jgs-top{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0;}
+.jgs-top>div{border-radius:16px;padding:10px 12px;display:flex;align-items:baseline;gap:8px;justify-content:center;} .jgs-top b{font:800 30px 'Space Grotesk',sans-serif;line-height:1;} .jgs-top span{font-size:12px;font-weight:700;}
+.jgs-a{background:linear-gradient(145deg,#d9f7ea,#bdeedb);color:#0a7a52;box-shadow:inset 0 1px 0 #fff,0 8px 14px -10px rgba(10,122,82,.7);} .jgs-b{background:linear-gradient(145deg,#eef1f7,#dfe5f0);color:#5a6988;box-shadow:inset 0 1px 0 #fff,0 8px 14px -10px rgba(60,80,120,.5);}
+.jgs-sh{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;} .jgs-sh button{border:0;font-family:inherit;cursor:pointer;border-radius:14px;padding:7px 2px 6px;display:flex;flex-direction:column;align-items:center;gap:1px;background:linear-gradient(180deg,#fff,#eef3fc);box-shadow:inset 0 3px 0 var(--c),0 8px 12px -9px rgba(19,40,90,.6);color:#14213d;}
+.jgs-sh b{font:800 18px 'Space Grotesk',sans-serif;line-height:1.15;} .jgs-sh span{font-size:10.5px;font-weight:700;color:#44557a;} .jgs-sh .z{opacity:.55;} .jgs-sh .on{outline:2.5px solid #14213d;outline-offset:1px;opacity:1;background:#fff;}
+.jgs-top button{border:0;font-family:inherit;cursor:pointer;} .jgs-top .sel{outline:2.5px solid #14213d;outline-offset:1px;} .jgs-top button:active{transform:translateY(1px);}
+/* v44 tombol status Jaga */
+.jgs-top button{display:flex !important;align-items:center !important;justify-content:space-between !important;gap:8px;border-radius:22px !important;padding:11px 12px 11px 16px !important;border:1.5px solid rgba(255,255,255,.95) !important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}
+.jgs-top button span{font-size:13px !important;font-weight:800;white-space:nowrap;}
+.jgs-top button b{font:800 17px 'Space Grotesk',sans-serif !important;min-width:30px;height:30px;line-height:30px;text-align:center;border-radius:15px;padding:0 8px;background:#fff;box-shadow:inset 0 -2px 3px rgba(80,110,170,.25),0 2px 4px rgba(19,40,90,.15);}
+.jgs-top .jgs-a{background:linear-gradient(180deg,rgba(255,255,255,.97),rgba(190,240,218,.85)) !important;color:#0a7a52 !important;outline:1px solid rgba(20,150,100,.4);outline-offset:-1px;box-shadow:0 14px 20px -10px rgba(10,122,82,.7),0 3px 5px rgba(19,40,90,.12),inset 0 2px 0 rgba(255,255,255,.98),inset 0 -5px 8px rgba(40,170,120,.28) !important;}
+.jgs-top .jgs-b{background:linear-gradient(180deg,rgba(255,255,255,.97),rgba(206,222,250,.7)) !important;color:#44557a !important;outline:1px solid rgba(70,110,190,.38);outline-offset:-1px;box-shadow:0 14px 20px -10px rgba(19,40,90,.6),0 3px 5px rgba(19,40,90,.12),inset 0 2px 0 rgba(255,255,255,.98),inset 0 -5px 8px rgba(110,145,215,.3) !important;}
+.jgs-top .jgs-a b{color:#0a7a52;} .jgs-top .jgs-b b{color:#44557a;}
+.jgs-top button:active{transform:translateY(2px);} .jgs-top .sel{outline:2.5px solid #14213d !important;outline-offset:1px !important;}
+/* v45 alat jadwal satu baris */
+.jd-tools{display:grid !important;grid-template-columns:1fr 1fr 1.25fr;gap:7px !important;align-items:stretch;flex-wrap:nowrap !important;margin-bottom:10px;}
+.jd-tools>*{min-width:0 !important;width:auto !important;margin:0 !important;height:44px;border-radius:16px !important;font:800 12.5px 'Plus Jakarta Sans',sans-serif !important;padding:0 6px !important;white-space:nowrap;text-align:center;text-align-last:center;color:#0b3a7a !important;}
+.jd-tools select{padding:0 4px !important;-webkit-appearance:none;appearance:none;} .jd-tools button{display:flex;align-items:center;justify-content:center;}
+#jdFill{color:#fff !important;background:linear-gradient(145deg,#38c9bf,#0b8f88) !important;border-color:rgba(255,255,255,.7) !important;text-shadow:0 1px 2px rgba(0,60,55,.4);box-shadow:0 12px 18px -10px rgba(11,143,136,.85),inset 0 1px 0 rgba(255,255,255,.55),inset 0 -4px 7px rgba(0,80,75,.25) !important;}
 </style>
 </head>
 <body>
@@ -789,7 +812,7 @@ button.tag.sc{border:0;font-family:inherit;cursor:pointer;} button.tag.sc.zero{c
         <label class="jgf"><span>🏥 Unit</span><select id="jgUnit"></select></label>
         <label class="jgf"><span>🕒 Shift</span><select id="jgShift"><option value="">Semua shift</option><option value="P">🌅 Pagi</option><option value="S">☀️ Siang</option><option value="D">🌤️ Middle</option><option value="M">🌙 Malam</option><option value="R">⏰ Lembur</option></select></label>
       </div>
-      <div class="sum-grid" id="jgSum"></div>
+      <div class="glass card jgs" id="jgSum"></div>
       <div id="jgList"></div>
     </section>
 
@@ -800,8 +823,8 @@ button.tag.sc{border:0;font-family:inherit;cursor:pointer;} button.tag.sc.zero{c
       <div class="small dim" id="jdPer" style="margin-bottom:8px"></div>
       <div class="jd-tools">
         <select id="jdBulk"><option value="P">🌅 Pagi</option><option value="S">☀️ Siang</option><option value="D">🌤️ Middle</option><option value="M">🌙 Malam</option></select>
-        <button class="btn btn-sm" id="jdFill">Isi hari kosong</button>
-        <button class="btn btn-sm" id="jdSun">Minggu = Libur</button>
+        <button class="btn btn-sm" id="jdFill">Isi kosong</button>
+        <button class="btn btn-sm" id="jdSun">🏠 Minggu libur</button>
       </div>
       <div class="jd-sum" id="jdSum"></div>
       <div id="jdList"></div>
@@ -985,6 +1008,7 @@ function fmtDur(m) { if (m == null) return '—'; return Math.floor(m / 60) + 'j
 function addDays(d, n) { const p = d.split('-'); const t = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2] + n)); return t.getUTCFullYear() + '-' + pad(t.getUTCMonth() + 1) + '-' + pad(t.getUTCDate()); }
 function periodKeyOf(d) { const p = d.split('-'); let y = +p[0], m = +p[1]; if (+p[2] < 27) { m--; if (m < 1) { m = 12; y--; } } return y + '-' + pad(m); }
 function shiftKey(k, n) { const p = k.split('-'); let t = (+p[0]) * 12 + (+p[1] - 1) + n; return Math.floor(t / 12) + '-' + pad((t % 12) + 1); }
+function periodShort(k) { const p = k.split('-'); const y = +p[0], m = +p[1]; const ny = m === 12 ? y + 1 : y, nm = m === 12 ? 1 : m + 1; return ny === y ? '27 ' + MONTHS[m - 1] + ' – 26 ' + MONTHS[nm - 1] + ' ' + y : '27 ' + MONTHS[m - 1] + ' ' + String(y).slice(2) + ' – 26 ' + MONTHS[nm - 1] + ' ' + String(ny).slice(2); }
 function periodLabel(k) { const p = k.split('-'); const y = +p[0], m = +p[1]; const ny = m === 12 ? y + 1 : y, nm = m === 12 ? 1 : m + 1; return '27 ' + MONTHS[m - 1] + ' ' + y + ' – 26 ' + MONTHS[nm - 1] + ' ' + ny; }
 function flagsOf(r) { return r.flag ? r.flag.split(',').filter(Boolean) : []; }
 function needCheck(r) { const f = flagsOf(r); return !f.includes('DICEK') && f.some((x) => FLAG_CEK.includes(x)); }
@@ -1455,7 +1479,7 @@ $('lpDPrev').addEventListener('click', () => { const s = $('lpDate'); if (s.sele
 $('lpDNext').addEventListener('click', () => { const s = $('lpDate'); if (s.selectedIndex > 0) { s.selectedIndex--; s.dispatchEvent(new Event('change')); } });
 $('lpPPrev').addEventListener('click', () => { const s = $('lpPer'); if (s.selectedIndex < s.options.length - 1) { s.selectedIndex++; lpPerSync(); } });
 $('lpPNext').addEventListener('click', () => { const s = $('lpPer'); if (s.selectedIndex > 0) { s.selectedIndex--; lpPerSync(); } });
-function lpPerSync() { const s = $('lpPer'); $('lpPLab').textContent = s.selectedOptions[0] ? s.selectedOptions[0].textContent.replace(' (periode ini)', '') : '—'; $('lpPPrev').disabled = s.selectedIndex >= s.options.length - 1; $('lpPNext').disabled = s.selectedIndex <= 0; }
+function lpPerSync() { const s = $('lpPer'); $('lpPLab').textContent = s.value ? periodShort(s.value) : '—'; $('lpPPrev').disabled = s.selectedIndex >= s.options.length - 1; $('lpPNext').disabled = s.selectedIndex <= 0; }
 function initLaporan() {
   const t = S ? S.today : nowJ().date; const sel = $('lpDate');
   const opts = []; for (let i = 0; i <= LAP_DAYS; i++) { const d = addDays(t, -i); opts.push(`<option value="${d}">${i === 0 ? 'Hari ini' : (i === 1 ? 'Kemarin' : i + ' hari lalu')} — ${fmtDate(d)}</option>`); }
@@ -1536,7 +1560,7 @@ function renderRwList() {
 }
 async function loadRiwayat() {
   if (!rwKey) rwKey = periodKeyOf(S ? S.today : nowJ().date);
-  $('rwLabel').textContent = periodLabel(rwKey); $('rwList').innerHTML = '<div class="empty"><span class="spin dk"></span></div>';
+  $('rwLabel').textContent = periodShort(rwKey); $('rwList').innerHTML = '<div class="empty"><span class="spin dk"></span></div>';
   try {
     const r = await apiGet('riwayat', { period: rwKey }); rwLast = r; const s = r.summary || { hari: 0, menit: 0, P: 0, S: 0, D: 0, M: 0, R: 0, cek: 0, belum: 0 };
     $('rwSum').innerHTML = statTiles([['c1', '✅', s.hari, 'Hari hadir'], ['c3', '🔁', shTot(s), 'Total shift'], ['c2', '🕒', fmtDur(r.rows.reduce((a, x) => a + (x.shift === 'R' && !isInvalid(x) && x.durasi != null ? x.durasi : 0), 0)), 'Jam lembur'], ['c4', '⏳', s.belum, 'Belum pulang']], 'flt') + '<div class="v-sec">Kalender shift</div>' + rwCalendar(r.rows, rwKey) + shiftBox(s, rwShift);
@@ -1603,7 +1627,7 @@ async function openLapPrint() {
     const tugas = ents.reduce((a, e) => a + taskCount(e.t), 0), filled = ents.filter((e) => e.t).length, hari = new Set(ents.map((e) => e.d)).size;
     const logo = $('lgLogo') ? $('lgLogo').src : '', nw = nowJ();
     const body = ents.map((e) => {
-      const lines = String(e.t || '').split(/\r?\n/).map((x) => x.replace(/^\s*[-•*\d.)]+\s*/, '').trim()).filter(Boolean);
+      const lines = taskItems(e.t);
       return `<div class="lp-ent"><div class="lp-h"><div>${esc(fmtDate(e.d))}</div><span>${esc(SHIFT_NAME[e.sh] || e.sh || '')}${e.jam ? ' · ' + esc(e.jam) : ''}</span></div>${lines.length ? `<div class="lp-b"><ol>${lines.map((l) => `<li>${esc(l)}</li>`).join('')}</ol></div>` : '<div class="lp-b kosong">Belum ada laporan.</div>'}</div>`;
     }).join('');
     $('rkPaper').innerHTML = `<div class="kop">${logo ? `<img src="${logo}" alt="">` : ''}<div><b>RSI At-Tin Husada Ngawi</b><span>Laporan Kerja Harian Karyawan</span></div></div>
@@ -1740,7 +1764,15 @@ const dsN = (x, d) => (Math.round(x * Math.pow(10, d || 0)) / Math.pow(10, d || 
 const dsH = (min) => dsN((min || 0) / 60, 0) + ' j';
 function dashDays(p) { const out = []; let t = Date.parse(p.start + 'T00:00:00Z'); const e = Date.parse(p.end + 'T00:00:00Z'); while (t <= e) { out.push(new Date(t).toISOString().slice(0, 10)); t += 864e5; } return out; }
 /** Jumlah tugas pada satu laporan: jika ada baris bertanda (-, •, *, 1.) maka tiap tanda = 1 tugas (baris lanjutan tanpa tanda ikut tugas sebelumnya); jika tidak ada tanda, tiap baris = 1 tugas. */
-function taskCount(t) { const ls = String(t || '').split(/\r?\n/).filter((l) => /[0-9A-Za-z\u00C0-\u024F]/.test(l)), b = ls.filter((l) => /^\s*([-•*–]|\d+[.)])\s*\S/.test(l)); return b.length ? b.length : ls.length; }
+function taskItems(t) {
+  const ls = String(t || '').split(/\r?\n/).filter((l) => /[0-9A-Za-z\u00C0-\u024F]/.test(l)), isB = (l) => /^\s*([-•*–]|\d+[.)])\s*\S/.test(l), strip = (l) => l.replace(/^\s*([-•*–]|\d+[.)])\s*/, '').trim();
+  if (!ls.some(isB)) return ls.map((l) => l.trim());
+  const out = []; let lead = [];
+  ls.forEach((l) => { if (isB(l)) { out.push(strip(l)); } else if (out.length) { out[out.length - 1] += ' ' + l.trim(); } else lead.push(l.trim()); });
+  if (lead.length) out[0] = lead.join(' ') + ' ' + out[0];
+  return out;
+}
+function taskCount(t) { return taskItems(t).length; }
 function renderDash() {
   const unit = $('tmUnit').value, today = S ? S.today : nowJ().date;
   const inU = (x) => !unit || (unit === '__none' ? !String(x.unit || '').trim() : x.unit === unit);
@@ -2370,6 +2402,7 @@ async function loadJagaFotos() {
   } catch (e) { /* server lama / jaringan: tetap tampil ikon orang */ }
   jgFotoBusy = false;
 }
+let jgStat = '';
 function renderJaga() {
   if (!jagaData) return;
   const cur = $('jgUnit').value, names = jagaData.units.map((x) => x.unit);
@@ -2381,8 +2414,10 @@ function renderJaga() {
   if (filtering) units = units.filter((x) => x.orang.length);
   units.sort((a, b) => (b.unit === me.unit) - (a.unit === me.unit));
   const all = units.reduce((a, x) => a.concat(x.orang.map((o) => Object.assign({ unit: x.unit }, o))), []);
-  const byS = { P: 0, S: 0, D: 0, M: 0, R: 0 }; all.filter((o) => !o.selesai).forEach((o) => { if (byS[o.shift] !== undefined) byS[o.shift]++; }); const done = all.filter((o) => o.selesai).length;
-  $('jgSum').innerHTML = `<div><b>${all.length - done}</b><span>Sedang jaga</span></div><div><b>${byS.P}<i class="sep">|</i>${byS.S}</b><span>Pagi <i class="sep">|</i> Siang</span></div><div><b>${byS.D}<i class="sep">|</i>${byS.M}</b><span>Middle <i class="sep">|</i> Malam</span></div><div><b>${byS.R}</b><span>Lembur</span></div><div><b>${done}</b><span>Sudah pulang</span></div>`;
+  const byS = { P: 0, S: 0, D: 0, M: 0, R: 0 }; jagaData.units.filter((x) => !fu || x.unit === fu).forEach((x) => x.orang.forEach((o) => { if (!o.selesai && byS[o.shift] !== undefined) byS[o.shift]++; }));
+  const done = all.filter((o) => o.selesai).length, on = all.length - done;
+  $('jgSum').innerHTML = `<div class="jgs-top"><button type="button" data-s="on" class="jgs-a ${jgStat === 'on' ? 'sel' : ''}"><span>Sedang jaga</span><b>${on}</b></button><button type="button" data-s="off" class="jgs-b ${jgStat === 'off' ? 'sel' : ''}"><span>Sudah pulang</span><b>${done}</b></button></div>`;
+  $('jgSum').querySelectorAll('.jgs-top button').forEach((bt) => bt.addEventListener('click', () => { jgStat = jgStat === bt.dataset.s ? '' : bt.dataset.s; renderJaga(); }));
   $('jgAt').textContent = 'Terakhir: ' + (jagaData.now || '').substring(11, 19);
   if (view === 'shift') {
     const order = SH_ALL;
@@ -2391,10 +2426,10 @@ function renderJaga() {
       return `<div class="glass card jg-unit"><h3><span><span class="tag tag-${k}">${SHIFT_NAME[k]}</span></span><span class="jg-n ${list.length ? '' : 'zero'}">${list.length}</span></h3>${list.length ? list.map((o) => jgPerson(o, o.unit)).join('') : '<div class="small dim">Tidak ada petugas pada shift ini.</div>'}</div>`;
     }).join('');
   } else {
-    const card = (x) => { const on = x.orang.filter((o) => !o.selesai); return on.length || !x.orang.length ? `<div class="glass card jg-unit"><h3><span>${esc(x.unit)}${x.unit === me.unit ? ' <span class="small dim">(unit Anda)</span>' : ''}</span><span class="jg-n ${on.length ? '' : 'zero'}">${on.length}</span></h3>${on.length ? on.map((o) => jgPerson(o, '')).join('') : '<div class="small dim">Tidak ada petugas tercatat jaga saat ini.</div>'}</div>` : ''; };
+    const card = (x) => { const on = x.orang.filter((o) => !o.selesai); return on.length ? `<div class="glass card jg-unit"><h3><span>${esc(x.unit)}${x.unit === me.unit ? ' <span class="small dim">(unit Anda)</span>' : ''}</span><span class="jg-n ${on.length ? '' : 'zero'}">${on.length}</span></h3>${on.map((o) => jgPerson(o, '')).join('')}</div>` : ''; };
     const offAll = []; units.forEach((x) => x.orang.forEach((o) => { if (o.selesai) offAll.push({ o, unit: x.unit }); }));
     offAll.sort((a, b) => (a.o.jamPulang < b.o.jamPulang ? 1 : -1));
-    $('jgList').innerHTML = (units.length ? units.map(card).join('') : '<div class="empty">Tidak ada data.</div>') + (offAll.length ? `<div class="glass card jg-unit jg-off"><h3><span>✔ Sudah pulang</span><span class="jg-n zero">${offAll.length}</span></h3>${offAll.map((z) => jgPerson(z.o, z.unit)).join('')}</div>` : '');
+    $('jgList').innerHTML = (jgStat === 'off' ? '' : (units.some((x) => x.orang.some((o) => !o.selesai)) ? units.map(card).join('') : '<div class="empty">Tidak ada yang sedang jaga.</div>')) + (jgStat === 'on' ? '' : (offAll.length ? `<div class="glass card jg-unit jg-off"><h3><span>✔ Sudah pulang</span><span class="jg-n zero">${offAll.length}</span></h3>${offAll.map((z) => jgPerson(z.o, z.unit)).join('')}</div>` : (jgStat === 'off' ? '<div class="empty">Belum ada yang pulang.</div>' : '')));
   }
 }
 renderJaga = ((orig) => function () { orig(); loadJagaFotos(); })(renderJaga);

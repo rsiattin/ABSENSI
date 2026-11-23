@@ -578,7 +578,7 @@ body:not(.authed) #app{display:none;} body.authed #loginScreen{display:none;}
 .paper .kop b{display:block;font-size:13px;color:#0b2a5b}.paper .kop span{font-size:10.5px;color:#5a6988}
 .paper h2{font-size:15px;text-align:center;margin:6px 0 2px;letter-spacing:.5px}.paper .per{text-align:center;color:#44557a;margin-bottom:10px}
 .paper .idt{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;margin-bottom:10px}.paper .idt span{color:#5a6988}
-.paper table{width:100%;border-collapse:collapse;margin-bottom:10px}.paper td,.paper th{font-size:11.5px}.paper table.det{table-layout:fixed}.paper table.det td,.paper table.det th{font-size:10px;padding:3px 2px;overflow-wrap:anywhere}.paper th{text-transform:none!important;letter-spacing:0!important}.paper table.det th{font-size:9.5px}.paper table.det th:nth-child(1){width:22px}.paper table.det th:nth-child(2){width:50px}.paper table.det th:nth-child(3){width:44px}.paper table.det th:nth-child(4),.paper table.det th:nth-child(5){width:40px}.paper table.det th:nth-child(6){width:44px}.paper th,.paper td{border:1px solid #9aa6bd;padding:4px 5px;text-align:left}.paper th{background:#e8effa;font-size:11px}
+.paper table{width:100%;border-collapse:collapse;margin-bottom:10px}.paper td,.paper th{font-size:11.5px}.paper table.det{table-layout:fixed}.paper table.det td,.paper table.det th{font-size:10px;padding:3px 2px;overflow-wrap:anywhere}.paper table.det th{white-space:nowrap;overflow-wrap:normal;font-size:9.5px}.paper th{text-transform:none!important;letter-spacing:0!important}.paper table.det th{font-size:9.5px}.paper table.det th:nth-child(1){width:22px}.paper table.det th:nth-child(2){width:50px}.paper table.det th:nth-child(3){width:44px}.paper table.det th:nth-child(4),.paper table.det th:nth-child(5){width:40px}.paper table.det th:nth-child(6){width:44px}.paper th,.paper td{border:1px solid #9aa6bd;padding:4px 5px;text-align:left}.paper th{background:#e8effa;font-size:11px}
 .paper td.n,.paper th.n{text-align:center}.paper tr.tot td{font-weight:800;background:#f1f5fb}.paper tr.bad td{background:#fff0f2;color:#9c2236}
 .paper .sec{font-weight:800;margin:10px 0 4px;color:#0b2a5b}.paper .mut{color:#6b7a99;font-size:10.5px}
 .paper .ttd{display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center;margin-top:18px}.paper .ttd div{height:78px}.paper .ttd b{display:block;margin-top:50px;border-top:1px solid #14213d;padding-top:3px}
@@ -1628,7 +1628,7 @@ function openRekap() {
   const shRows = ['P', 'S', 'D', 'M'].map((k) => `<tr><td>${SHIFT_NAME[k]}</td><td class="n">${s[k] || 0}</td></tr>`).join('');
   const det = rows.map((x, i) => {
     const ket = [isInvalid(x) ? 'Tidak sah (tidak dihitung)' : (needCheck(x) ? 'Perlu dicek' : ''), x.noteMasuk ? 'Masuk: ' + x.noteMasuk : '', x.notePulang ? 'Pulang: ' + x.notePulang : '', x.catatan || ''].filter(Boolean).join('; ');
-    return `<tr class="${isInvalid(x) ? 'bad' : ''}"><td class="n">${i + 1}</td><td style="white-space:nowrap">${esc(fmtDate(x.tanggal).slice(0, 3) + ', ' + fmtDateShort(x.tanggal))}</td><td>${esc(SHIFT_NAME[x.shift] || x.shift)}</td><td class="n">${esc(x.jamMasuk)}</td><td class="n">${x.jamPulang ? esc(x.jamPulang) : '—'}</td><td class="n">${x.durasi != null ? fmtDur(x.durasi) : '—'}</td><td>${esc(ket)}</td></tr>`;
+    return `<tr class="${isInvalid(x) ? 'bad' : ''}"><td class="n">${i + 1}</td><td style="white-space:nowrap">${esc(fmtDateShort(x.tanggal))}</td><td>${esc(SHIFT_NAME[x.shift] || x.shift)}</td><td class="n">${esc(x.jamMasuk)}</td><td class="n">${x.jamPulang ? esc(x.jamPulang) : '—'}</td><td class="n">${x.durasi != null ? fmtDur(x.durasi) : '—'}</td><td>${esc(ket)}</td></tr>`;
   }).join('');
   $('rkPaper').innerHTML = `<div class="kop">${logo ? `<img src="${logo}" alt="">` : ''}<div><b>RSI At-Tin Husada Ngawi</b><span>Rekap Absensi Karyawan</span></div></div>
     <h2>REKAP KEHADIRAN PER PERIODE</h2><div class="per">${esc(periodLabel(rwKey))}</div>
@@ -1639,10 +1639,10 @@ function openRekap() {
       <tr class="tot"><td>Total shift</td><td class="n">${shTot(s)}</td></tr>
       <tr class="tot"><td>Jam lembur (shift Lembur)</td><td class="n">${fmtDur(lem)}</td></tr>
       <tr><td>Belum absen pulang</td><td class="n">${s.belum || 0}</td></tr>
-      ${cek ? `<tr><td>Absen perlu dicek atasan</td><td class="n">${cek}</td></tr>` : ''}${tidak ? `<tr><td>Absen tidak sah (tidak dihitung)</td><td class="n">${tidak}</td></tr>` : ''}</table>
+      ${cek ? `<tr><td>Absen perlu dicek Koord.</td><td class="n">${cek}</td></tr>` : ''}${tidak ? `<tr><td>Absen tidak sah (tidak dihitung)</td><td class="n">${tidak}</td></tr>` : ''}</table>
     <div class="sec">Rincian Absen</div>
-    ${rows.length ? `<table class="det"><tr><th class="n">No</th><th style="width:92px">Tgl</th><th>Shift</th><th class="n">Masuk</th><th class="n">Pulang</th><th class="n">Durasi</th><th>Keterangan</th></tr>${det}</table>` : '<div class="mut">Tidak ada absen pada periode ini.</div>'}
-    <div class="ttd"><div>Karyawan<b>${esc(me.nama)}</b></div><div>Atasan / Kepala Unit<b>&nbsp;</b></div></div>
+    ${rows.length ? `<table class="det"><colgroup><col style="width:6%"><col style="width:11%"><col style="width:13%"><col style="width:11%"><col style="width:11%"><col style="width:12%"><col style="width:36%"></colgroup><tr><th class="n">No</th><th>Tgl</th><th>Shift</th><th class="n">Masuk</th><th class="n">Pulang</th><th class="n">Durasi</th><th>Keterangan</th></tr>${det}</table>` : '<div class="mut">Tidak ada absen pada periode ini.</div>'}
+    <div class="ttd"><div>Karyawan<b>${esc(me.nama)}</b></div><div>Koord. / Kepala Unit<b>&nbsp;</b></div></div>
     <div class="foot2">Dicetak dari aplikasi Absensi RSI At-Tin Husada · ${esc(fmtDate(nw.date))} ${esc(nw.hhmm)}</div>`;
   $('ovRekap').className = 'overlay show'; $('ovRekap').scrollTop = 0;
 }
@@ -1680,7 +1680,7 @@ async function openLapPrint() {
       <div class="idt"><span>Nama</span><b>${esc(me.nama)}</b><span>NIP</span><div>${esc(me.nip || '-')}</div><span>Unit</span><div>${esc(me.unit || '-')}</div></div>
       <table><tr><th>Keterangan</th><th class="n" style="width:90px">Jumlah</th></tr><tr><td>Hari kerja</td><td class="n">${hari}</td></tr><tr><td>Laporan terisi</td><td class="n">${filled}</td></tr><tr><td>Laporan belum diisi</td><td class="n">${ents.length - filled}</td></tr><tr class="tot"><td>Total tugas</td><td class="n">${tugas}</td></tr></table>
       <div class="sec">Uraian Pekerjaan</div>${ents.length ? body : '<div class="mut">Tidak ada data pada periode ini.</div>'}
-      <div class="ttd"><div>Karyawan<b>${esc(me.nama)}</b></div><div>Atasan / Kepala Unit<b>&nbsp;</b></div></div>
+      <div class="ttd"><div>Karyawan<b>${esc(me.nama)}</b></div><div>Koord. / Kepala Unit<b>&nbsp;</b></div></div>
       <div class="foot2">Dicetak dari aplikasi Absensi RSI At-Tin Husada · ${esc(fmtDate(nw.date))} ${esc(nw.hhmm)}</div>`;
     $('ovRekap').className = 'overlay show'; $('ovRekap').scrollTop = 0;
   } catch (e) { if (e.message !== 'Sesi berakhir') toast(e.message, true); }

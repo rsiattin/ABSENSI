@@ -795,7 +795,7 @@ button.tag.sc{border:0;font-family:inherit;cursor:pointer;} button.tag.sc.zero{c
     <div class="user-chip" id="userChip"><div class="avatar" id="avatar">?</div><span id="chipName" class="small" style="font-weight:700;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">—</span></div>
   </header>
   <div class="menu glass hidden" id="menu">
-    <button id="mnAkun">👤 Akun Saya</button>
+    <button id="mnAkun">👤 Profil Saya</button>
     <button id="mnFoto">📷 Ganti Foto Profil</button>
     <button id="mnInstall">📲 Pasang di Layar Utama</button>
     <button id="mnPw">🔑 Ubah Password</button>
@@ -824,7 +824,7 @@ button.tag.sc{border:0;font-family:inherit;cursor:pointer;} button.tag.sc.zero{c
       <div id="jadwalBanner"></div>
       <div id="olderBanner"></div>
       <div class="glass card"><h3>🕘 Absensi Hari Ini <span class="small dim" id="tdDate" style="font-weight:500"></span></h3><div id="todayList"></div></div>
-      <div class="glass card"><h3>📝 Laporan Harian</h3><div id="homeLaporan"></div></div>
+      <div class="glass card"><h3>📝 Aktivitas Harian</h3><div id="homeLaporan"></div></div>
     </section>
 
     <!-- JAGA SEKARANG -->
@@ -865,22 +865,22 @@ button.tag.sc{border:0;font-family:inherit;cursor:pointer;} button.tag.sc.zero{c
 
     <!-- LAPORAN -->
     <section class="page hidden" id="pg-laporan">
-      <div class="pg-head" data-c="violet"><div class="pg-ic">📝</div><div class="pg-tx"><h2>Laporan Harian</h2><p>Catat pekerjaan per tanggal dan shift</p></div></div>
+      <div class="pg-head" data-c="violet"><div class="pg-ic">📝</div><div class="pg-tx"><h2>Aktivitas Harian</h2><p>Catat pekerjaan per tanggal dan shift</p></div></div>
       <div class="periodbar"><button class="btn btn-sm" id="lpPPrev">‹</button><div class="lbl" id="lpPLab">—</div><button class="btn btn-sm" id="lpPNext">›</button><button class="btn btn-sm pb-ic" id="lpPrintBtn" title="Lihat &amp; cetak laporan periode" aria-label="Cetak laporan periode"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z" fill="#fff"/></svg></button></div><select id="lpPer" class="hidden"></select>
       <div class="glass card">
-        <h3>📝 Isi Laporan Harian</h3>
+        <h3>📝 Isi Aktivitas Harian</h3>
         <div class="lp-lab">Tanggal</div><div class="lp-dt"><button type="button" class="lpb ic" id="lpDPrev" aria-label="Lebih lama">‹</button><div class="lpb lab" id="lpDLab">—</div><button type="button" class="lpb ic" id="lpDNext" aria-label="Lebih baru">›</button></div><select id="lpDate" class="hidden"></select>
         <div class="lp-lab">Shift</div><div class="lp-shifts" id="lpShBtns"></div><select id="lpShift" class="hidden"></select>
         <div class="small dim" id="lpInfo" style="margin:-4px 0 8px"></div>
         <div class="field"><label>Uraian pekerjaan</label><textarea id="lpText" placeholder="Awali tiap pekerjaan dengan tanda -, misalnya:&#10;- Pemeriksaan jaringan lantai 2&#10;- Pelayanan pasien poli umum, dilanjutkan ke baris berikutnya bila panjang"></textarea><div class="small dim" style="margin-top:4px" id="lpCount">0 / 4000</div><div class="small dim" style="margin-top:2px">Tiap pekerjaan diawali tanda <b>-</b> (1 tanda = 1 tugas). Bila satu pekerjaan panjang, lanjutkan di baris berikutnya <b>tanpa</b> tanda -.</div></div>
-        <button class="btn btn-teal btn-block" id="btnSaveLaporan" style="padding:14px">Simpan Laporan</button>
+        <button class="btn btn-teal btn-block" id="btnSaveLaporan" style="padding:14px">Simpan Aktivitas</button>
       </div>
-      <div class="glass card"><h3>🗂️ Laporan Terakhir</h3><div id="lpHistory"></div></div>
+      <div class="glass card"><h3>🗂️ Aktivitas Terakhir</h3><div id="lpHistory"></div></div>
     </section>
 
     <!-- RIWAYAT -->
     <section class="page hidden" id="pg-riwayat">
-      <div class="pg-head" data-c="blue"><div class="pg-ic">🕘</div><div class="pg-tx"><h2>Riwayat Absensi</h2><p>Rekap kehadiran dan laporan per periode</p></div></div>
+      <div class="pg-head" data-c="blue"><div class="pg-ic">🕘</div><div class="pg-tx"><h2>Riwayat Absensi</h2><p>Rekap kehadiran dan aktivitas per periode</p></div></div>
       <div class="periodbar"><button class="btn btn-sm" id="rwPrev">‹</button><div class="lbl" id="rwLabel">—</div><button class="btn btn-sm" id="rwNext">›</button><button class="btn btn-sm pb-ic" id="rwRekap" title="Rekap &amp; cetak periode" aria-label="Rekap dan cetak periode"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z" fill="#fff"/></svg></button></div>
       <div id="rwSum"></div>
       <div id="rwList"></div>
@@ -888,7 +888,7 @@ button.tag.sc{border:0;font-family:inherit;cursor:pointer;} button.tag.sc.zero{c
 
     <!-- TIM -->
     <section class="page hidden" id="pg-tim">
-      <div class="pg-head" data-c="orange"><div class="pg-ic">👥</div><div class="pg-tx"><h2>Tim & Rekap</h2><p>Pantau kehadiran &amp; rekap</p></div><button class="btn btn-sm pb-ic" id="tmPrint" title="Cetak" aria-label="Cetak"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z" fill="#fff"/></svg></button><button class="btn btn-sm pb-ic" id="btnExport" title="Unduh Excel" aria-label="Unduh Excel"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg></button></div>
+      <div class="pg-head" data-c="orange"><div class="pg-ic">👥</div><div class="pg-tx"><h2>Monitoring</h2><p>Pantau kehadiran &amp; rekap</p></div><button class="btn btn-sm pb-ic" id="tmPrint" title="Cetak" aria-label="Cetak"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z" fill="#fff"/></svg></button><button class="btn btn-sm pb-ic" id="btnExport" title="Unduh Excel" aria-label="Unduh Excel"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg></button></div>
       <div class="periodbar tm-range"><button class="btn btn-sm" id="tmPrev" aria-label="Sebelumnya">‹</button><label class="tm-d"><small>Dari</small><span id="tmFromLab">—</span><input type="date" id="tmFrom"></label><label class="tm-d"><small>Sampai</small><span id="tmToLab">—</span><input type="date" id="tmTo"></label><button class="btn btn-sm" id="tmNext" aria-label="Berikutnya">›</button></div>
       <div class="tm-seg" id="tmSeg"><button class="on" data-m="pantau">👥 Pantau</button><button data-m="dasbor">📊 Dasbord</button></div>
       <div class="row tm-filt"><select class="inp grow" id="tmUnit"></select><select class="inp grow" id="tmShSel"><option value="">Semua shift</option><option value="P">Pagi</option><option value="S">Siang</option><option value="D">Middle</option><option value="M">Malam</option><option value="R">Lembur</option></select></div>
@@ -900,7 +900,7 @@ button.tag.sc{border:0;font-family:inherit;cursor:pointer;} button.tag.sc.zero{c
 
     <!-- AKUN -->
     <section class="page hidden" id="pg-akun">
-      <div class="pg-head" data-c="navy"><div class="pg-ic">👤</div><div class="pg-tx"><h2>Akun Saya</h2><p>Data pribadi, foto profil, dan keamanan</p></div></div>
+      <div class="pg-head" data-c="navy"><div class="pg-ic">👤</div><div class="pg-tx"><h2>Profil Saya</h2><p>Data pribadi, foto profil, dan keamanan</p></div></div>
       <div class="glass card ak-cover">
         <div class="ak-banner"></div>
         <div class="ak-body">
@@ -1016,7 +1016,7 @@ button.tag.sc{border:0;font-family:inherit;cursor:pointer;} button.tag.sc.zero{c
 /* ============================================================
    KONFIGURASI — isi dengan URL Web App Apps Script Anda
    ============================================================ */
-const API_URL = "https://script.google.com/macros/s/AKfycbz2yyAm8UzuLobuHKwPUBxBD64MGzlxIdJoOAYS_a8sJ_PD6Fcvw_TS5q_uYtvY1TCd/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyy_udMlesbD32gywSY205MBJQsSfc86BzvPCUzyNhY-_aZvEtSVY2YS8bniZj-7Qr6/exec";
 
 /* ---------------- util ---------------- */
 const $ = (id) => document.getElementById(id);
@@ -1180,7 +1180,7 @@ async function startApp() {
 }
 function tick() { const n = nowJ(); $('hClock').textContent = n.hhmm + ':' + n.sec; $('hDate').textContent = fmtDate(n.date); if (S && S.open) updateDur(); }
 function buildNav() {
-  const items = [['home', '🏠', 'Beranda'], ['jaga', '🩺', 'Jaga'], ['absen', '✔️', 'Absen'], ['laporan', '📝', 'Laporan'], ['riwayat', '🕘', 'Riwayat']];
+  const items = [['home', '🏠', 'Beranda'], ['jaga', '🩺', 'Jaga'], ['absen', '✔️', 'Absen'], ['laporan', '📝', 'Aktivitas'], ['riwayat', '🕘', 'Riwayat']];
   $('nav').classList.remove('many');
   $('nav').innerHTML = items.map((i) => `<button data-p="${i[0]}"${i[0] === 'absen' ? ' class="abs-mid"' : ''}><span class="ic">${i[1]}</span>${i[2]}</button>`).join('');
   $('nav').querySelectorAll('button').forEach((b) => b.addEventListener('click', () => go(b.dataset.p)));
@@ -1188,7 +1188,7 @@ function buildNav() {
   buildPintas();
 }
 function buildPintas() {
-  const P = { jadwal: ['🗓️', 'Jadwal'], jaga: ['🩺', 'Jaga'], laporan: ['📝', 'Laporan'], riwayat: ['🕘', 'Riwayat'], tim: ['👥', 'Tim'], admin: ['⚙️', 'Admin'], akun: ['👤', 'Akun'], bantuan: ['💬', 'Bantuan'] };
+  const P = { jadwal: ['🗓️', 'Jadwal'], jaga: ['🩺', 'Jaga'], laporan: ['📝', 'Aktivitas'], riwayat: ['🕘', 'Riwayat'], tim: ['👥', 'Monitoring'], admin: ['⚙️', 'Admin'], akun: ['👤', 'Profil'], bantuan: ['💬', 'Bantuan'] };
   const k = ['jadwal', 'jaga', 'laporan', 'riwayat'];
   if (me.role === 'atasan' || me.role === 'admin') k.push('tim');
   if (me.role === 'admin') k.push('admin');
@@ -1262,7 +1262,7 @@ function renderHome() {
   const tg = []; const addT = (r) => { if (r && !tg.some((x) => x.d === r.tanggal && x.s === r.shift)) tg.push({ d: r.tanggal, s: r.shift }); };
   addT(S.olderOpen); addT(S.open); recs.forEach(addT);
   $('homeLaporan').innerHTML = tg.length ? tg.map((x) => { const t = lapFor(S.laporan, x.d, x.s); return `<div style="margin-bottom:10px"><div class="row between"><div class="small dim"><span class="tag tag-${esc(x.s)}">${esc(SHIFT_NAME[x.s] || x.s)}</span> ${fmtDate(x.d)}</div><button class="btn btn-sm ${t ? '' : 'btn-teal'}" data-lp="${esc(x.d)}|${esc(x.s)}">${t ? '✎ Ubah' : 'Isi laporan'}</button></div>${t ? '<div class="lap-text">' + esc(t) + '</div>' : '<div class="dim small" style="margin-top:4px">Laporan shift ini belum diisi.</div>'}</div>`; }).join('')
-    : `<div class="dim small" style="margin-bottom:10px">Belum ada absen hari ini. Laporan diisi per tanggal dan shift.</div><button class="btn btn-teal btn-sm" data-lp="">Isi laporan</button>`;
+    : `<div class="dim small" style="margin-bottom:10px">Belum ada absen hari ini. Laporan diisi per tanggal dan shift.</div><button class="btn btn-teal btn-sm" data-lp="">Isi aktivitas</button>`;
   $('homeLaporan').querySelectorAll('[data-lp]').forEach((b) => b.addEventListener('click', () => { const p = b.dataset.lp.split('|'); lapPreset = p[0] ? { d: p[0], s: p[1] } : null; go('laporan'); }));
   const list = (S.olderOpen ? [S.olderOpen] : []).concat(recs.slice().sort((x, y) => (x.tanggal + x.jamMasuk < y.tanggal + y.jamMasuk ? 1 : -1)));
   $('tdDate').textContent = '· ' + fmtDateFull(S.today);
@@ -1564,7 +1564,7 @@ function fillLap() {
   const d = $('lpDate').value, sh = $('lpShift').value, own = lapMap[d + '_' + sh], legacy = lapMap[d + '_'];
   $('lpText').value = own || legacy || ''; lpCountUpd();
   $('lpInfo').textContent = own ? '✎ Sedang mengubah laporan yang sudah tersimpan.' : (legacy ? 'Laporan lama (sebelum ada pembagian shift). Simpan untuk memindahkannya ke shift ini.' : 'Laporan baru. Satu laporan untuk tiap tanggal dan shift.');
-  $('btnSaveLaporan').textContent = own ? 'Perbarui Laporan' : 'Simpan Laporan';
+  $('btnSaveLaporan').textContent = own ? 'Perbarui Aktivitas' : 'Simpan Aktivitas';
 }
 $('lpDate').addEventListener('change', () => { fillShiftSel(''); fillLap(); }); $('lpShift').addEventListener('change', fillLap);
 function lpCountUpd() { const v = $('lpText').value; $('lpCount').textContent = v.length + ' / 4000 · ' + taskCount(v) + ' tugas'; }
@@ -1578,7 +1578,7 @@ $('btnSaveLaporan').addEventListener('click', async () => {
     const r = await sendAndConfirm('saveLaporan', { tanggal: tgl, shift, isi }, () => apiGet('riwayat', { period: k }), (d) => (d.laporan[me.id + '_' + tgl + '_' + shift] || '').trim() === isi.slice(0, 4000));
     if (r) { toast('✅ Laporan tersimpan'); await loadState(); renderHome(); const same = $('lpDate').value === tgl && $('lpShift').value === shift; await loadLapHistory(); if (same && $('lpDate').value === tgl && $('lpShift').value === shift) { fillShiftSel(shift); fillLap(); } else { fillShiftSel($('lpShift').value); } } else toast(NOT_CONFIRMED, true);
   } catch (e) { toast(e.message, true); }
-  b.disabled = false; $('btnSaveLaporan').textContent = lapMap[$('lpDate').value + '_' + $('lpShift').value] ? 'Perbarui Laporan' : 'Simpan Laporan';
+  b.disabled = false; $('btnSaveLaporan').textContent = lapMap[$('lpDate').value + '_' + $('lpShift').value] ? 'Perbarui Aktivitas' : 'Simpan Aktivitas';
 });
 
 /* ---------------- RIWAYAT ---------------- */
